@@ -1,0 +1,13 @@
+{"code":"28P01","file":"d:\\pginstaller_12.auto\\postgres.windows-x64\\src\\backend\\libpq\\auth.c","length":166,"level":"error","line":"333","name":"error","routine":"auth_failed","severity":"FATAL","timestamp":"2022-10-25T17:09:28.456Z"}
+{"level":"error","timestamp":"2022-10-25T17:09:53.772Z"}
+{"level":"error","timestamp":"2022-10-25T17:10:17.165Z"}
+{"level":"error","timestamp":"2022-10-25T17:10:53.665Z"}
+{"level":"error","timestamp":"2022-10-25T17:10:57.647Z"}
+{"level":"error","timestamp":"2022-10-25T17:11:17.876Z"}
+{"level":"error","timestamp":"2022-10-25T17:11:29.101Z"}
+{"level":"error","timestamp":"2022-10-25T18:19:44.521Z"}
+{"level":"error","timestamp":"2022-10-25T18:23:07.978Z"}
+{"level":"error","timestamp":"2022-10-25T18:34:09.292Z"}
+{"level":"error","timestamp":"2022-10-25T18:34:38.762Z"}
+{"code":"23502","column":"user_type","driverError":{"code":"23502","column":"user_type","file":"d:\\pginstaller_12.auto\\postgres.windows-x64\\src\\backend\\commands\\tablecmds.c","length":192,"line":"5273","name":"error","routine":"ATRewriteTable","schema":"public","severity":"ERROR","table":"user"},"file":"d:\\pginstaller_12.auto\\postgres.windows-x64\\src\\backend\\commands\\tablecmds.c","length":192,"level":"error","line":"5273","query":"ALTER TABLE \"user\" ADD \"user_type\" character varying NOT NULL","routine":"ATRewriteTable","schema":"public","severity":"ERROR","table":"user","timestamp":"2022-10-25T18:37:17.861Z"}
+{"code":"23502","column":"user_type","driverError":{"code":"23502","column":"user_type","file":"d:\\pginstaller_12.auto\\postgres.windows-x64\\src\\backend\\commands\\tablecmds.c","length":192,"line":"5273","name":"error","routine":"ATRewriteTable","schema":"public","severity":"ERROR","table":"user"},"file":"d:\\pginstaller_12.auto\\postgres.windows-x64\\src\\backend\\commands\\tablecmds.c","length":192,"level":"error","line":"5273","query":"ALTER TABLE \"user\" ADD \"user_type\" character varying NOT NULL","routine":"ATRewriteTable","schema":"public","severity":"ERROR","table":"user","timestamp":"2022-10-25T18:37:22.219Z"}
