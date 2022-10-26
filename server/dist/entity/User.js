@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
+const types_1 = require("../types");
 const typeorm_1 = require("typeorm");
 var UserLogin;
 (function (UserLogin) {
@@ -22,10 +23,6 @@ __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
 ], User.prototype, "id", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ nullable: false }),
-    __metadata("design:type", String)
-], User.prototype, "user_type", void 0);
 __decorate([
     (0, typeorm_1.Column)({ nullable: false }),
     __metadata("design:type", String)
@@ -43,14 +40,6 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "mobile_no", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
-    __metadata("design:type", String)
-], User.prototype, "profile_pic_url", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
-    __metadata("design:type", String)
-], User.prototype, "profile_pic", void 0);
-__decorate([
     (0, typeorm_1.Column)({ nullable: false }),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
@@ -59,21 +48,23 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "is_login", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: false, default: 0 }),
-    __metadata("design:type", Number)
-], User.prototype, "is_approved", void 0);
-__decorate([
     (0, typeorm_1.Column)({ nullable: false, default: 1 }),
     __metadata("design:type", Number)
 ], User.prototype, "is_active", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: false, default: 0 }),
-    __metadata("design:type", Number)
-], User.prototype, "is_mobile_verified", void 0);
+    (0, typeorm_1.Column)({
+        array: true,
+        type: "enum",
+        enum: types_1.UserPermissions,
+        default: [types_1.UserPermissions.read],
+        nullable: false
+    }),
+    __metadata("design:type", Array)
+], User.prototype, "roles", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: false, default: 0 }),
-    __metadata("design:type", Number)
-], User.prototype, "is_email_verified", void 0);
+    (0, typeorm_1.Column)({ nullable: false }),
+    __metadata("design:type", String)
+], User.prototype, "createdBy", void 0);
 __decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", Number)

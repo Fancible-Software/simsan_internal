@@ -1,3 +1,4 @@
+import { UserPermissions } from "../types";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 
@@ -12,9 +13,6 @@ export class User {
   readonly id: number;
 
   @Column({ nullable: false })
-  user_type: string
-
-  @Column({ nullable: false })
   first_name: string
 
   @Column({ nullable: false })
@@ -26,29 +24,27 @@ export class User {
   @Column({ nullable: false })
   mobile_no: string
 
-  @Column({ nullable: true })
-  profile_pic_url: string
-
-  @Column({ nullable: true })
-  profile_pic: string
-
   @Column({ nullable: false })
   password: string
 
   @Column({ nullable: false, default: 0 })
   is_login: UserLogin
 
-  @Column({ nullable: false, default: 0 })
-  is_approved: number
-
   @Column({ nullable: false, default: 1 })
   is_active: number
 
-  @Column({ nullable: false, default: 0 })
-  is_mobile_verified: number
+  @Column({
+    array: true,
+    type: "enum",
+    enum: UserPermissions,
+    default: [UserPermissions.read],
+    nullable: false
+  })
+  roles!: UserPermissions[];
 
-  @Column({ nullable: false, default: 0 })
-  is_email_verified: number
+  @Column({ nullable: false })
+  createdBy: string
+  
 
   @Column({ nullable: true })
   forget_pwd_otp: number
