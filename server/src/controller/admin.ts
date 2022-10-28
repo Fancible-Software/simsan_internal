@@ -1,7 +1,7 @@
 import { Response } from "express";
-import { Body, Controller, Post, Res, CurrentUser, Get, Params, Authorized } from "routing-controllers";
+import { Body, Controller, Post, Res, CurrentUser, Get, Params, Authorized, QueryParams } from "routing-controllers";
 import { customerSignupRequest, SkipLimitURLParams, UserPermissions } from '../types'
-import { getConnection } from "typeorm";
+import { Any, getConnection } from "typeorm";
 import { User } from "../entity/User";
 import { APIError } from "../utils/APIError";
 import logger from "../utils/logger"
@@ -11,14 +11,15 @@ const bcrypt = require('bcryptjs')
 @Authorized(UserPermissions.admin)
 export class AdminController {
 
-    @Get("/users/:skip/:limit")
+    @Get("/users/list")
     async users(
-        @Params({ validate: true }) { skip, limit }: SkipLimitURLParams,
+        @QueryParams()
+        { skip, limit }: SkipLimitURLParams,
         @Res() res: Response
     ) {
         try {
             const repo = getConnection().getRepository(User)
-            const users = await repo.find({
+            let users = await repo.find({
                 select: ['id', 'first_name', 'last_name', 'email', 'roles', 'createdBy', 'createdAt'],
                 order: {
                     id: "ASC"
@@ -27,7 +28,7 @@ export class AdminController {
                 take: +limit
             })
 
-            const total = repo.count()
+            const total = await repo.count()
 
             return res.status(200).send({
                 status: true,
@@ -39,6 +40,7 @@ export class AdminController {
             })
         }
         catch (err) {
+            console.log(err.message)
             logger.error(err)
             throw new APIError(err.message, 500)
         }
