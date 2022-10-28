@@ -4,7 +4,7 @@ import { customerSignupRequest, SkipLimitURLParams, UserPermissions } from '../t
 import { getConnection } from "typeorm";
 import { User } from "../entity/User";
 import { APIError } from "../utils/APIError";
-import logger from "src/utils/logger";
+import logger from "../utils/logger"
 const bcrypt = require('bcryptjs')
 
 @Controller("/admin")
@@ -75,7 +75,7 @@ export class AdminController {
             newCustomer.mobile_no = obj.mobile_no;
             newCustomer.createdBy = user.first_name + " " + user.last_name
             newCustomer.password = bcrypt.hashSync(obj.password);
-
+            newCustomer.roles = obj.roles;
             await queryRunner.manager.save(newCustomer)
 
             return res.status(200).send({

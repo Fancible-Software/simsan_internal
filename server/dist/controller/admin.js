@@ -21,7 +21,7 @@ const types_1 = require("../types");
 const typeorm_1 = require("typeorm");
 const User_1 = require("../entity/User");
 const APIError_1 = require("../utils/APIError");
-const logger_1 = __importDefault(require("src/utils/logger"));
+const logger_1 = __importDefault(require("../utils/logger"));
 const bcrypt = require('bcryptjs');
 let AdminController = class AdminController {
     async users({ skip, limit }, res) {
@@ -72,6 +72,7 @@ let AdminController = class AdminController {
             newCustomer.mobile_no = obj.mobile_no;
             newCustomer.createdBy = user.first_name + " " + user.last_name;
             newCustomer.password = bcrypt.hashSync(obj.password);
+            newCustomer.roles = obj.roles;
             await queryRunner.manager.save(newCustomer);
             return res.status(200).send({
                 status: true,

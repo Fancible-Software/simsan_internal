@@ -7,6 +7,7 @@ import jwt, { TokenExpiredError } from "jsonwebtoken";
 import morgan from "morgan";
 import { Action, useExpressServer } from "routing-controllers";
 import { getConnection } from "typeorm";
+import { AdminController } from "./controller/admin";
 import { AuthController } from "./controller/auth";
 import { UserController } from "./controller/user";
 import { User } from "./entity/User";
@@ -52,7 +53,7 @@ async function run() {
                 credentials: true,
             },
             defaultErrorHandler: false,
-            controllers: [UserController, AuthController],
+            controllers: [UserController, AuthController, AdminController],
             middlewares: [CustomErrorHandler],
             authorizationChecker: (action: Action): boolean => {
                 const { authorization } = (action.request as Request).headers || {};
