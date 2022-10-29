@@ -1,10 +1,6 @@
 import { Response } from "express";
-import { Body, Controller, Post, Res, CurrentUser, Get } from "routing-controllers";
-import { customerSignupRequest } from '../types'
-import { getConnection } from "typeorm";
+import { Controller, Res, CurrentUser, Get } from "routing-controllers";
 import { User } from "../entity/User";
-import { APIError } from "../utils/APIError";
-const bcrypt = require('bcryptjs')
 
 
 @Controller("/user")
@@ -23,7 +19,7 @@ export class UserController {
         })
     }
 
-    
+
 
 
 }

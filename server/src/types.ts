@@ -59,7 +59,7 @@ export class SkipLimitURLParams {
   @Matches(/^\d+$/)
   skip: string;
 
-  @Matches(/^\d+&/)
+  @Matches(/^\d+$/)
   @IsNotIn(["0"])
   limit: string;
 }

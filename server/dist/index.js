@@ -30,6 +30,7 @@ const jsonwebtoken_1 = __importStar(require("jsonwebtoken"));
 const morgan_1 = __importDefault(require("morgan"));
 const routing_controllers_1 = require("routing-controllers");
 const typeorm_1 = require("typeorm");
+const admin_1 = require("./controller/admin");
 const auth_1 = require("./controller/auth");
 const user_1 = require("./controller/user");
 const User_1 = require("./entity/User");
@@ -67,7 +68,7 @@ async function run() {
                 credentials: true,
             },
             defaultErrorHandler: false,
-            controllers: [user_1.UserController, auth_1.AuthController],
+            controllers: [user_1.UserController, auth_1.AuthController, admin_1.AdminController],
             middlewares: [errorHandler_1.CustomErrorHandler],
             authorizationChecker: (action) => {
                 const { authorization } = action.request.headers || {};

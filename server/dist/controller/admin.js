@@ -21,13 +21,13 @@ const types_1 = require("../types");
 const typeorm_1 = require("typeorm");
 const User_1 = require("../entity/User");
 const APIError_1 = require("../utils/APIError");
-const logger_1 = __importDefault(require("src/utils/logger"));
+const logger_1 = __importDefault(require("../utils/logger"));
 const bcrypt = require('bcryptjs');
 let AdminController = class AdminController {
     async users({ skip, limit }, res) {
         try {
             const repo = (0, typeorm_1.getConnection)().getRepository(User_1.User);
-            const users = await repo.find({
+            let users = await repo.find({
                 select: ['id', 'first_name', 'last_name', 'email', 'roles', 'createdBy', 'createdAt'],
                 order: {
                     id: "ASC"
@@ -35,7 +35,7 @@ let AdminController = class AdminController {
                 skip: +skip,
                 take: +limit
             });
-            const total = repo.count();
+            const total = await repo.count();
             return res.status(200).send({
                 status: true,
                 message: 'Users list fetched!',
@@ -46,6 +46,7 @@ let AdminController = class AdminController {
             });
         }
         catch (err) {
+            console.log(err.message);
             logger_1.default.error(err);
             throw new APIError_1.APIError(err.message, 500);
         }
@@ -72,6 +73,7 @@ let AdminController = class AdminController {
             newCustomer.mobile_no = obj.mobile_no;
             newCustomer.createdBy = user.first_name + " " + user.last_name;
             newCustomer.password = bcrypt.hashSync(obj.password);
+            newCustomer.roles = obj.roles;
             await queryRunner.manager.save(newCustomer);
             return res.status(200).send({
                 status: true,
@@ -84,8 +86,8 @@ let AdminController = class AdminController {
     }
 };
 __decorate([
-    (0, routing_controllers_1.Get)("/users/:skip/:limit"),
-    __param(0, (0, routing_controllers_1.Params)({ validate: true })),
+    (0, routing_controllers_1.Get)("/users/list"),
+    __param(0, (0, routing_controllers_1.QueryParams)()),
     __param(1, (0, routing_controllers_1.Res)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [types_1.SkipLimitURLParams, Object]),

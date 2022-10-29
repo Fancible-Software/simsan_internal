@@ -72,7 +72,7 @@ __decorate([
     __metadata("design:type", String)
 ], SkipLimitURLParams.prototype, "skip", void 0);
 __decorate([
-    (0, class_validator_1.Matches)(/^\d+&/),
+    (0, class_validator_1.Matches)(/^\d+$/),
     (0, class_validator_1.IsNotIn)(["0"]),
     __metadata("design:type", String)
 ], SkipLimitURLParams.prototype, "limit", void 0);

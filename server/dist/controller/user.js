@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 const routing_controllers_1 = require("routing-controllers");
 const User_1 = require("../entity/User");
-const bcrypt = require('bcryptjs');
 let UserController = class UserController {
     async details(res, user) {
         return res.status(200).send({
