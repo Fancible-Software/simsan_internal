@@ -1,0 +1,24 @@
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpEventType, HttpRequest, HttpErrorResponse, HttpEvent } from '@angular/common/http';
+import { environment } from '../../environments/environment.prod';
+import { Observable, Subject, throwError } from 'rxjs';
+import { Router } from '@angular/router';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CommonService {
+
+  constructor(private httpClient: HttpClient) { }
+
+  // httpOptions = {
+  //   headers: new HttpHeaders({
+  //     'Authorization': 'Bearer ' + localStorage.getItem('token')
+  //   })
+  // }
+
+  login(data: any): Observable<any> {
+    return this.httpClient.post<any>(environment.endPoint + "/auth/login", data).pipe()
+  }
+
+}

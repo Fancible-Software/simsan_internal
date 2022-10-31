@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-sidebar',
@@ -7,11 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SidebarComponent implements OnInit {
   collapseShow = "hidden";
-  constructor() { }
+  constructor(public router: Router) { }
 
   ngOnInit() { }
   toggleCollapseShow(classes: any) {
     this.collapseShow = classes;
+  }
+
+  onLogout() {
+    localStorage.removeItem('token')
+    this.router.navigate(['/auth/login'])
   }
 
 }

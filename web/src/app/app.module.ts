@@ -24,6 +24,12 @@ import { CardLineChartComponent } from './components/cards/card-line-chart/card-
 import { FeedbacksComponent } from './views/admin/feedbacks/feedbacks.component';
 import { CardTableComponent } from './components/cards/card-table/card-table.component';
 import { TableDropdownComponent } from './components/dropdowns/table-dropdown/table-dropdown.component';
+import { NgxUiLoaderModule } from "ngx-ui-loader";
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonService } from './services/common.service';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ListComponent } from './views/admin/users/list/list.component';
+import { UserInterceptor } from "./services/user.interceptor";
 
 @NgModule({
   declarations: [
@@ -48,13 +54,18 @@ import { TableDropdownComponent } from './components/dropdowns/table-dropdown/ta
     CardLineChartComponent,
     FeedbacksComponent,
     CardTableComponent,
-    TableDropdownComponent
+    TableDropdownComponent,
+    ListComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    NgxUiLoaderModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [UserInterceptor, { provide: HTTP_INTERCEPTORS, useClass: UserInterceptor, multi: true }, CommonService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
