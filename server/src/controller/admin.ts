@@ -11,9 +11,9 @@ const bcrypt = require('bcryptjs')
 @Authorized(UserPermissions.admin)
 export class AdminController {
 
-    @Get("/users/list")
+    @Get("/users/:skip/:limit")
     async users(
-        @QueryParams()
+        @Params()
         { skip, limit }: SkipLimitURLParams,
         @Res() res: Response
     ) {
