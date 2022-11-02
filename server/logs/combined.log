@@ -319,3 +319,55 @@
 {"level":"info","message":"env is development","timestamp":"2022-10-28T14:57:32.515Z"}
 {"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-10-28T14:57:32.517Z"}
 {"level":"info","message":"::1 - - [28/Oct/2022:14:57:35 +0000] \"GET /admin/users/list?skip=0&limit=10 HTTP/1.1\" 200 436 \"-\" \"PostmanRuntime/7.29.2\"\n","timestamp":"2022-10-28T14:57:35.070Z"}
+{"level":"info","message":"env is development","timestamp":"2022-10-28T14:58:11.932Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-10-28T14:58:11.935Z"}
+{"level":"info","message":"::1 - - [28/Oct/2022:14:58:14 +0000] \"GET /admin/users/list?skip=0&limit=10 HTTP/1.1\" 200 435 \"-\" \"PostmanRuntime/7.29.2\"\n","timestamp":"2022-10-28T14:58:14.167Z"}
+{"level":"info","message":"env is development","timestamp":"2022-10-28T15:01:45.781Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-10-28T15:01:45.785Z"}
+{"level":"info","message":"env is development","timestamp":"2022-10-28T15:02:01.485Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-10-28T15:02:01.490Z"}
+{"level":"info","message":"env is development","timestamp":"2022-10-31T11:37:36.038Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-10-31T11:37:36.043Z"}
+{"level":"info","message":"::1 - - [31/Oct/2022:12:38:43 +0000] \"OPTIONS /auth/login HTTP/1.1\" 204 0 \"http://localhost:4200/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36\"\n","timestamp":"2022-10-31T12:38:43.935Z"}
+{"level":"info","message":"::1 - - [31/Oct/2022:12:38:44 +0000] \"POST /auth/login HTTP/1.1\" 200 351 \"http://localhost:4200/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36\"\n","timestamp":"2022-10-31T12:38:44.364Z"}
+{"level":"info","message":"::1 - - [31/Oct/2022:12:40:52 +0000] \"OPTIONS /auth/login HTTP/1.1\" 204 0 \"http://localhost:4200/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36\"\n","timestamp":"2022-10-31T12:40:52.722Z"}
+{"level":"info","message":"::1 - - [31/Oct/2022:12:40:52 +0000] \"POST /auth/login HTTP/1.1\" 200 351 \"http://localhost:4200/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36\"\n","timestamp":"2022-10-31T12:40:52.891Z"}
+{"level":"info","message":"::1 - - [31/Oct/2022:12:41:42 +0000] \"OPTIONS /auth/login HTTP/1.1\" 204 0 \"http://localhost:4200/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36\"\n","timestamp":"2022-10-31T12:41:42.725Z"}
+{"level":"info","message":"::1 - - [31/Oct/2022:12:41:42 +0000] \"POST /auth/login HTTP/1.1\" 200 351 \"http://localhost:4200/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36\"\n","timestamp":"2022-10-31T12:41:42.904Z"}
+{"level":"info","message":"::1 - - [31/Oct/2022:14:51:14 +0000] \"OPTIONS /auth/login HTTP/1.1\" 204 0 \"http://localhost:4200/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36\"\n","timestamp":"2022-10-31T14:51:14.107Z"}
+{"level":"info","message":"::1 - - [31/Oct/2022:14:51:14 +0000] \"POST /auth/login HTTP/1.1\" 200 351 \"http://localhost:4200/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36\"\n","timestamp":"2022-10-31T14:51:14.309Z"}
+{"level":"info","message":"::1 - - [31/Oct/2022:14:51:14 +0000] \"POST /auth/login HTTP/1.1\" 200 351 \"http://localhost:4200/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36\"\n","timestamp":"2022-10-31T14:51:14.591Z"}
+{"level":"info","message":"env is development","timestamp":"2022-10-31T15:33:42.299Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-10-31T15:33:42.305Z"}
+{"level":"info","message":"::1 - - [31/Oct/2022:15:39:16 +0000] \"OPTIONS /auth/login HTTP/1.1\" 204 0 \"http://localhost:4200/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36\"\n","timestamp":"2022-10-31T15:39:16.360Z"}
+{"level":"info","message":"::1 - - [31/Oct/2022:15:39:17 +0000] \"POST /auth/login HTTP/1.1\" 200 351 \"http://localhost:4200/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36\"\n","timestamp":"2022-10-31T15:39:17.284Z"}
+{"level":"info","message":"::1 - - [31/Oct/2022:17:51:09 +0000] \"OPTIONS /auth/login HTTP/1.1\" 204 0 \"http://localhost:4200/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36\"\n","timestamp":"2022-10-31T17:51:09.521Z"}
+{"level":"info","message":"::1 - - [31/Oct/2022:17:51:09 +0000] \"POST /auth/login HTTP/1.1\" 200 351 \"http://localhost:4200/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36\"\n","timestamp":"2022-10-31T17:51:09.766Z"}
+{"level":"info","message":"::1 - - [31/Oct/2022:18:00:06 +0000] \"GET /admin/users/1/10 HTTP/1.1\" 404 155 \"-\" \"PostmanRuntime/7.29.2\"\n","timestamp":"2022-10-31T18:00:06.884Z"}
+{"level":"info","message":"::1 - - [31/Oct/2022:18:00:49 +0000] \"GET /admin/users/1/10 HTTP/1.1\" 404 155 \"-\" \"PostmanRuntime/7.29.2\"\n","timestamp":"2022-10-31T18:00:49.625Z"}
+{"level":"info","message":"::1 - - [31/Oct/2022:18:01:06 +0000] \"POST /auth/login HTTP/1.1\" 200 351 \"-\" \"PostmanRuntime/7.29.2\"\n","timestamp":"2022-10-31T18:01:06.275Z"}
+{"level":"info","message":"::1 - - [31/Oct/2022:18:01:17 +0000] \"GET /admin/users/1/10 HTTP/1.1\" 404 155 \"-\" \"PostmanRuntime/7.29.2\"\n","timestamp":"2022-10-31T18:01:17.165Z"}
+{"level":"info","message":"::1 - - [31/Oct/2022:18:01:19 +0000] \"GET /admin/users/1/10 HTTP/1.1\" 404 155 \"-\" \"PostmanRuntime/7.29.2\"\n","timestamp":"2022-10-31T18:01:19.730Z"}
+{"level":"info","message":"env is development","timestamp":"2022-10-31T18:02:32.893Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-10-31T18:02:32.896Z"}
+{"level":"info","message":"::1 - - [31/Oct/2022:18:03:07 +0000] \"GET /admin/users/1/10 HTTP/1.1\" 404 155 \"-\" \"PostmanRuntime/7.29.2\"\n","timestamp":"2022-10-31T18:03:07.422Z"}
+{"level":"info","message":"env is development","timestamp":"2022-10-31T18:05:51.774Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-10-31T18:05:51.776Z"}
+{"level":"info","message":"::1 - - [31/Oct/2022:18:05:56 +0000] \"GET /admin/users/1/10 HTTP/1.1\" 404 155 \"-\" \"PostmanRuntime/7.29.2\"\n","timestamp":"2022-10-31T18:05:56.751Z"}
+{"level":"info","message":"env is development","timestamp":"2022-10-31T18:06:11.472Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-10-31T18:06:11.477Z"}
+{"level":"info","message":"::1 - - [31/Oct/2022:18:06:14 +0000] \"GET /admin/users/1/10 HTTP/1.1\" 404 155 \"-\" \"PostmanRuntime/7.29.2\"\n","timestamp":"2022-10-31T18:06:14.272Z"}
+{"level":"info","message":"env is development","timestamp":"2022-10-31T18:06:25.456Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-10-31T18:06:25.459Z"}
+{"level":"info","message":"::1 - - [31/Oct/2022:18:06:28 +0000] \"GET /admin/users/1/10 HTTP/1.1\" 404 155 \"-\" \"PostmanRuntime/7.29.2\"\n","timestamp":"2022-10-31T18:06:28.746Z"}
+{"level":"info","message":"env is development","timestamp":"2022-10-31T18:06:38.238Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-10-31T18:06:38.241Z"}
+{"level":"info","message":"::1 - - [31/Oct/2022:18:06:41 +0000] \"GET /admin/users/1/10 HTTP/1.1\" 200 253 \"-\" \"PostmanRuntime/7.29.2\"\n","timestamp":"2022-10-31T18:06:41.490Z"}
+{"level":"error","message":"500 -  - /admin/users/1/10 - GET - ::1","timestamp":"2022-10-31T18:06:50.940Z"}
+{"level":"error","message":"Error:","timestamp":"2022-10-31T18:06:50.940Z"}
+{"level":"error","message":" | Error\n    at new HttpError (V:\\simsan_internal\\server\\node_modules\\routing-controllers\\cjs\\http-error\\HttpError.js:17:22)\n    at new APIError (V:\\simsan_internal\\server\\dist\\utils\\APIError.js:7:9)\n    at ExpressDriver.authorizationChecker (V:\\simsan_internal\\server\\dist\\index.js:93:31)\n    at V:\\simsan_internal\\server\\node_modules\\routing-controllers\\cjs\\driver\\express\\ExpressDriver.js:104:46\n    at Layer.handle [as handle_request] (V:\\simsan_internal\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (V:\\simsan_internal\\server\\node_modules\\express\\lib\\router\\route.js:144:13)\n    at routeGuard (V:\\simsan_internal\\server\\node_modules\\routing-controllers\\cjs\\driver\\express\\ExpressDriver.js:163:24)\n    at Layer.handle [as handle_request] (V:\\simsan_internal\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (V:\\simsan_internal\\server\\node_modules\\express\\lib\\router\\route.js:144:13)\n    at Route.dispatch (V:\\simsan_internal\\server\\node_modules\\express\\lib\\router\\route.js:114:3)","timestamp":"2022-10-31T18:06:50.941Z"}
+{"level":"error","message":"Body:","timestamp":"2022-10-31T18:06:50.941Z"}
+{"level":"error","message":"{}","timestamp":"2022-10-31T18:06:50.942Z"}
+{"level":"info","message":"::1 - - [31/Oct/2022:18:06:50 +0000] \"GET /admin/users/1/10 HTTP/1.1\" 500 43 \"-\" \"PostmanRuntime/7.29.2\"\n","timestamp":"2022-10-31T18:06:50.944Z"}
+{"level":"info","message":"::1 - - [31/Oct/2022:18:09:54 +0000] \"GET /admin/users/1/10 HTTP/1.1\" 200 253 \"-\" \"PostmanRuntime/7.29.2\"\n","timestamp":"2022-10-31T18:09:54.116Z"}
+{"level":"info","message":"::1 - - [31/Oct/2022:18:11:44 +0000] \"GET /admin/users/0/10 HTTP/1.1\" 200 435 \"-\" \"PostmanRuntime/7.29.2\"\n","timestamp":"2022-10-31T18:11:44.254Z"}

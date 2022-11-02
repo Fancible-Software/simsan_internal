@@ -86,8 +86,8 @@ let AdminController = class AdminController {
     }
 };
 __decorate([
-    (0, routing_controllers_1.Get)("/users/list"),
-    __param(0, (0, routing_controllers_1.QueryParams)()),
+    (0, routing_controllers_1.Get)("/users/:skip/:limit"),
+    __param(0, (0, routing_controllers_1.Params)()),
     __param(1, (0, routing_controllers_1.Res)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [types_1.SkipLimitURLParams, Object]),
