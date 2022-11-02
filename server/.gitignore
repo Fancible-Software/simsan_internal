@@ -5,6 +5,7 @@ build/
 tmp/
 temp/
 dbdata
-
+dist
+logs
 
 ormconfig.json

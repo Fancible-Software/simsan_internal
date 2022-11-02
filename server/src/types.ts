@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, IsNumber, IsEnum, IsArray, Matches, IsNotIn, isString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsNumber, IsEnum, IsArray, Matches, IsNotIn } from 'class-validator';
 
 
 export interface TokenData {

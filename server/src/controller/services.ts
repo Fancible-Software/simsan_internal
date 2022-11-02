@@ -1,9 +1,9 @@
 import { Response } from "express";
 import { Body, Controller, Get, Post, Res } from "routing-controllers";
-import { Service } from "src/entity/Services";
-import { ResponseStatus, ServiceType } from "src/types";
-import { APIError } from "src/utils/APIError";
-import logger from "src/utils/logger";
+import { Service } from "../entity/Services";
+import { ResponseStatus, ServiceType } from "../types";
+import { APIError } from "../utils/APIError";
+import logger from "../utils/logger";
 import { getConnection, QueryRunner, Repository } from "typeorm";
 
 @Controller("/services")
