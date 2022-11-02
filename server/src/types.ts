@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, IsNumber, IsEnum, IsArray, Matches, IsNotIn } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsNumber, IsEnum, IsArray, Matches, IsNotIn, isString } from 'class-validator';
 
 
 export interface TokenData {
@@ -10,6 +10,14 @@ export enum UserPermissions {
   admin = "admin",
   read = "read",
   write = "write"
+}
+
+export enum ResponseStatus{
+  ALREADY_EXISTS = 409,
+  SUCCESS_FETCH = 200,
+  SUCCESS_UPDATE = 201,
+  FAILED_UPDATE = 400,
+  API_ERROR = 500,
 }
 
 export class customerSigninRequest {
@@ -26,8 +34,6 @@ export class customerSigninRequest {
 }
 
 export class customerSignupRequest {
-
-
   @IsNotEmpty()
   @IsString()
   first_name: string;
@@ -53,6 +59,17 @@ export class customerSignupRequest {
   @IsArray()
   roles: UserPermissions[];
 
+}
+
+export class ServiceType{
+  @IsString()
+  @IsNotEmpty()
+  serviceName : string;
+
+  @IsString()
+  @IsNotEmpty()
+  @Matches(/^\d+\.?\d*$/)
+  price : string;
 }
 
 export class SkipLimitURLParams {

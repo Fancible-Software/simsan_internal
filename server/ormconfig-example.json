@@ -1,0 +1,14 @@
+{
+    "type": "postgres",
+    "host": "database",
+    "port": "5432",
+    "username": "",
+    "password": "",
+    "database": "postgres",
+    "ssl": false,
+    "logging": false,
+    "entities": ["dist/entity/*.js"],
+    "migrations": ["src/migration/1666424439654-country.ts"],
+    "synchronize": true
+  }
+  
