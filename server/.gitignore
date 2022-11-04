@@ -7,5 +7,7 @@ temp/
 dbdata
 dist
 logs
+dist/
+
 
 ormconfig.json
