@@ -38,4 +38,8 @@ export class ListComponent implements OnInit {
     })
   }
 
+  onPageChange(evt: any) {
+
+  }
+
 }

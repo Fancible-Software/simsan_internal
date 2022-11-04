@@ -30,6 +30,8 @@ import { CommonService } from './services/common.service';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ListComponent } from './views/admin/users/list/list.component';
 import { UserInterceptor } from "./services/user.interceptor";
+import { CreateComponent } from './views/admin/users/create/create.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   declarations: [
@@ -55,7 +57,8 @@ import { UserInterceptor } from "./services/user.interceptor";
     FeedbacksComponent,
     CardTableComponent,
     TableDropdownComponent,
-    ListComponent
+    ListComponent,
+    CreateComponent
   ],
   imports: [
     BrowserModule,
@@ -63,7 +66,8 @@ import { UserInterceptor } from "./services/user.interceptor";
     NgxUiLoaderModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    NgxPaginationModule
   ],
   providers: [UserInterceptor, { provide: HTTP_INTERCEPTORS, useClass: UserInterceptor, multi: true }, CommonService],
   bootstrap: [AppComponent]
