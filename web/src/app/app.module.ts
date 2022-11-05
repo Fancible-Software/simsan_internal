@@ -32,6 +32,8 @@ import { ListComponent } from './views/admin/users/list/list.component';
 import { UserInterceptor } from "./services/user.interceptor";
 import { CreateComponent } from './views/admin/users/create/create.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
+
 
 @NgModule({
   declarations: [
@@ -67,7 +69,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    AngularMultiSelectModule
   ],
   providers: [UserInterceptor, { provide: HTTP_INTERCEPTORS, useClass: UserInterceptor, multi: true }, CommonService],
   bootstrap: [AppComponent]

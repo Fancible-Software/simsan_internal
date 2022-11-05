@@ -14,8 +14,7 @@ const class_validator_1 = require("class-validator");
 var UserPermissions;
 (function (UserPermissions) {
     UserPermissions["admin"] = "admin";
-    UserPermissions["read"] = "read";
-    UserPermissions["write"] = "write";
+    UserPermissions["sub_admin"] = "sub_admin";
 })(UserPermissions = exports.UserPermissions || (exports.UserPermissions = {}));
 class customerSigninRequest {
 }

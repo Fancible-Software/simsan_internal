@@ -8,8 +8,7 @@ export interface TokenData {
 
 export enum UserPermissions {
   admin = "admin",
-  read = "read",
-  write = "write"
+  sub_admin = "sub_admin"
 }
 
 export class customerSigninRequest {

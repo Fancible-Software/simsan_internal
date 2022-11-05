@@ -11,11 +11,10 @@
                         </h3>
                     </div>
                     <div class="relative w-full px-4 max-w-full flex-grow flex-1 text-right">
-                        <button
-                            class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-                            type="button">
+                        <a [routerLink]="['/admin/users/create']"
+                            class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150">
                             Create
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>

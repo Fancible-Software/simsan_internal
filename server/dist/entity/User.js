@@ -56,7 +56,7 @@ __decorate([
         array: true,
         type: "enum",
         enum: types_1.UserPermissions,
-        default: [types_1.UserPermissions.read],
+        default: [types_1.UserPermissions.sub_admin],
         nullable: false
     }),
     __metadata("design:type", Array)

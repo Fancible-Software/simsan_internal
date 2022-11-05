@@ -37,14 +37,14 @@ export class User {
     array: true,
     type: "enum",
     enum: UserPermissions,
-    default: [UserPermissions.read],
+    default: [UserPermissions.sub_admin],
     nullable: false
   })
   roles!: UserPermissions[];
 
   @Column({ nullable: false })
   createdBy: string
-  
+
 
   @Column({ nullable: true })
   forget_pwd_otp: number
