@@ -34,13 +34,10 @@ export class User {
   is_active: number
 
   @Column({
-    array: true,
-    type: "enum",
-    enum: UserPermissions,
-    default: [UserPermissions.sub_admin],
+    default: UserPermissions.sub_admin,
     nullable: false
   })
-  roles!: UserPermissions[];
+  roles: UserPermissions;
 
   @Column({ nullable: false })
   createdBy: string

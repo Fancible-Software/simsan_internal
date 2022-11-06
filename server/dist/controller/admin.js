@@ -81,6 +81,7 @@ let AdminController = class AdminController {
             });
         }
         catch (err) {
+            console.log(err);
             throw new APIError_1.APIError(err.message, 500);
         }
     }

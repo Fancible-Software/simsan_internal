@@ -59,9 +59,9 @@ __decorate([
     __metadata("design:type", String)
 ], customerSignupRequest.prototype, "password", void 0);
 __decorate([
-    (0, class_validator_1.IsEnum)(UserPermissions, { each: true }),
-    (0, class_validator_1.IsArray)(),
-    __metadata("design:type", Array)
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
 ], customerSignupRequest.prototype, "roles", void 0);
 exports.customerSignupRequest = customerSignupRequest;
 class SkipLimitURLParams {

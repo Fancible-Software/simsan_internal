@@ -53,13 +53,10 @@ __decorate([
 ], User.prototype, "is_active", void 0);
 __decorate([
     (0, typeorm_1.Column)({
-        array: true,
-        type: "enum",
-        enum: types_1.UserPermissions,
-        default: [types_1.UserPermissions.sub_admin],
+        default: types_1.UserPermissions.sub_admin,
         nullable: false
     }),
-    __metadata("design:type", Array)
+    __metadata("design:type", String)
 ], User.prototype, "roles", void 0);
 __decorate([
     (0, typeorm_1.Column)({ nullable: false }),

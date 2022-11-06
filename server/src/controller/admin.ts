@@ -1,7 +1,7 @@
 import { Response } from "express";
-import { Body, Controller, Post, Res, CurrentUser, Get, Params, Authorized, QueryParams } from "routing-controllers";
+import { Body, Controller, Post, Res, CurrentUser, Get, Params, Authorized } from "routing-controllers";
 import { customerSignupRequest, SkipLimitURLParams, UserPermissions } from '../types'
-import { Any, getConnection } from "typeorm";
+import { getConnection } from "typeorm";
 import { User } from "../entity/User";
 import { APIError } from "../utils/APIError";
 import logger from "../utils/logger"
@@ -86,7 +86,10 @@ export class AdminController {
             })
         }
         catch (err) {
+            console.log(err)
             throw new APIError(err.message, 500)
         }
     }
+
+
 }

@@ -1,9 +1,9 @@
-import { IsEmail, IsNotEmpty, IsString, IsNumber, IsEnum, IsArray, Matches, IsNotIn } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsNumber, Matches, IsNotIn } from 'class-validator';
 
 
 export interface TokenData {
   email: string;
-  roles: UserPermissions[]
+  roles: string
 }
 
 export enum UserPermissions {
@@ -48,9 +48,10 @@ export class customerSignupRequest {
   @IsNotEmpty()
   password: string;
 
-  @IsEnum(UserPermissions, { each: true })
-  @IsArray()
-  roles: UserPermissions[];
+  // @IsEnum(UserPermissions, { each: true })
+  @IsString()
+  @IsNotEmpty()
+  roles: UserPermissions;
 
 }
 
