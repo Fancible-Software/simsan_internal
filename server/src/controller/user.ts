@@ -18,8 +18,4 @@ export class UserController {
             data: user
         })
     }
-
-
-
-
 }

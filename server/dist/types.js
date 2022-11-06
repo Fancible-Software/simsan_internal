@@ -9,13 +9,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SkipLimitURLParams = exports.customerSignupRequest = exports.customerSigninRequest = exports.UserPermissions = void 0;
+exports.SkipLimitURLParams = exports.ServiceType = exports.customerSignupRequest = exports.customerSigninRequest = exports.ResponseStatus = exports.UserPermissions = void 0;
 const class_validator_1 = require("class-validator");
 var UserPermissions;
 (function (UserPermissions) {
     UserPermissions["admin"] = "admin";
     UserPermissions["sub_admin"] = "sub_admin";
 })(UserPermissions = exports.UserPermissions || (exports.UserPermissions = {}));
+var ResponseStatus;
+(function (ResponseStatus) {
+    ResponseStatus[ResponseStatus["ALREADY_EXISTS"] = 409] = "ALREADY_EXISTS";
+    ResponseStatus[ResponseStatus["SUCCESS_FETCH"] = 200] = "SUCCESS_FETCH";
+    ResponseStatus[ResponseStatus["SUCCESS_UPDATE"] = 201] = "SUCCESS_UPDATE";
+    ResponseStatus[ResponseStatus["FAILED_UPDATE"] = 400] = "FAILED_UPDATE";
+    ResponseStatus[ResponseStatus["API_ERROR"] = 500] = "API_ERROR";
+})(ResponseStatus = exports.ResponseStatus || (exports.ResponseStatus = {}));
 class customerSigninRequest {
 }
 __decorate([
@@ -64,6 +72,20 @@ __decorate([
     __metadata("design:type", String)
 ], customerSignupRequest.prototype, "roles", void 0);
 exports.customerSignupRequest = customerSignupRequest;
+class ServiceType {
+}
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], ServiceType.prototype, "serviceName", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.Matches)(/^\d+\.?\d*$/),
+    __metadata("design:type", String)
+], ServiceType.prototype, "price", void 0);
+exports.ServiceType = ServiceType;
 class SkipLimitURLParams {
 }
 __decorate([

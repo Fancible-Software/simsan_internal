@@ -9,6 +9,7 @@ import { Action, useExpressServer } from "routing-controllers";
 import { getConnection } from "typeorm";
 import { AdminController } from "./controller/admin";
 import { AuthController } from "./controller/auth";
+import { ServicesController } from "./controller/services";
 import { UserController } from "./controller/user";
 import { User } from "./entity/User";
 import { CustomErrorHandler } from "./middleware/errorHandler";
@@ -53,7 +54,7 @@ async function run() {
                 credentials: true,
             },
             defaultErrorHandler: false,
-            controllers: [UserController, AuthController, AdminController],
+            controllers: [UserController, AuthController, AdminController, ServicesController],
             middlewares: [CustomErrorHandler],
             authorizationChecker: (action: Action): boolean => {
                 const { authorization } = (action.request as Request).headers || {};

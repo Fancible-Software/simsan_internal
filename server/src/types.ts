@@ -11,6 +11,14 @@ export enum UserPermissions {
   sub_admin = "sub_admin"
 }
 
+export enum ResponseStatus{
+  ALREADY_EXISTS = 409,
+  SUCCESS_FETCH = 200,
+  SUCCESS_UPDATE = 201,
+  FAILED_UPDATE = 400,
+  API_ERROR = 500,
+}
+
 export class customerSigninRequest {
 
   @IsString()
@@ -25,8 +33,6 @@ export class customerSigninRequest {
 }
 
 export class customerSignupRequest {
-
-
   @IsNotEmpty()
   @IsString()
   first_name: string;
@@ -53,6 +59,17 @@ export class customerSignupRequest {
   @IsNotEmpty()
   roles: UserPermissions;
 
+}
+
+export class ServiceType{
+  @IsString()
+  @IsNotEmpty()
+  serviceName : string;
+
+  @IsString()
+  @IsNotEmpty()
+  @Matches(/^\d+\.?\d*$/)
+  price : string;
 }
 
 export class SkipLimitURLParams {
