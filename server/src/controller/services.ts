@@ -1,13 +1,45 @@
 import { Response } from "express";
-import { Body, Controller, Delete, Get, Post, Put, Res } from "routing-controllers";
+import { Authorized, Body, Controller, Delete, Get, Params, Post, Put, Res } from "routing-controllers";
 import { Service } from "../entity/Services";
-import { EntityDeleteById, ResponseStatus, ServiceCreate, ServiceUpdate } from "../types";
+import { EntityId, ResponseStatus, ServiceType, UserPermissions } from "../types";
 import { APIError } from "../utils/APIError";
 import logger from "../utils/logger";
 import { getConnection, QueryRunner, Repository } from "typeorm";
 
 @Controller("/services")
 export class ServicesController{
+    @Authorized(UserPermissions.read)
+    @Get("/:id")
+    async getServiceById(
+        @Res() res : Response,
+        @Params() { id } : EntityId
+    ){
+        try{
+            const serviceRepository : Repository<Service> = getConnection().getRepository(Service);
+            const serviceObj : Service | undefined = await serviceRepository.findOne(id);
+
+            if(serviceObj){
+                return res.status(ResponseStatus.SUCCESS_FETCH).send({
+                    status : true,
+                    data : serviceObj
+                })
+            }else{
+                return res.status(ResponseStatus.API_ERROR).send({
+                    status : false,
+                    message : "Service with provided id does not exist"
+                })
+            }
+        }
+        catch (err) {
+            console.log(err.message);
+            logger.error(err);
+            return new APIError(err.message,500);
+        }
+    }
+
+
+
+    @Authorized(UserPermissions.read)
     @Get("/all")
     async getAllServices(
         @Res() res : Response
@@ -35,15 +67,17 @@ export class ServicesController{
         }
     }
 
+    @Authorized(UserPermissions.write)
     @Put("/update")
     async updateService(
         @Res() res : Response,
-        @Body() body : ServiceUpdate
+        @Params() { id } : EntityId,
+        @Body() body : ServiceType
     ){
         try{
             const serviceRepository : Repository<Service> = getConnection().getRepository(Service);
             const queryRunner : QueryRunner = getConnection().createQueryRunner();
-            const serviceObj : Service | undefined = await serviceRepository.findOne(body.serviceId);
+            const serviceObj : Service | undefined = await serviceRepository.findOne(id);
             if(serviceObj){
                 serviceObj.serviceName = body.serviceName;
                 serviceObj.price = body.price;
@@ -66,15 +100,16 @@ export class ServicesController{
         }
     }
 
-    @Delete("/delete")
+    @Authorized(UserPermissions.write)
+    @Delete("/:id")
     async deleteService(
         @Res() res : Response,
-        @Body() body : EntityDeleteById
+        @Params() { id } : EntityId
     ){
         try{
             const serviceRepository : Repository<Service> = getConnection().getRepository(Service);
             const queryRunner : QueryRunner = getConnection().createQueryRunner();
-            const serviceObj : Service | undefined = await serviceRepository.findOne(body.id);
+            const serviceObj : Service | undefined = await serviceRepository.findOne(id);
 
             if(serviceObj){
                 queryRunner.manager.remove(serviceObj);
@@ -96,10 +131,11 @@ export class ServicesController{
         }
     }
 
+    @Authorized(UserPermissions.write)
     @Post("/create")
     async createService(
         @Res() res : Response,
-        @Body() body : ServiceCreate 
+        @Body() body : ServiceType 
     ){
         try{
             const serviceRepository : Repository<Service> = getConnection().getRepository(Service);
