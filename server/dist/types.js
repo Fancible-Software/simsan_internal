@@ -9,8 +9,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SkipLimitURLParams = exports.ServiceType = exports.customerSignupRequest = exports.customerSigninRequest = exports.ResponseStatus = exports.UserPermissions = void 0;
+exports.EntityId = exports.FormType = exports.SkipLimitURLParams = exports.ServiceType = exports.customerSignupRequest = exports.customerSigninRequest = exports.ResponseStatus = exports.UserPermissions = void 0;
 const class_validator_1 = require("class-validator");
+const Form_1 = require("./entity/Form");
 var UserPermissions;
 (function (UserPermissions) {
     UserPermissions["admin"] = "admin";
@@ -98,4 +99,76 @@ __decorate([
     __metadata("design:type", String)
 ], SkipLimitURLParams.prototype, "limit", void 0);
 exports.SkipLimitURLParams = SkipLimitURLParams;
+class FormType {
+    toForm() {
+        const form = new Form_1.Form();
+        form.customerName = this.customerName;
+        form.customerEmail = this.customerEmail;
+        form.customerAddress = this.customerAddress;
+        form.customerCity = this.customerCity;
+        form.customerCountry = this.customerCountry;
+        form.customerPostalCode = this.customerPostalCode;
+        form.customerPhone = this.customerPhone;
+        form.customerProvince = this.customerProvince;
+        return form;
+    }
+    updateForm(formRecord) {
+        formRecord.customerName = this.customerName;
+        formRecord.customerEmail = this.customerEmail;
+        formRecord.customerAddress = this.customerAddress;
+        formRecord.customerCity = this.customerCity;
+        formRecord.customerCountry = this.customerCountry;
+        formRecord.customerPostalCode = this.customerPostalCode;
+        formRecord.customerPhone = this.customerPhone;
+        formRecord.customerProvince = this.customerProvince;
+        return formRecord;
+    }
+}
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], FormType.prototype, "customerName", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], FormType.prototype, "customerEmail", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], FormType.prototype, "customerPhone", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], FormType.prototype, "customerAddress", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], FormType.prototype, "customerPostalCode", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], FormType.prototype, "customerCity", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], FormType.prototype, "customerProvince", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], FormType.prototype, "customerCountry", void 0);
+exports.FormType = FormType;
+class EntityId {
+}
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Object)
+], EntityId.prototype, "id", void 0);
+exports.EntityId = EntityId;
 //# sourceMappingURL=types.js.map

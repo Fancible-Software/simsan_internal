@@ -9,6 +9,7 @@ import { Action, useExpressServer } from "routing-controllers";
 import { getConnection } from "typeorm";
 import { AdminController } from "./controller/admin";
 import { AuthController } from "./controller/auth";
+import { FormController } from "./controller/forms";
 import { ServicesController } from "./controller/services";
 import { UserController } from "./controller/user";
 import { User } from "./entity/User";
@@ -54,7 +55,7 @@ async function run() {
                 credentials: true,
             },
             defaultErrorHandler: false,
-            controllers: [UserController, AuthController, AdminController, ServicesController],
+            controllers: [UserController, AuthController, AdminController, ServicesController, FormController],
             middlewares: [CustomErrorHandler],
             authorizationChecker: (action: Action): boolean => {
                 const { authorization } = (action.request as Request).headers || {};
@@ -95,6 +96,7 @@ async function run() {
                         process.env.JWT_SECRET
                     ) as TokenData;
                     if (!userData) return;
+                    console.log(userData);
                     return getConnection().getRepository(User).findOne({ email: userData.email })
                 } catch (error) {
                     if (error instanceof TokenExpiredError) {
