@@ -758,3 +758,24 @@
 {"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-11-07T04:53:26.599Z"}
 {"level":"info","message":"env is development","timestamp":"2022-11-07T05:06:36.613Z"}
 {"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-11-07T05:06:36.616Z"}
+{"level":"info","message":"env is development","timestamp":"2022-11-07T05:07:17.397Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-11-07T05:07:17.405Z"}
+{"level":"info","message":"env is development","timestamp":"2022-11-07T17:42:30.090Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-11-07T17:42:30.093Z"}
+{"level":"info","message":"env is development","timestamp":"2022-11-07T17:44:01.727Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-11-07T17:44:01.730Z"}
+{"level":"info","message":"env is development","timestamp":"2022-11-07T17:45:04.546Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-11-07T17:45:04.549Z"}
+{"level":"info","message":"env is development","timestamp":"2022-11-07T17:45:51.695Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-11-07T17:45:51.698Z"}
+{"code":"MODULE_NOT_FOUND","level":"error","requireStack":["V:\\simsan_internal\\server\\dist\\migration\\1667841299086-defaultUser.js","V:\\simsan_internal\\server\\node_modules\\typeorm\\util\\ImportUtils.js","V:\\simsan_internal\\server\\node_modules\\typeorm\\connection\\ConnectionOptionsReader.js","V:\\simsan_internal\\server\\node_modules\\typeorm\\globals.js","V:\\simsan_internal\\server\\node_modules\\typeorm\\index.js","V:\\simsan_internal\\server\\dist\\index.js"],"timestamp":"2022-11-07T17:46:42.350Z"}
+{"level":"info","message":"env is development","timestamp":"2022-11-07T17:49:51.872Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-11-07T17:49:51.874Z"}
+{"level":"info","message":"env is development","timestamp":"2022-11-07T17:50:22.499Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-11-07T17:50:22.502Z"}
+{"level":"info","message":"env is development","timestamp":"2022-11-07T17:50:34.774Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-11-07T17:50:34.777Z"}
+{"code":"MODULE_NOT_FOUND","level":"error","requireStack":["V:\\simsan_internal\\server\\dist\\migration\\1667841299086-defaultUser.js","V:\\simsan_internal\\server\\node_modules\\typeorm\\util\\ImportUtils.js","V:\\simsan_internal\\server\\node_modules\\typeorm\\connection\\ConnectionOptionsReader.js","V:\\simsan_internal\\server\\node_modules\\typeorm\\globals.js","V:\\simsan_internal\\server\\node_modules\\typeorm\\index.js","V:\\simsan_internal\\server\\dist\\index.js"],"timestamp":"2022-11-07T17:51:28.663Z"}
+{"code":"MODULE_NOT_FOUND","level":"error","requireStack":["V:\\simsan_internal\\server\\dist\\migration\\1667841299086-defaultUser.js","V:\\simsan_internal\\server\\node_modules\\typeorm\\util\\ImportUtils.js","V:\\simsan_internal\\server\\node_modules\\typeorm\\connection\\ConnectionOptionsReader.js","V:\\simsan_internal\\server\\node_modules\\typeorm\\globals.js","V:\\simsan_internal\\server\\node_modules\\typeorm\\index.js","V:\\simsan_internal\\server\\dist\\index.js"],"timestamp":"2022-11-07T17:51:42.673Z"}
+{"level":"info","message":"env is development","timestamp":"2022-11-07T17:54:22.883Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-11-07T17:54:22.886Z"}

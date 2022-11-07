@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, IsNumber, IsEnum, IsArray, Matches, IsNotIn } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsNumber, Matches, IsNotIn } from 'class-validator';
 import { Form } from './entity/Form';
 
 
