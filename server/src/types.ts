@@ -61,8 +61,26 @@ export class customerSignupRequest {
 
 }
 
-export class ServiceType{
+export class EntityDeleteById{
+  @IsNotEmpty()
+  id : number | string;
+}
+
+export class ServiceCreate{
   @IsString()
+  @IsNotEmpty()
+  serviceName : string;
+
+  @IsString()
+  @IsNotEmpty()
+  @Matches(/^\d+\.?\d*$/)
+  price : string;
+}
+
+export class ServiceUpdate{
+  @IsNotEmpty()
+  serviceId : number;
+
   @IsNotEmpty()
   serviceName : string;
 
