@@ -779,3 +779,19 @@
 {"code":"MODULE_NOT_FOUND","level":"error","requireStack":["V:\\simsan_internal\\server\\dist\\migration\\1667841299086-defaultUser.js","V:\\simsan_internal\\server\\node_modules\\typeorm\\util\\ImportUtils.js","V:\\simsan_internal\\server\\node_modules\\typeorm\\connection\\ConnectionOptionsReader.js","V:\\simsan_internal\\server\\node_modules\\typeorm\\globals.js","V:\\simsan_internal\\server\\node_modules\\typeorm\\index.js","V:\\simsan_internal\\server\\dist\\index.js"],"timestamp":"2022-11-07T17:51:42.673Z"}
 {"level":"info","message":"env is development","timestamp":"2022-11-07T17:54:22.883Z"}
 {"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-11-07T17:54:22.886Z"}
+{"level":"info","message":"env is development","timestamp":"2022-11-07T18:00:16.496Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-11-07T18:00:16.500Z"}
+{"level":"info","message":"env is development","timestamp":"2022-11-07T18:59:35.337Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-11-07T18:59:35.340Z"}
+{"level":"info","message":"env is development","timestamp":"2022-11-07T19:10:38.772Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-11-07T19:10:38.775Z"}
+{"level":"info","message":"env is development","timestamp":"2022-11-07T19:19:33.596Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-11-07T19:19:33.599Z"}
+{"level":"info","message":"env is development","timestamp":"2022-11-07T19:22:14.305Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-11-07T19:22:14.308Z"}
+{"level":"info","message":"env is development","timestamp":"2022-11-07T19:23:13.945Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-11-07T19:23:13.948Z"}
+{"level":"info","message":"env is development","timestamp":"2022-11-07T19:28:31.702Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-11-07T19:28:31.707Z"}
+{"level":"info","message":"env is development","timestamp":"2022-11-07T19:29:41.126Z"}
+{"level":"info","message":"Listening on http://localhost:4000","timestamp":"2022-11-07T19:29:41.129Z"}
