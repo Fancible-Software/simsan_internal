@@ -34,7 +34,9 @@ import { CreateComponent } from './views/admin/users/create/create.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
 import { ServiceListComponent } from './views/admin/services/service-list/service-list.component';
-
+import { ToastrModule } from 'ngx-toastr'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ServiceCreateComponent } from './views/admin/services/service-create/service-create.component';
 
 @NgModule({
   declarations: [
@@ -62,17 +64,20 @@ import { ServiceListComponent } from './views/admin/services/service-list/servic
     TableDropdownComponent,
     ListComponent,
     CreateComponent,
-    ServiceListComponent
+    ServiceListComponent,
+    ServiceCreateComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     NgxUiLoaderModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
     NgxPaginationModule,
-    AngularMultiSelectModule
+    AngularMultiSelectModule,
+    ToastrModule.forRoot({ positionClass: 'inline' })
   ],
   providers: [UserInterceptor, { provide: HTTP_INTERCEPTORS, useClass: UserInterceptor, multi: true }, CommonService],
   bootstrap: [AppComponent]

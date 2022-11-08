@@ -55,7 +55,10 @@ export class ServicesController {
                     isActive: 1
                 },
                 skip: +skip,
-                take: +limit
+                take: +limit,
+                order: {
+                    "serviceId": "DESC"
+                }
 
             });
             const total = await serviceRepository.count({ where: { isActive: 1 } })

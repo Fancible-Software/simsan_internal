@@ -10,6 +10,7 @@ import { ListComponent } from './views/admin/users/list/list.component';
 import { LoginComponent } from './views/auth/login/login.component';
 import { IndexComponent } from './views/index/index.component';
 import { ServiceListComponent } from './views/admin/services/service-list/service-list.component'
+import { ServiceCreateComponent } from './views/admin/services/service-create/service-create.component';
 
 const routes: Routes = [
   { path: "", component: IndexComponent },
@@ -30,7 +31,8 @@ const routes: Routes = [
       { path: "feedbacks", component: FeedbacksComponent },
       { path: "users", component: ListComponent },
       { path: "users/create", component: CreateComponent },
-      { path: "services", component: ServiceListComponent }
+      { path: "services", component: ServiceListComponent },
+      { path: "services/create", component: ServiceCreateComponent }
     ]
   }
 

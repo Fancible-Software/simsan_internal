@@ -22,7 +22,7 @@ export class AdminController {
             let users = await repo.find({
                 select: ['id', 'first_name', 'last_name', 'email', 'roles', 'createdBy', 'createdAt'],
                 order: {
-                    id: "ASC"
+                    id: "DESC"
                 },
                 skip: +skip,
                 take: +limit

@@ -29,4 +29,8 @@ export class CommonService {
     return this.httpClient.get<any>(environment.endPoint + "/services/all/" + skip + "/" + limit).pipe()
   }
 
+  addService(body: any): Observable<any> {
+    return this.httpClient.post<any>(environment.endPoint + "/services/create", body).pipe()
+  }
+
 }

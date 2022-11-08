@@ -28,7 +28,8 @@
             ],
             "styles": [
               "src/styles.css",
-              "src/assets/styles/tailwind.css"
+              "src/assets/styles/tailwind.css",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": []
           },

@@ -72,7 +72,8 @@
                         </tr>
                     </thead>
                     <tbody *ngIf="usersData">
-                        <tr *ngFor="let user of usersData">
+                        <tr
+                            *ngFor="let user of usersData| paginate: {itemsPerPage: 10, currentPage: page,totalItems: totalUsers}">
                             <th
                                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
                                 <!-- <img src="assets/img/bootstrap.jpg" class="h-12 w-12 bg-white rounded-full border"
