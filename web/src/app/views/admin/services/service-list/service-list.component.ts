@@ -3,6 +3,7 @@ import { CommonService } from '../../../../services/common.service'
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ToastrService } from 'ngx-toastr'
 
+
 @Component({
   selector: 'app-service-list',
   templateUrl: './service-list.component.html',
@@ -13,6 +14,7 @@ export class ServiceListComponent implements OnInit {
   servicesData: any = []
   totalServices: number = 0
   page: number = 1
+  showModal = false
 
   @Input()
   get color(): string {
@@ -22,6 +24,7 @@ export class ServiceListComponent implements OnInit {
     this._color = color !== "light" && color !== "dark" ? "light" : color;
   }
   private _color = "light";
+  
   constructor(public commonService: CommonService, private loader: NgxUiLoaderService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
@@ -56,5 +59,16 @@ export class ServiceListComponent implements OnInit {
       }
     })
   }
+
+  deleteService(serviceId: number) {
+    console.log(serviceId)
+    this.showModal = true
+  }
+
+  toggleModal() {
+
+  }
+
+
 
 }
