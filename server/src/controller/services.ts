@@ -1,7 +1,8 @@
 import { Response } from "express";
-import { Authorized, Body, Controller, Delete, Get, Params, Post, Put, Res } from "routing-controllers";
+import { Authorized, Body, Controller, Delete, Get, Params, Post, Put, Res, CurrentUser } from "routing-controllers";
 import { Service } from "../entity/Services";
-import { EntityId, ResponseStatus, ServiceType, UserPermissions } from "../types";
+import { User } from '../entity/User'
+import { EntityId, ResponseStatus, ServiceType, UserPermissions, SkipLimitURLParams } from "../types";
 import { APIError } from "../utils/APIError";
 import logger from "../utils/logger";
 import { getConnection, QueryRunner, Repository } from "typeorm";
@@ -9,7 +10,7 @@ import { getConnection, QueryRunner, Repository } from "typeorm";
 @Controller("/services")
 export class ServicesController {
     @Authorized(UserPermissions.sub_admin)
-    @Get("/:id")
+    @Get("/service/:id")
     async getServiceById(
         @Res() res: Response,
         @Params() { id }: EntityId
@@ -39,23 +40,30 @@ export class ServicesController {
 
 
 
-    @Authorized(UserPermissions.sub_admin)
-    @Get("/all")
+    @Authorized(UserPermissions.sub_admin || UserPermissions.admin)
+    @Get("/all/:skip/:limit")
     async getAllServices(
+        @Params()
+        { skip, limit }: SkipLimitURLParams,
         @Res() res: Response
     ) {
         try {
             const serviceRepository: Repository<Service> = getConnection().getRepository(Service);
             const services: Service[] = await serviceRepository.find({
+                select: ['serviceId', 'serviceName', 'price', 'isActive', 'createdAt', 'createdBy'],
                 where: {
                     isActive: 1
-                }
+                },
+                skip: +skip,
+                take: +limit
+
             });
+            const total = await serviceRepository.count({ where: { isActive: 1 } })
             return res.status(200).send({
                 status: true,
                 message: "Services Fetched !",
                 data: {
-                    total: services.length,
+                    total: total,
                     rows: services
                 }
             });
@@ -135,7 +143,8 @@ export class ServicesController {
     @Post("/create")
     async createService(
         @Res() res: Response,
-        @Body() body: ServiceType
+        @Body() body: ServiceType,
+        @CurrentUser() user: User
     ) {
         try {
             const serviceRepository: Repository<Service> = getConnection().getRepository(Service);
@@ -156,12 +165,13 @@ export class ServicesController {
             let service = new Service();
             service.price = body.price;
             service.serviceName = body.serviceName;
+            service.createdBy = user.first_name + " " + user.last_name
 
             await queryRunner.manager.save(service);
 
             return res.status(ResponseStatus.SUCCESS_UPDATE).send({
                 status: true,
-                message: "User created successfully!"
+                message: "Service created successfully!"
             });
         }
         catch (err) {

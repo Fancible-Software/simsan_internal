@@ -25,4 +25,8 @@ export class CommonService {
     return this.httpClient.get<any>(environment.endPoint + "/admin/users/" + skip + "/" + limit).pipe()
   }
 
+  servicesList(skip: number, limit: number): Observable<any> {
+    return this.httpClient.get<any>(environment.endPoint + "/services/all/" + skip + "/" + limit).pipe()
+  }
+
 }

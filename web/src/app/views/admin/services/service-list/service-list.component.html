@@ -1,0 +1,119 @@
+<div class="flex flex-wrap mt-4">
+    <div class="w-full mb-12 px-4">
+        <div class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded"
+            [ngClass]="color === 'light' ? 'bg-white' : 'bg-red-900 text-white'">
+            <div class="rounded-t mb-0 px-4 py-3 border-0">
+                <div class="flex flex-wrap items-center">
+                    <div class="relative w-full px-4 max-w-full flex-grow flex-1">
+                        <h3 class="font-semibold text-lg"
+                            [ngClass]="color === 'light' ? 'text-blueGray-700' : 'text-white'">
+                            Services
+                        </h3>
+                    </div>
+                    <div class="relative w-full px-4 max-w-full flex-grow flex-1 text-right">
+                        <a [routerLink]="['/admin/users/create']"
+                            class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150">
+                            Create
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="block w-full overflow-x-auto">
+                <!-- Projects table -->
+                <table class="items-center w-full bg-transparent border-collapse">
+                    <thead>
+                        <tr>
+                            <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                                [ngClass]="
+              color === 'light'
+                ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                : 'bg-red-800 text-red-300 border-red-700'
+            ">
+                                Service Name
+                            </th>
+                            <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                                [ngClass]="
+              color === 'light'
+                ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                : 'bg-red-800 text-red-300 border-red-700'
+            ">
+                                Price
+                            </th>
+                            <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                                [ngClass]="
+              color === 'light'
+                ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                : 'bg-red-800 text-red-300 border-red-700'
+            ">
+                                Is Active
+                            </th>
+                            <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                                [ngClass]="
+              color === 'light'
+                ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                : 'bg-red-800 text-red-300 border-red-700'
+            ">
+                                Created By
+                            </th>
+                            <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                                [ngClass]="
+              color === 'light'
+                ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                : 'bg-red-800 text-red-300 border-red-700'
+            ">
+                                Created At
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody *ngIf="servicesData">
+                        <tr
+                            *ngFor="let service of servicesData | paginate: {itemsPerPage: 10, currentPage: page,totalItems: totalServices}">
+                            <th
+                                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
+                                <!-- <img src="assets/img/bootstrap.jpg" class="h-12 w-12 bg-white rounded-full border"
+                                    alt="..." /> -->
+                                <span class="ml-3 font-bold"
+                                    [ngClass]="color === 'light' ? 'text-blueGray-600' : 'text-white'">
+                                    {{service.serviceName}}
+                                </span>
+                            </th>
+                            <td
+                                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                                {{service.price}}
+                            </td>
+                            <td
+                                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                                <i class="fas fa-circle text-orange-500 mr-2"></i>
+                                <ng-container *ngIf="service.isActive; else in_active">
+                                    True
+                                </ng-container>
+                                <ng-template #in_active>
+                                    False
+                                </ng-template>
+                            </td>
+                            <td
+                                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                                {{service.createdBy}}
+                            </td>
+                            <td
+                                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                                <div class="flex items-center">
+                                    {{service.createdAt | date:'dd/MM/yyyy hh:mm a'}}
+                                </div>
+                            </td>
+                            <!-- <td
+                                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right">
+                                <app-table-dropdown></app-table-dropdown>
+                            </td> -->
+                        </tr>
+                    </tbody>
+
+                    <tfoot>
+                        <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="onPageChange($event)">
+                        </pagination-controls>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

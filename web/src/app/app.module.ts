@@ -33,6 +33,7 @@ import { UserInterceptor } from "./services/user.interceptor";
 import { CreateComponent } from './views/admin/users/create/create.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
+import { ServiceListComponent } from './views/admin/services/service-list/service-list.component';
 
 
 @NgModule({
@@ -60,7 +61,8 @@ import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
     CardTableComponent,
     TableDropdownComponent,
     ListComponent,
-    CreateComponent
+    CreateComponent,
+    ServiceListComponent
   ],
   imports: [
     BrowserModule,

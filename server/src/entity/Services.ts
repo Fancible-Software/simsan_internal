@@ -19,4 +19,7 @@ export class Service {
 
     @CreateDateColumn()
     createdAt: Date;
+
+    @Column({ nullable: false, default: "default" })
+    createdBy: string
 }
