@@ -32,7 +32,9 @@ const routes: Routes = [
       { path: "users", component: ListComponent },
       { path: "users/create", component: CreateComponent },
       { path: "services", component: ServiceListComponent },
-      { path: "services/create", component: ServiceCreateComponent }
+      { path: "services/create", component: ServiceCreateComponent },
+      { path: "services/edit/:id", component: ServiceCreateComponent }
+
     ]
   }
 

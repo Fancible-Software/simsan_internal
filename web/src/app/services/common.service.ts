@@ -33,4 +33,12 @@ export class CommonService {
     return this.httpClient.post<any>(environment.endPoint + "/services/create", body).pipe()
   }
 
+  serviceDetail(id: number): Observable<any> {
+    return this.httpClient.get<any>(environment.endPoint + "/services/service/" + id).pipe()
+  }
+
+  updateService(body: any, serviceId: number): Observable<any> {
+    return this.httpClient.put<any>(environment.endPoint + "/services/update/" + serviceId, body).pipe()
+  }
+
 }

@@ -5,7 +5,7 @@ import { User } from '../entity/User'
 import { EntityId, ResponseStatus, ServiceType, UserPermissions, SkipLimitURLParams } from "../types";
 import { APIError } from "../utils/APIError";
 import logger from "../utils/logger";
-import { getConnection, QueryRunner, Repository } from "typeorm";
+import { getConnection, QueryRunner, Repository, Not } from "typeorm";
 
 @Controller("/services")
 export class ServicesController {
@@ -79,7 +79,7 @@ export class ServicesController {
     }
 
     @Authorized(UserPermissions.admin)
-    @Put("/update")
+    @Put("/update/:id")
     async updateService(
         @Res() res: Response,
         @Params() { id }: EntityId,
@@ -90,8 +90,22 @@ export class ServicesController {
             const queryRunner: QueryRunner = getConnection().createQueryRunner();
             const serviceObj: Service | undefined = await serviceRepository.findOne(id);
             if (serviceObj) {
+                const uniqueService: Service[] | undefined = await serviceRepository.find({
+                    where: {
+                        serviceName: body.serviceName,
+                        serviceId: Not(id)
+                    }
+                })
+                if (uniqueService.length) {
+                    return res.status(ResponseStatus.ALREADY_EXISTS).send({
+                        status: false,
+                        message: "Service with this name already exist!"
+                    })
+                }
+                console.log(serviceObj)
                 serviceObj.serviceName = body.serviceName;
                 serviceObj.price = body.price;
+                serviceObj.isActive = +body.isActive
                 queryRunner.manager.save(serviceObj);
                 return res.status(ResponseStatus.SUCCESS_UPDATE).send({
                     status: true,
@@ -105,7 +119,6 @@ export class ServicesController {
             }
         }
         catch (err) {
-            console.log(err.message);
             logger.error(err);
             return new APIError(err.message, 500);
         }
@@ -168,6 +181,7 @@ export class ServicesController {
             let service = new Service();
             service.price = body.price;
             service.serviceName = body.serviceName;
+            service.isActive = +body.isActive
             service.createdBy = user.first_name + " " + user.last_name
 
             await queryRunner.manager.save(service);

@@ -71,6 +71,9 @@ export class ServiceType {
   @IsNotEmpty()
   @Matches(/^\d+\.?\d*$/)
   price: string;
+
+  @IsString()
+  isActive: string
 }
 
 export class SkipLimitURLParams {

@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { CommonService } from '../../../../services/common.service'
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ToastrService } from 'ngx-toastr'
+import { Route, Router } from '@angular/router'
 
 
 @Component({
@@ -24,8 +25,8 @@ export class ServiceListComponent implements OnInit {
     this._color = color !== "light" && color !== "dark" ? "light" : color;
   }
   private _color = "light";
-  
-  constructor(public commonService: CommonService, private loader: NgxUiLoaderService, private toastr: ToastrService) { }
+
+  constructor(public commonService: CommonService, private loader: NgxUiLoaderService, private toastr: ToastrService, private router: Router) { }
 
   ngOnInit(): void {
     this.getAllServices()
@@ -67,6 +68,10 @@ export class ServiceListComponent implements OnInit {
 
   toggleModal() {
 
+  }
+
+  editService(serviceId: number) {
+    this.router.navigateByUrl(`/admin/services/edit/${serviceId}`)
   }
 
 

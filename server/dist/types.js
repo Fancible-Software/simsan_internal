@@ -86,6 +86,10 @@ __decorate([
     (0, class_validator_1.Matches)(/^\d+\.?\d*$/),
     __metadata("design:type", String)
 ], ServiceType.prototype, "price", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], ServiceType.prototype, "isActive", void 0);
 exports.ServiceType = ServiceType;
 class SkipLimitURLParams {
 }
