@@ -6,11 +6,12 @@ import { User } from "../entity/User";
 import { APIError } from "../utils/APIError";
 const bcrypt = require('bcryptjs')
 import jwt from 'jsonwebtoken'
-// import bcrypt from 'bcryptjs'
 import { TokenData } from '../types'
+
 
 @Controller("/auth")
 export class AuthController {
+
 
   @Post("/login")
   async login(
@@ -73,24 +74,5 @@ export class AuthController {
       throw new APIError(err.message, 500)
     }
   }
-
-
-
-  // @Post("/send-otp")
-  // async sendOtp(
-  //   @Res() res: Response
-  //   // obj: sendOtpRequest
-  // ) {
-  //   const otp = Math.floor(100000 + Math.random() * 900000);
-  //   // const message = otp + " is your Idowaz verification code. You need to enter this code in order to verify your account.";
-
-
-  //   return res.status(200).send({
-  //     status: true,
-  //     message: "OTP sent successfully!",
-  //     data: otp
-  //   })
-  // }
-
 
 }

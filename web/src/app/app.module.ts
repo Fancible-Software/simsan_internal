@@ -30,6 +30,14 @@ import { CommonService } from './services/common.service';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ListComponent } from './views/admin/users/list/list.component';
 import { UserInterceptor } from "./services/user.interceptor";
+import { CreateComponent } from './views/admin/users/create/create.component';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
+import { ServiceListComponent } from './views/admin/services/service-list/service-list.component';
+import { ToastrModule } from 'ngx-toastr'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ServiceCreateComponent } from './views/admin/services/service-create/service-create.component';
+
 
 @NgModule({
   declarations: [
@@ -55,15 +63,22 @@ import { UserInterceptor } from "./services/user.interceptor";
     FeedbacksComponent,
     CardTableComponent,
     TableDropdownComponent,
-    ListComponent
+    ListComponent,
+    CreateComponent,
+    ServiceListComponent,
+    ServiceCreateComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     NgxUiLoaderModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    NgxPaginationModule,
+    AngularMultiSelectModule,
+    ToastrModule.forRoot({ positionClass: 'inline' })
   ],
   providers: [UserInterceptor, { provide: HTTP_INTERCEPTORS, useClass: UserInterceptor, multi: true }, CommonService],
   bootstrap: [AppComponent]

@@ -1,173 +1,200 @@
 import { Response } from "express";
-import { Authorized, Body, Controller, Delete, Get, Params, Post, Put, Res } from "routing-controllers";
+import { Authorized, Body, Controller, Delete, Get, Params, Post, Put, Res, CurrentUser } from "routing-controllers";
 import { Service } from "../entity/Services";
-import { EntityId, ResponseStatus, ServiceType, UserPermissions } from "../types";
+import { User } from '../entity/User'
+import { EntityId, ResponseStatus, ServiceType, UserPermissions, SkipLimitURLParams } from "../types";
 import { APIError } from "../utils/APIError";
 import logger from "../utils/logger";
-import { getConnection, QueryRunner, Repository } from "typeorm";
+import { getConnection, QueryRunner, Repository, Not } from "typeorm";
 
 @Controller("/services")
-export class ServicesController{
-    @Authorized(UserPermissions.read)
-    @Get("/:id")
+export class ServicesController {
+    @Authorized(UserPermissions.sub_admin)
+    @Get("/service/:id")
     async getServiceById(
-        @Res() res : Response,
-        @Params() { id } : EntityId
-    ){
-        try{
-            const serviceRepository : Repository<Service> = getConnection().getRepository(Service);
-            const serviceObj : Service | undefined = await serviceRepository.findOne(id);
+        @Res() res: Response,
+        @Params() { id }: EntityId
+    ) {
+        try {
+            const serviceRepository: Repository<Service> = getConnection().getRepository(Service);
+            const serviceObj: Service | undefined = await serviceRepository.findOne(id);
 
-            if(serviceObj){
+            if (serviceObj) {
                 return res.status(ResponseStatus.SUCCESS_FETCH).send({
-                    status : true,
-                    data : serviceObj
+                    status: true,
+                    data: serviceObj
                 })
-            }else{
+            } else {
                 return res.status(ResponseStatus.API_ERROR).send({
-                    status : false,
-                    message : "Service with provided id does not exist"
+                    status: false,
+                    message: "Service with provided id does not exist"
                 })
             }
         }
         catch (err) {
             console.log(err.message);
             logger.error(err);
-            return new APIError(err.message,500);
+            return new APIError(err.message, 500);
         }
     }
 
 
 
-    @Authorized(UserPermissions.read)
-    @Get("/all")
+    @Authorized(UserPermissions.sub_admin || UserPermissions.admin)
+    @Get("/all/:skip/:limit")
     async getAllServices(
-        @Res() res : Response
-    ){
-        try{
-            const serviceRepository : Repository<Service> = getConnection().getRepository(Service);
-            const services : Service[] = await serviceRepository.find({
-                where : {
-                    isActive : 1
+        @Params()
+        { skip, limit }: SkipLimitURLParams,
+        @Res() res: Response
+    ) {
+        try {
+            const serviceRepository: Repository<Service> = getConnection().getRepository(Service);
+            const services: Service[] = await serviceRepository.find({
+                select: ['serviceId', 'serviceName', 'price', 'isActive', 'createdAt', 'createdBy'],
+                where: {
+                    isActive: 1
+                },
+                skip: +skip,
+                take: +limit,
+                order: {
+                    "serviceId": "DESC"
                 }
+
             });
+            const total = await serviceRepository.count({ where: { isActive: 1 } })
             return res.status(200).send({
-                status : true,
-                message : "Services Fetched !",
-                data : {
-                    total : services.length,
-                    rows : services
+                status: true,
+                message: "Services Fetched !",
+                data: {
+                    total: total,
+                    rows: services
                 }
             });
         }
         catch (err) {
             console.log(err.message);
             logger.error(err);
-            return new APIError(err.message,500);
+            return new APIError(err.message, 500);
         }
     }
 
-    @Authorized(UserPermissions.write)
-    @Put("/update")
+    @Authorized(UserPermissions.admin)
+    @Put("/update/:id")
     async updateService(
-        @Res() res : Response,
-        @Params() { id } : EntityId,
-        @Body() body : ServiceType
-    ){
-        try{
-            const serviceRepository : Repository<Service> = getConnection().getRepository(Service);
-            const queryRunner : QueryRunner = getConnection().createQueryRunner();
-            const serviceObj : Service | undefined = await serviceRepository.findOne(id);
-            if(serviceObj){
+        @Res() res: Response,
+        @Params() { id }: EntityId,
+        @Body() body: ServiceType
+    ) {
+        try {
+            const serviceRepository: Repository<Service> = getConnection().getRepository(Service);
+            const queryRunner: QueryRunner = getConnection().createQueryRunner();
+            const serviceObj: Service | undefined = await serviceRepository.findOne(id);
+            if (serviceObj) {
+                const uniqueService: Service[] | undefined = await serviceRepository.find({
+                    where: {
+                        serviceName: body.serviceName,
+                        serviceId: Not(id)
+                    }
+                })
+                if (uniqueService.length) {
+                    return res.status(ResponseStatus.ALREADY_EXISTS).send({
+                        status: false,
+                        message: "Service with this name already exist!"
+                    })
+                }
+                console.log(serviceObj)
                 serviceObj.serviceName = body.serviceName;
                 serviceObj.price = body.price;
+                serviceObj.isActive = +body.isActive
                 queryRunner.manager.save(serviceObj);
                 return res.status(ResponseStatus.SUCCESS_UPDATE).send({
-                    status : true,
-                    message : "Service successfully updated"
+                    status: true,
+                    message: "Service successfully updated"
                 })
-            }else{
+            } else {
                 return res.status(ResponseStatus.API_ERROR).send({
-                    status : false,
-                    message : "Service with provided id does not exist"
+                    status: false,
+                    message: "Service with provided id does not exist"
+                })
+            }
+        }
+        catch (err) {
+            logger.error(err);
+            return new APIError(err.message, 500);
+        }
+    }
+
+    @Authorized(UserPermissions.admin)
+    @Delete("/:id")
+    async deleteService(
+        @Res() res: Response,
+        @Params() { id }: EntityId
+    ) {
+        try {
+            const serviceRepository: Repository<Service> = getConnection().getRepository(Service);
+            const queryRunner: QueryRunner = getConnection().createQueryRunner();
+            const serviceObj: Service | undefined = await serviceRepository.findOne(id);
+
+            if (serviceObj) {
+                queryRunner.manager.remove(serviceObj);
+                return res.status(ResponseStatus.SUCCESS_UPDATE).send({
+                    status: true,
+                    message: "Service successfully deleted"
+                })
+            } else {
+                return res.status(ResponseStatus.API_ERROR).send({
+                    status: false,
+                    message: "Service with provided id does not exist"
                 })
             }
         }
         catch (err) {
             console.log(err.message);
             logger.error(err);
-            return new APIError(err.message,500);
+            return new APIError(err.message, ResponseStatus.API_ERROR);
         }
     }
 
-    @Authorized(UserPermissions.write)
-    @Delete("/:id")
-    async deleteService(
-        @Res() res : Response,
-        @Params() { id } : EntityId
-    ){
-        try{
-            const serviceRepository : Repository<Service> = getConnection().getRepository(Service);
-            const queryRunner : QueryRunner = getConnection().createQueryRunner();
-            const serviceObj : Service | undefined = await serviceRepository.findOne(id);
-
-            if(serviceObj){
-                queryRunner.manager.remove(serviceObj);
-                return res.status(ResponseStatus.SUCCESS_UPDATE).send({
-                    status : true,
-                    message : "Service successfully deleted"
-                })
-            }else{
-                return res.status(ResponseStatus.API_ERROR).send({
-                    status : false,
-                    message : "Service with provided id does not exist"
-                })
-            }
-        }
-        catch (err){
-            console.log(err.message);
-            logger.error(err);
-            return new APIError(err.message,ResponseStatus.API_ERROR);
-        }
-    }
-
-    @Authorized(UserPermissions.write)
+    @Authorized(UserPermissions.admin)
     @Post("/create")
     async createService(
-        @Res() res : Response,
-        @Body() body : ServiceType 
-    ){
-        try{
-            const serviceRepository : Repository<Service> = getConnection().getRepository(Service);
-            const queryRunner : QueryRunner = getConnection().createQueryRunner();
-            const isExisting : Service[] = await serviceRepository.find({
-                where : {
-                    serviceName : body.serviceName
+        @Res() res: Response,
+        @Body() body: ServiceType,
+        @CurrentUser() user: User
+    ) {
+        try {
+            const serviceRepository: Repository<Service> = getConnection().getRepository(Service);
+            const queryRunner: QueryRunner = getConnection().createQueryRunner();
+            const isExisting: Service[] = await serviceRepository.find({
+                where: {
+                    serviceName: body.serviceName
                 }
             });
 
-            if(isExisting.length > 0){
+            if (isExisting.length > 0) {
                 return res.status(ResponseStatus.ALREADY_EXISTS).send({
-                    status : false,
-                    message : "Service with similar name already exists"
+                    status: false,
+                    message: "Service with similar name already exists"
                 })
             }
 
             let service = new Service();
             service.price = body.price;
             service.serviceName = body.serviceName;
-            
+            service.isActive = +body.isActive
+            service.createdBy = user.first_name + " " + user.last_name
+
             await queryRunner.manager.save(service);
 
             return res.status(ResponseStatus.SUCCESS_UPDATE).send({
                 status: true,
-                message: "User created successfully!"
+                message: "Service created successfully!"
             });
         }
-        catch (err){
+        catch (err) {
             console.log(err.message);
             logger.error(err);
-            return new APIError(err.message,ResponseStatus.API_ERROR);
+            return new APIError(err.message, ResponseStatus.API_ERROR);
         }
     }
 }

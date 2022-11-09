@@ -1,19 +1,18 @@
-import { IsEmail, IsNotEmpty, IsString, IsNumber, IsEnum, IsArray, Matches, IsNotIn } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsNumber, Matches, IsNotIn } from 'class-validator';
 import { Form } from './entity/Form';
 
 
 export interface TokenData {
   email: string;
-  roles: UserPermissions[]
+  roles: string
 }
 
 export enum UserPermissions {
   admin = "admin",
-  read = "read",
-  write = "write"
+  sub_admin = "sub_admin"
 }
 
-export enum ResponseStatus{
+export enum ResponseStatus {
   ALREADY_EXISTS = 409,
   SUCCESS_FETCH = 200,
   SUCCESS_UPDATE = 201,
@@ -56,26 +55,25 @@ export class customerSignupRequest {
   @IsNotEmpty()
   password: string;
 
-  @IsEnum(UserPermissions, { each: true })
-  @IsArray()
-  roles: UserPermissions[];
-
-}
-
-export class EntityId{
-  @IsNotEmpty()
-  id : number | string;
-}
-
-export class ServiceType{
+  // @IsEnum(UserPermissions, { each: true })
   @IsString()
   @IsNotEmpty()
-  serviceName : string;
+  roles: UserPermissions;
+
+}
+
+export class ServiceType {
+  @IsString()
+  @IsNotEmpty()
+  serviceName: string;
 
   @IsString()
   @IsNotEmpty()
   @Matches(/^\d+\.?\d*$/)
-  price : string;
+  price: string;
+
+  @IsString()
+  isActive: string
 }
 
 export class SkipLimitURLParams {
@@ -87,60 +85,65 @@ export class SkipLimitURLParams {
   limit: string;
 }
 
-export class FormType{
-    @IsNotEmpty()
-    @IsString()
-    customerName : string;
+export class FormType {
+  @IsNotEmpty()
+  @IsString()
+  customerName: string;
 
-    @IsNotEmpty()
-    @IsString()
-    customerEmail : string;
+  @IsNotEmpty()
+  @IsString()
+  customerEmail: string;
 
-    @IsNotEmpty()
-    @IsString()
-    customerPhone : string;
+  @IsNotEmpty()
+  @IsString()
+  customerPhone: string;
 
-    @IsNotEmpty()
-    @IsString()
-    customerAddress : string;
+  @IsNotEmpty()
+  @IsString()
+  customerAddress: string;
 
-    @IsNotEmpty()
-    @IsString()
-    customerPostalCode : string;
+  @IsNotEmpty()
+  @IsString()
+  customerPostalCode: string;
 
-    @IsNotEmpty()
-    @IsString()
-    customerCity : string;
+  @IsNotEmpty()
+  @IsString()
+  customerCity: string;
 
-    @IsNotEmpty()
-    @IsString()
-    customerProvince : String;
+  @IsNotEmpty()
+  @IsString()
+  customerProvince: String;
 
-    @IsString()
-    customerCountry : string;
+  @IsString()
+  customerCountry: string;
 
-    public toForm() : Form{
-      const form :Form = new Form();
-      form.customerName = this.customerName;
-      form.customerEmail = this.customerEmail;
-      form.customerAddress = this.customerAddress;
-      form.customerCity = this.customerCity;
-      form.customerCountry = this.customerCountry;
-      form.customerPostalCode = this.customerPostalCode;
-      form.customerPhone = this.customerPhone;
-      form.customerProvince = this.customerProvince;
-      return form;
-    }
+  public toForm(): Form {
+    const form: Form = new Form();
+    form.customerName = this.customerName;
+    form.customerEmail = this.customerEmail;
+    form.customerAddress = this.customerAddress;
+    form.customerCity = this.customerCity;
+    form.customerCountry = this.customerCountry;
+    form.customerPostalCode = this.customerPostalCode;
+    form.customerPhone = this.customerPhone;
+    form.customerProvince = this.customerProvince;
+    return form;
+  }
 
-    public updateForm(formRecord:Form) : Form {
-      formRecord.customerName = this.customerName;
-      formRecord.customerEmail = this.customerEmail;
-      formRecord.customerAddress = this.customerAddress;
-      formRecord.customerCity = this.customerCity;
-      formRecord.customerCountry = this.customerCountry;
-      formRecord.customerPostalCode = this.customerPostalCode;
-      formRecord.customerPhone = this.customerPhone;
-      formRecord.customerProvince = this.customerProvince;
-      return formRecord;
-    }
+  public updateForm(formRecord: Form): Form {
+    formRecord.customerName = this.customerName;
+    formRecord.customerEmail = this.customerEmail;
+    formRecord.customerAddress = this.customerAddress;
+    formRecord.customerCity = this.customerCity;
+    formRecord.customerCountry = this.customerCountry;
+    formRecord.customerPostalCode = this.customerPostalCode;
+    formRecord.customerPhone = this.customerPhone;
+    formRecord.customerProvince = this.customerProvince;
+    return formRecord;
+  }
+}
+
+export class EntityId {
+  @IsNotEmpty()
+  id: number | string;
 }

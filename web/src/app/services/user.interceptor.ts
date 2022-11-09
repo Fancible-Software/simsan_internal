@@ -27,10 +27,19 @@ export class UserInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       retry(2),
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 500) {
+        if (error.status === 401) {
 
           localStorage.removeItem('token')
           this.router.navigateByUrl('/auth/login');
+        }
+        if (error.status === 409) {
+          alert(error.error.message)
+        }
+        if (error.status === 400) {
+          alert(error.error.message)
+        }
+        if (error.status === 500) {
+          alert(error.error.message)
         }
         return throwError(error);
       })
