@@ -10,6 +10,7 @@ import { getConnection } from "typeorm";
 import { AdminController } from "./controller/admin";
 import { AuthController } from "./controller/auth";
 import { FormController } from "./controller/forms";
+import { LocationController } from "./controller/location";
 import { ServicesController } from "./controller/services";
 import { UserController } from "./controller/user";
 import { User } from "./entity/User";
@@ -55,7 +56,7 @@ async function run() {
                 credentials: true,
             },
             defaultErrorHandler: false,
-            controllers: [UserController, AuthController, AdminController, ServicesController, FormController],
+            controllers: [UserController, AuthController, AdminController, ServicesController, FormController, LocationController],
             middlewares: [CustomErrorHandler],
             authorizationChecker: (action: Action): boolean => {
                 const { authorization } = (action.request as Request).headers || {};
