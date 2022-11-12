@@ -37,7 +37,7 @@ export class ServiceListComponent implements OnInit {
     this.commonService.servicesList(this.page - 1, 10).subscribe(data => {
       // console.log(data)
       if (data.status) {
-        this.toastr.success(data.message)
+        // this.toastr.success(data.message)
         this.servicesData = data.data.rows
         this.totalServices = data.data.total
       }
@@ -52,6 +52,8 @@ export class ServiceListComponent implements OnInit {
     this.page = evt
     this.commonService.servicesList((this.page - 1) * 10, 10).subscribe(data => {
       if (data.status) {
+        // this.toastr.success(data.message)
+
         this.servicesData = data.data.rows
         this.totalServices = data.data.total
       }
@@ -62,7 +64,7 @@ export class ServiceListComponent implements OnInit {
   }
 
   deleteService(serviceId: number) {
-    console.log(serviceId)
+    // console.log(serviceId)
     this.showModal = true
   }
 
