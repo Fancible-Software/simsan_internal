@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { FormToServices } from "./FormToServices";
 
 @Entity()
 export class Form{
@@ -28,6 +29,15 @@ export class Form{
 
     @Column({nullable : false, default : "Canada"})
     customerCountry : string;
+
+    @Column({nullable : false, default : '0'})
+    total : string;
+
+    @Column({nullable : false, default : '0'})
+    discount : string;
+
+    @OneToMany(()=>FormToServices,(formToServices:FormToServices)=>formToServices.form)
+    formToServices : FormToServices[];
 
     @UpdateDateColumn({ nullable: true })
     updatedAt?: Date;

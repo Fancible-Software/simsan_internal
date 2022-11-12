@@ -1,20 +1,26 @@
 import { Response } from "express";
-import { Body, Controller, Delete, Get, Params, Post, Put, Res } from "routing-controllers";
+import { Authorized, Body, Controller, Delete, Get, Params, Post, Put, Res } from "routing-controllers";
 import { getConnection, QueryRunner, Repository } from "typeorm";
-import { EntityId, FormType, ResponseStatus } from "../types";
+import { EntityId, FormType, ResponseStatus, UserPermissions } from "../types";
 import { Form } from "../entity/Form";
 import logger from "../utils/logger";
 import { APIError } from "../utils/APIError";
+import { FormToServices } from "src/entity/FormToServices";
 
 @Controller("/form")
 export class FormController{
+
+    @Authorized(UserPermissions.admin || UserPermissions.sub_admin)
     @Get("/all")
     async getAllForms(
         @Res() res : Response
     ){
         try{
             const formRepository : Repository<Form> =  getConnection().getRepository(Form);
-            const forms : Form[] = await formRepository.find();
+            const forms : Form[] = await formRepository.find({
+                relations : ["formToServices","formToServices.service"]
+            });
+
             return res.status(ResponseStatus.SUCCESS_FETCH).send({
                 status: true,
                 count : forms.length,
@@ -28,6 +34,7 @@ export class FormController{
         }
     }
 
+    @Authorized(UserPermissions.admin || UserPermissions.sub_admin)
     @Get("/:id")
     async getFormById(
         @Res() res : Response,
@@ -35,7 +42,9 @@ export class FormController{
     ){
         try{
             const formRepository : Repository<Form> =  getConnection().getRepository(Form);
-            const formRecord : Form | undefined = await formRepository.findOne(id);
+            const formRecord : Form | undefined = await formRepository.findOne(id,{
+                relations : ["formToServices"]
+            });
             
             if(formRecord){
                 return res.status(ResponseStatus.SUCCESS_UPDATE).send({
@@ -56,6 +65,7 @@ export class FormController{
         }
     }
 
+    @Authorized(UserPermissions.admin)
     @Post("/create")
     async createForm(
         @Res() res : Response,
@@ -63,7 +73,12 @@ export class FormController{
     ){
         try{
             const queryRunner : QueryRunner = getConnection().createQueryRunner();
-            queryRunner.manager.save(body.toForm());
+            const newFormRecord : Form = body.toForm();
+            await queryRunner.manager.save(newFormRecord);
+            await queryRunner.manager.save(newFormRecord.formToServices.map((service : FormToServices)=> {
+                service.form = newFormRecord
+                return service;
+            }));
 
             return res.status(ResponseStatus.SUCCESS_UPDATE).send({
                 status: true,
@@ -77,6 +92,7 @@ export class FormController{
         }
     }
 
+    @Authorized(UserPermissions.admin)
     @Put("/:id")
     async updateForm(
         @Res() res : Response,
@@ -108,6 +124,7 @@ export class FormController{
         }
     }
 
+    @Authorized(UserPermissions.admin)
     @Delete("/:id")
     async deleteFormById(
         @Res() res : Response,
