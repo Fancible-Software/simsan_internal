@@ -41,4 +41,8 @@ export class CommonService {
     return this.httpClient.put<any>(environment.endPoint + "/services/update/" + serviceId, body).pipe()
   }
 
+  activeServicesList(): Observable<any> {
+    return this.httpClient.get<any>(environment.endPoint + "/services/all-services").pipe()
+  }
+
 }
