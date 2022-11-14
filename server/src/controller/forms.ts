@@ -1,11 +1,12 @@
 import { Response } from "express";
 import { Authorized, Body, Controller, Delete, Get, Params, Post, Put, Res } from "routing-controllers";
-import { getConnection, QueryRunner, Repository } from "typeorm";
-import { EntityId, FormType, ResponseStatus, UserPermissions } from "../types";
+import { getConnection, In, QueryRunner, Repository } from "typeorm";
+import { EntityId, FormToServiceType, FormType, ResponseStatus, UserPermissions } from "../types";
 import { Form } from "../entity/Form";
 import logger from "../utils/logger";
 import { APIError } from "../utils/APIError";
 import { FormToServices } from "src/entity/FormToServices";
+import { Service } from "../entity/Services";
 
 @Controller("/form")
 export class FormController{
@@ -71,8 +72,17 @@ export class FormController{
         @Res() res : Response,
         @Body() body : FormType
     ){
+        console.log("HELLO");
         try{
             const queryRunner : QueryRunner = getConnection().createQueryRunner();
+            const serviceRepository : Repository<Service> =  getConnection().getRepository(Service);
+            const services = await serviceRepository.find({
+                where:{
+                    serviceId : In(body.services.map((service : FormToServiceType)=> service.serviceId))
+                }
+            });
+            const serviceMap : Map<number,Service> = new Map<number,Service>();
+            services.forEach((service : Service)=>serviceMap.set(service.serviceId,service));
             const newFormRecord : Form = body.toForm();
             await queryRunner.manager.save(newFormRecord);
             await queryRunner.manager.save(newFormRecord.formToServices.map((service : FormToServices)=> {

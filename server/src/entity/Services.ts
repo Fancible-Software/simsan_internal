@@ -4,7 +4,7 @@ import { FormToServices } from "./FormToServices";
 @Entity()
 export class Service {
     @PrimaryGeneratedColumn()
-    readonly serviceId: number;
+    serviceId: number;
 
     @Column({ nullable: false, unique: true })
     serviceName: string;
