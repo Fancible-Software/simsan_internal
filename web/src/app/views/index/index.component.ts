@@ -56,15 +56,15 @@ export class IndexComponent implements OnInit {
     let amount: number = 0
     this.form.value.services.map((checked: any, i: number) => {
       if (checked) {
-        selectedOrderIds.push(this.services[i].serviceId)
+        selectedOrderIds.push({ "service_id": this.services[i].serviceId, "price": this.services[i].price })
         amount = amount + (+this.services[i].price)
       }
     }).filter((v: number) => v !== null);
-
+    console.log(selectedOrderIds)
+    this.form.patchValue({ "service": null })
     this.form.patchValue({
       "total_amount": amount,
-      "final_amount": amount + ((amount * 5) / 100),
-      "services": selectedOrderIds
+      "final_amount": amount + ((amount * 5) / 100)
     })
 
   }
@@ -79,5 +79,12 @@ export class IndexComponent implements OnInit {
 
   get f() { return this.form.controls; }
 
+  applyDiscount(evt: any) {
+    const discPerc = evt.target.value
+    let discountedAmount = this.form.value.total_amount - (this.form.value.total_amount * (discPerc / 100))
+    this.form.patchValue({
+      "final_amount": (discountedAmount + (discountedAmount * 5) / 100).toFixed(2)
+    })
+  }
 
 }
