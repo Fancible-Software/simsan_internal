@@ -72,7 +72,6 @@ export class FormController{
         @Res() res : Response,
         @Body() body : FormType
     ){
-        console.log("HELLO");
         try{
             const queryRunner : QueryRunner = getConnection().createQueryRunner();
             const serviceRepository : Repository<Service> =  getConnection().getRepository(Service);
