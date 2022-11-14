@@ -3,7 +3,6 @@ import { Form } from './entity/Form';
 import { FormToServices } from './entity/FormToServices';
 import { Service } from './entity/Services';
 
-
 export interface TokenData {
   email: string;
   roles: string
@@ -79,8 +78,7 @@ export class ServiceType {
 }
 
 export class FormToServiceType{
-  @IsNotEmpty()
-  service : Service
+  serviceId : number;
 
   @IsNotEmpty()
   @IsString()
@@ -152,7 +150,8 @@ export class FormType {
     form.total = this.total;
     form.formToServices = this.services.map((s : FormToServiceType) => {
       let obj : FormToServices = new FormToServices();
-      obj.service = s.service;
+      obj.service = new Service();
+      obj.service.serviceId = s.serviceId;
       obj.price = s.price;
       return obj;
     });
