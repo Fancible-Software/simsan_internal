@@ -77,12 +77,12 @@ export class ServiceType {
   isActive: string
 }
 
-export class FormToServiceType{
-  serviceId : number;
+export class FormToServiceType {
+  serviceId: number;
 
   @IsNotEmpty()
   @IsString()
-  price : string;
+  price: string;
 }
 
 export class SkipLimitURLParams {
@@ -128,15 +128,21 @@ export class FormType {
 
   @IsString()
   @IsNotEmpty()
-  total : string;
+  total: string;
 
   @IsString()
-  discount : string;
+  @IsNotEmpty()
+  final_amount: string;
+
+  @IsString()
+  discount: string;
 
   @IsNotEmpty()
-  services : FormToServiceType[];
+  services: FormToServiceType[];
 
-  public toForm(): Form {
+
+
+  public toForm(userId: string): Form {
     const form: Form = new Form();
     form.customerName = this.customerName;
     form.customerEmail = this.customerEmail;
@@ -148,8 +154,10 @@ export class FormType {
     form.customerProvince = this.customerProvince;
     form.discount = this.discount ? this.discount : '0';
     form.total = this.total;
-    form.formToServices = this.services.map((s : FormToServiceType) => {
-      let obj : FormToServices = new FormToServices();
+    form.final_amount = this.final_amount;
+    form.createdBy = userId
+    form.formToServices = this.services.map((s: FormToServiceType) => {
+      let obj: FormToServices = new FormToServices();
       obj.service = new Service();
       obj.service.serviceId = s.serviceId;
       obj.price = s.price;

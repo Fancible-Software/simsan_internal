@@ -13,7 +13,7 @@ import { ServiceListComponent } from './views/admin/services/service-list/servic
 import { ServiceCreateComponent } from './views/admin/services/service-create/service-create.component';
 
 const routes: Routes = [
-  { path: "", component: IndexComponent },
+  { path: "", redirectTo: "auth", pathMatch: "full" },
   {
     path: "auth",
     component: AuthComponent,
@@ -22,11 +22,13 @@ const routes: Routes = [
       { path: "", redirectTo: "login", pathMatch: "full" }
     ]
   },
+  { path: "collect/feedback", component: IndexComponent, canActivate: [AuthGuard] },
   {
     path: "admin",
     component: AdminComponent,
     canActivate: [AuthGuard],
     children: [
+
       { path: "dashboard", component: DashboardComponent },
       { path: "feedbacks", component: FeedbacksComponent },
       { path: "users", component: ListComponent },

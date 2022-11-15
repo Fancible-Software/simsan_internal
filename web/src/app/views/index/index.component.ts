@@ -10,6 +10,7 @@ import { FormBuilder, FormGroup, FormArray, FormControl, ValidatorFn, Validators
 })
 export class IndexComponent implements OnInit {
 
+  enabled = false
   form: FormGroup;
   submitted = false
   services: any = []
@@ -22,7 +23,8 @@ export class IndexComponent implements OnInit {
       city: ['', Validators.required],
       province: ['', Validators.required],
       postal_code: ['', Validators.required],
-      services: new FormArray([]),
+      services_dropdown: new FormArray([]),
+      services: [[], Validators.required],
       total_amount: ['', [Validators.required]],
       discount: [''],
       final_amount: ['', [Validators.required]]
@@ -34,7 +36,7 @@ export class IndexComponent implements OnInit {
   }
 
   get servicesFormArray() {
-    return this.form.controls['services'] as FormArray;
+    return this.form.controls['services_dropdown'] as FormArray;
   }
 
   getActiveServicesList() {
@@ -51,20 +53,24 @@ export class IndexComponent implements OnInit {
   }
 
   generateAmount() {
-
+    this.enabled = true
     const selectedOrderIds: any = []
     let amount: number = 0
-    this.form.value.services.map((checked: any, i: number) => {
+    // console.log(this.form.value.services_dropdown)
+    this.form.value.services_dropdown.map((checked: any, i: number) => {
       if (checked) {
         selectedOrderIds.push({ "service_id": this.services[i].serviceId, "price": this.services[i].price })
         amount = amount + (+this.services[i].price)
       }
     }).filter((v: number) => v !== null);
-    console.log(selectedOrderIds)
-    this.form.patchValue({ "service": null })
+    if (!selectedOrderIds.length) {
+      alert('Please select any of the above service!')
+      return
+    }
     this.form.patchValue({
       "total_amount": amount,
-      "final_amount": amount + ((amount * 5) / 100)
+      "final_amount": amount + ((amount * 5) / 100),
+      "services": selectedOrderIds
     })
 
   }
@@ -85,6 +91,10 @@ export class IndexComponent implements OnInit {
     this.form.patchValue({
       "final_amount": (discountedAmount + (discountedAmount * 5) / 100).toFixed(2)
     })
+  }
+
+  clear() {
+    // this.services.forEach(() => this.servicesFormArray.push(new FormControl(false)));
   }
 
 }

@@ -2,46 +2,52 @@ import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Up
 import { FormToServices } from "./FormToServices";
 
 @Entity()
-export class Form{
+export class Form {
     @PrimaryGeneratedColumn()
-    readonly formId : number;
+    readonly formId: number;
 
-    @Column({nullable : false})
-    customerName : string;
+    @Column({ nullable: false })
+    customerName: string;
 
-    @Column({nullable : false})
-    customerEmail : string;
+    @Column({ nullable: false })
+    customerEmail: string;
 
-    @Column({nullable : true})
-    customerPhone : string;
+    @Column({ nullable: true })
+    customerPhone: string;
 
-    @Column({nullable : false})
-    customerAddress : string;
+    @Column({ nullable: false })
+    customerAddress: string;
 
-    @Column({nullable : false})
-    customerPostalCode : string;
+    @Column({ nullable: false })
+    customerPostalCode: string;
 
-    @Column({nullable : false})
-    customerCity : string;
+    @Column({ nullable: false })
+    customerCity: string;
 
-    @Column({nullable : false})
-    customerProvince : String;
+    @Column({ nullable: false })
+    customerProvince: String;
 
-    @Column({nullable : false, default : "Canada"})
-    customerCountry : string;
+    @Column({ nullable: false, default: "Canada" })
+    customerCountry: string;
 
-    @Column({nullable : false, default : '0'})
-    total : string;
+    @Column({ nullable: false })
+    total: string;
 
-    @Column({nullable : false, default : '0'})
-    discount : string;
+    @Column({ nullable: false })
+    discount: string;
 
-    @OneToMany(()=>FormToServices,(formToServices:FormToServices)=>formToServices.form)
-    formToServices : FormToServices[];
+    @Column({ nullable: false })
+    final_amount: string;
+
+    @OneToMany(() => FormToServices, (formToServices: FormToServices) => formToServices.form)
+    formToServices: FormToServices[];
 
     @UpdateDateColumn({ nullable: true })
     updatedAt?: Date;
 
     @CreateDateColumn()
     createdAt: Date;
+
+    @Column({ nullable: false })
+    createdBy: string
 }
