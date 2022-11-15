@@ -22,7 +22,6 @@ export class FormController {
         try {
             const formRepository: Repository<Form> = getConnection().getRepository(Form);
             const forms: Form[] = await formRepository.find({
-                relations: ["formToServices", "formToServices.service"],
                 order: {
                     formId: "DESC"
                 },

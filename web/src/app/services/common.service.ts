@@ -57,4 +57,8 @@ export class CommonService {
     return this.httpClient.post<any>(environment.endPoint + "/form/create", body).pipe()
   }
 
+  feedbackList(skip: number, limit: number): Observable<any> {
+    return this.httpClient.get<any>(environment.endPoint + "/form/all/" + skip + "/" + limit).pipe()
+  }
+
 }
