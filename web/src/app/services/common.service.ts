@@ -45,4 +45,16 @@ export class CommonService {
     return this.httpClient.get<any>(environment.endPoint + "/services/all-services").pipe()
   }
 
+  provinceList(): Observable<any> {
+    return this.httpClient.get<any>(environment.endPoint + "/location/provinces").pipe()
+  }
+
+  citiesList(provinceId: string): Observable<any> {
+    return this.httpClient.get<any>(environment.endPoint + "/location/cities?province_id=" + provinceId).pipe()
+  }
+
+  submitFeedback(body: any): Observable<any> {
+    return this.httpClient.post<any>(environment.endPoint + "/form/create", body).pipe()
+  }
+
 }

@@ -1,7 +1,7 @@
 import { Response } from "express";
 import { Authorized, Body, Controller, Delete, Get, Params, Post, Put, Res, CurrentUser } from "routing-controllers";
 import { getConnection, In, QueryRunner, Repository } from "typeorm";
-import { EntityId, FormToServiceType, FormType, ResponseStatus, UserPermissions } from "../types";
+import { EntityId, FormToServiceType, FormType, ResponseStatus, UserPermissions, SkipLimitURLParams } from "../types";
 import { Form } from "../entity/Form";
 import logger from "../utils/logger";
 import { APIError } from "../utils/APIError";
@@ -13,19 +13,28 @@ import { User } from '../entity/User'
 export class FormController {
 
     @Authorized(UserPermissions.admin || UserPermissions.sub_admin)
-    @Get("/all")
+    @Get("/all/:skip/:limit")
     async getAllForms(
+        @Params()
+        { skip, limit }: SkipLimitURLParams,
         @Res() res: Response
     ) {
         try {
             const formRepository: Repository<Form> = getConnection().getRepository(Form);
             const forms: Form[] = await formRepository.find({
-                relations: ["formToServices", "formToServices.service"]
+                relations: ["formToServices", "formToServices.service"],
+                order: {
+                    formId: "DESC"
+                },
+                skip: +skip,
+                take: +limit
             });
+
+            const formCount = await formRepository.count()
 
             return res.status(ResponseStatus.SUCCESS_FETCH).send({
                 status: true,
-                count: forms.length,
+                count: formCount,
                 data: forms
             })
         }

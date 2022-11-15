@@ -183,3 +183,9 @@ export class EntityId {
   @IsNotEmpty()
   id: number | string;
 }
+
+
+export class CityParams {
+  @IsNotEmpty()
+  province_id: string;
+}

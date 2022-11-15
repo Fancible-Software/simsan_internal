@@ -79,14 +79,18 @@
                             <div class="relative w-full mb-3">
                                 <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                                     htmlFor="grid-password">
-                                    City
+                                    Province
                                 </label>
-                                <input type="email"
+                                <select
                                     class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                                    placeholder="city" formControlName="city" />
+                                    formControlName="province" (change)="onChange($event)">
+                                    <option value="">Select Province</option>
 
-                                <div *ngIf="submitted && f['city'].errors" class="invalid-feedback">
-                                    <div *ngIf="f['city'].errors['required']">City is required</div>
+                                    <option *ngFor="let province of provinces" value="{{province.province_id}}">
+                                        {{province.province_name}}</option>
+                                </select>
+                                <div *ngIf="submitted && f['province'].errors" class="invalid-feedback">
+                                    <div *ngIf="f['province'].errors['required']">Province is required</div>
                                 </div>
                             </div>
                         </div>
@@ -94,16 +98,23 @@
                             <div class="relative w-full mb-3">
                                 <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                                     htmlFor="grid-password">
-                                    Province
+                                    City
                                 </label>
-                                <input type="text"
+                                <select
                                     class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                                    placeholder="Province" formControlName="province" />
-                                <div *ngIf="submitted && f['province'].errors" class="invalid-feedback">
-                                    <div *ngIf="f['province'].errors['required']">Province is required</div>
+                                    formControlName="city">
+                                    <option value="">Select City</option>
+
+                                    <option *ngFor="let city of cities" value="{{city.city}}">
+                                        {{city.city}}</option>
+                                </select>
+
+                                <div *ngIf="submitted && f['city'].errors" class="invalid-feedback">
+                                    <div *ngIf="f['city'].errors['required']">City is required</div>
                                 </div>
                             </div>
                         </div>
+
                         <div class="w-full lg:w-4/12 px-4">
                             <div class="relative w-full mb-3">
                                 <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
@@ -140,13 +151,14 @@
 
                     <div class="flex flex-wrap">
                         <button
-                            class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-                            type="button" (click)="generateAmount()" [disabled]="enabled">
+                            class="text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                            type="button" (click)="generateAmount()" [ngClass]="enabled?'bg-grey-btn':'bg-red-600'"
+                            [disabled]="enabled">
                             Generate
                         </button>
                         <button
                             class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-                            type="button" (click)="clear()" [disabled]="enabled">
+                            type="button" (click)="clear()">
                             Clear
                         </button>
                     </div>
