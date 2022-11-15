@@ -3,8 +3,7 @@
     <div class="container mx-auto items-center flex flex-wrap">
         <div class="w-full md:w-6/12 lg:w-6/12 xl:w-6/12 px-4">
             <div class="pt-32 sm:pt-0">
-                <form>
-                    <!-- <hr class="mt-6 border-b-1 border-blueGray-300" /> -->
+                <form [formGroup]="form">
                     <h6 class="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
                         User Information
                     </h6>
@@ -16,7 +15,11 @@
                                     Name
                                 </label>
                                 <input type="text"
-                                    class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" />
+                                    class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                                    formControlName="name" />
+                                <div *ngIf="submitted && f['name'].errors" class="invalid-feedback">
+                                    <div *ngIf="f['name'].errors['required']">Name is required</div>
+                                </div>
                             </div>
                         </div>
                         <div class="w-full lg:w-6/12 px-4">
@@ -26,7 +29,11 @@
                                     Phone Number
                                 </label>
                                 <input type="email"
-                                    class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" />
+                                    class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                                    formControlName="mobile_no" />
+                                <div *ngIf="submitted && f['mobile_no'].errors" class="invalid-feedback">
+                                    <div *ngIf="f['mobile_no'].errors['required']">Mobile Number is required</div>
+                                </div>
                             </div>
                         </div>
                         <div class="w-full lg:w-6/12 px-4">
@@ -36,7 +43,14 @@
                                     Email
                                 </label>
                                 <input type="text"
-                                    class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" />
+                                    class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                                    formControlName="email" />
+                                <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+                                    <div *ngIf="f['email'].errors['required']">Email is required</div>
+                                </div>
+                                <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+                                    <div *ngIf="f['email'].errors['email']">Invalid Email</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -55,7 +69,10 @@
                                 </label>
                                 <input type="text"
                                     class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                                    placeholder="Address" />
+                                    placeholder="Address" formControlName="address" />
+                                <div *ngIf="submitted && f['address'].errors" class="invalid-feedback">
+                                    <div *ngIf="f['address'].errors['required']">Address is required</div>
+                                </div>
                             </div>
                         </div>
                         <div class="w-full lg:w-4/12 px-4">
@@ -66,18 +83,25 @@
                                 </label>
                                 <input type="email"
                                     class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                                    placeholder="city" />
+                                    placeholder="city" formControlName="city" />
+
+                                <div *ngIf="submitted && f['city'].errors" class="invalid-feedback">
+                                    <div *ngIf="f['city'].errors['required']">City is required</div>
+                                </div>
                             </div>
                         </div>
                         <div class="w-full lg:w-4/12 px-4">
                             <div class="relative w-full mb-3">
                                 <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                                     htmlFor="grid-password">
-                                    Country
+                                    Province
                                 </label>
                                 <input type="text"
                                     class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                                    placeholder="Country" />
+                                    placeholder="Province" formControlName="province" />
+                                <div *ngIf="submitted && f['province'].errors" class="invalid-feedback">
+                                    <div *ngIf="f['province'].errors['required']">Province is required</div>
+                                </div>
                             </div>
                         </div>
                         <div class="w-full lg:w-4/12 px-4">
@@ -88,7 +112,10 @@
                                 </label>
                                 <input type="text"
                                     class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                                    placeholder="Postal Code" />
+                                    placeholder="Postal Code" formControlName="postal_code" />
+                                <div *ngIf="submitted && f['postal_code'].errors" class="invalid-feedback">
+                                    <div *ngIf="f['postal_code'].errors['required']">Postal Code is required</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -99,78 +126,24 @@
                         Services
                     </h6>
                     <div class="flex flex-wrap">
-                        <div class="w-full lg:w-12/12 px-4" style="display: inline-flex;">
-                            <div class="w-full lg:w-4/12 px-4">
-                                <div class="w-full mb-3" style="display: inline-flex;">
-                                    <input type="checkbox" class="rounded shadow focus:outline-none transition-all"
-                                        id="vehicle1" name="vehicle1" />
-                                    <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                                        style="padding-left: 8px;" htmlFor="grid-password" for="vehicle1">
-                                        Roof moss removal
-                                    </label>
-                                </div>
 
+                        <label
+                            class="w-full mb-3 block uppercase text-blueGray-600 text-xs font-bold mb-2 w-full lg:w-4/12 px-4"
+                            style="display: inline-flex;" htmlFor="grid-password" formArrayName="services"
+                            *ngFor="let order of servicesFormArray.controls; let i = index">
+                            <input type="checkbox" class="rounded shadow focus:outline-none transition-all"
+                                [formControlName]="i" />
+                            <span style="padding-left: 8px;">{{services[i].serviceName}}</span>
+                        </label>
 
-                            </div>
-                            <div class="w-full lg:w-4/12 px-4">
+                    </div>
 
-                                <div class="w-full mb-3" style="display: inline-flex;">
-                                    <input type="checkbox" class="rounded shadow focus:outline-none transition-all"
-                                        id="vehicle1" name="vehicle1" />
-                                    <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                                        style="padding-left: 8px;" htmlFor="grid-password" for="vehicle1">
-                                        Gutter cleaning from inside
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="w-full lg:w-4/12 px-4">
-                                <div class="w-full mb-3" style="display: inline-flex;">
-                                    <input type="checkbox" class="rounded shadow focus:outline-none transition-all"
-                                        id="vehicle1" name="vehicle1" />
-                                    <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                                        style="padding-left: 8px;" htmlFor="grid-password" for="vehicle1">
-                                        Gutter cleaning from outside
-                                    </label>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="w-full lg:w-12/12 px-4" style="display: inline-flex;">
-                            <div class="w-full lg:w-4/12 px-4">
-                                <div class="w-full mb-3" style="display: inline-flex;">
-                                    <input type="checkbox" class="rounded shadow focus:outline-none transition-all"
-                                        id="vehicle1" name="vehicle1" />
-                                    <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                                        style="padding-left: 8px;" htmlFor="grid-password" for="vehicle1">
-                                        Window washing
-                                    </label>
-                                </div>
-
-
-                            </div>
-                            <div class="w-full lg:w-4/12 px-4">
-
-                                <div class="w-full mb-3" style="display: inline-flex;">
-                                    <input type="checkbox" class="rounded shadow focus:outline-none transition-all"
-                                        id="vehicle1" name="vehicle1" />
-                                    <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                                        style="padding-left: 8px;" htmlFor="grid-password" for="vehicle1">
-                                        Awning washing
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="w-full lg:w-4/12 px-4">
-                                <div class="w-full mb-3" style="display: inline-flex;">
-                                    <input type="checkbox" class="rounded shadow focus:outline-none transition-all"
-                                        id="vehicle1" name="vehicle1" />
-                                    <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                                        style="padding-left: 8px;" htmlFor="grid-password" for="vehicle1">
-                                        Stylites washing
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
+                    <div class="flex flex-wrap">
+                        <button
+                            class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                            type="button" (click)="generateAmount()">
+                            Generate
+                        </button>
                     </div>
                     <h6 class="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
                         Pricing
@@ -183,7 +156,11 @@
                                     Total Amount
                                 </label>
                                 <input type="text"
-                                    class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" />
+                                    class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                                    formControlName="total_amount" />
+                                <div *ngIf="submitted && f['total_amount'].errors" class="invalid-feedback">
+                                    <div *ngIf="f['total_amount'].errors['required']">Total Amount is required</div>
+                                </div>
                             </div>
                         </div>
                         <div class="w-full lg:w-6/12 px-4">
@@ -193,17 +170,22 @@
                                     Discount
                                 </label>
                                 <input type="text"
-                                    class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" />
+                                    class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                                    formControlName="discount" (change)="applyDiscount($event)" />
                             </div>
                         </div>
                         <div class="w-full lg:w-6/12 px-4">
                             <div class="relative w-full mb-3">
                                 <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                                     htmlFor="grid-password">
-                                    Final Amount (including GST)
+                                    Final Amount (including 5% GST)
                                 </label>
                                 <input type="text"
-                                    class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" />
+                                    class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                                    formControlName="final_amount" />
+                                <div *ngIf="submitted && f['final_amount'].errors" class="invalid-feedback">
+                                    <div *ngIf="f['final_amount'].errors['required']">Final Amount is required</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -211,7 +193,7 @@
                     <div class="flex flex-wrap">
                         <button
                             class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-                            type="button">
+                            type="button" (click)="finalSubmit()">
                             Submit
                         </button>
                     </div>
@@ -221,8 +203,8 @@
         </div>
     </div>
 
-    <!-- <img class="absolute top-0 b-auto right-0 pt-16 sm:w-6/12 -mt-48 sm:mt-0 w-10/12 max-h-860-px"
-        src="assets/img/pattern_angular.png" alt="..." /> -->
+    <img class="absolute top-0 b-auto right-0 pt-16 sm:w-6/12 -mt-48 sm:mt-0 w-10/12 max-h-860-px"
+        src="assets/img/pattern_angular.png" alt="..." />
 </section>
 
 <!-- <section class="mt-48 md:mt-40 pb-40 relative bg-blueGray-100">

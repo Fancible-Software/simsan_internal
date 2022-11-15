@@ -39,7 +39,7 @@ export class ServicesController {
     }
 
 
-
+    // for admin listing - fetching all services (is Active flag removed)
     @Authorized(UserPermissions.sub_admin || UserPermissions.admin)
     @Get("/all/:skip/:limit")
     async getAllServices(
@@ -51,9 +51,6 @@ export class ServicesController {
             const serviceRepository: Repository<Service> = getConnection().getRepository(Service);
             const services: Service[] = await serviceRepository.find({
                 select: ['serviceId', 'serviceName', 'price', 'isActive', 'createdAt', 'createdBy'],
-                where: {
-                    isActive: 1
-                },
                 skip: +skip,
                 take: +limit,
                 order: {
@@ -61,7 +58,7 @@ export class ServicesController {
                 }
 
             });
-            const total = await serviceRepository.count({ where: { isActive: 1 } })
+            const total = await serviceRepository.count()
             return res.status(200).send({
                 status: true,
                 message: "Services Fetched !",
@@ -196,5 +193,39 @@ export class ServicesController {
             logger.error(err);
             return new APIError(err.message, ResponseStatus.API_ERROR);
         }
+    }
+
+    @Get('/all-services')
+    async getServices(
+        @Res() res: Response
+    ) {
+        try {
+            const serviceRepository: Repository<Service> = getConnection().getRepository(Service);
+            const services: Service[] = await serviceRepository.find({
+                select: ['serviceId', 'serviceName', 'price', 'isActive'],
+                where: {
+                    isActive: 1
+                },
+                order: {
+                    "serviceId": "DESC"
+                }
+
+            });
+            const total = await serviceRepository.count({ isActive: 1 })
+            return res.status(200).send({
+                status: true,
+                message: "Services Fetched !",
+                data: {
+                    total: total,
+                    rows: services
+                }
+            });
+        }
+        catch (err) {
+            // console.log(err.message);
+            logger.error(err);
+            return new APIError(err.message, 500);
+        }
+
     }
 }
