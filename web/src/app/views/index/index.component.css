@@ -1,3 +1,9 @@
 .invalid-feedback {
     color: #e34242
 }
+
+.bg-grey-btn{
+    cursor: not-allowed;
+    background-color: azure;
+    color: black
+}

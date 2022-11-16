@@ -39,5 +39,5 @@ export class Location{
     postal : string;
 
     @Column()
-    id : String;
+    city_id : String;
 }

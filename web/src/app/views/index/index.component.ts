@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonService } from '../../services/common.service';
 import { FormBuilder, FormGroup, FormArray, FormControl, ValidatorFn, Validators } from '@angular/forms';
-
+import { ToastrService } from 'ngx-toastr'
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-index',
@@ -10,10 +11,13 @@ import { FormBuilder, FormGroup, FormArray, FormControl, ValidatorFn, Validators
 })
 export class IndexComponent implements OnInit {
 
+  enabled = false
   form: FormGroup;
   submitted = false
   services: any = []
-  constructor(private commonService: CommonService, private formBuilder: FormBuilder) {
+  provinces: any = []
+  cities: any = []
+  constructor(private commonService: CommonService, private formBuilder: FormBuilder, private toastr: ToastrService, private router: Router) {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
@@ -22,7 +26,8 @@ export class IndexComponent implements OnInit {
       city: ['', Validators.required],
       province: ['', Validators.required],
       postal_code: ['', Validators.required],
-      services: new FormArray([]),
+      services_dropdown: new FormArray([]),
+      services: [[], Validators.required],
       total_amount: ['', [Validators.required]],
       discount: [''],
       final_amount: ['', [Validators.required]]
@@ -31,10 +36,11 @@ export class IndexComponent implements OnInit {
 
   ngOnInit(): void {
     this.getActiveServicesList()
+    this.getProvinceList()
   }
 
   get servicesFormArray() {
-    return this.form.controls['services'] as FormArray;
+    return this.form.controls['services_dropdown'] as FormArray;
   }
 
   getActiveServicesList() {
@@ -51,30 +57,53 @@ export class IndexComponent implements OnInit {
   }
 
   generateAmount() {
-
     const selectedOrderIds: any = []
     let amount: number = 0
-    this.form.value.services.map((checked: any, i: number) => {
+    // console.log(this.form.value.services_dropdown)
+    this.form.value.services_dropdown.map((checked: any, i: number) => {
       if (checked) {
-        selectedOrderIds.push({ "service_id": this.services[i].serviceId, "price": this.services[i].price })
+        selectedOrderIds.push({ "serviceId": this.services[i].serviceId, "price": this.services[i].price })
         amount = amount + (+this.services[i].price)
       }
     }).filter((v: number) => v !== null);
-    console.log(selectedOrderIds)
-    this.form.patchValue({ "service": null })
+    if (!selectedOrderIds.length) {
+      alert('Please select any of the above service!')
+      return
+    }
     this.form.patchValue({
       "total_amount": amount,
-      "final_amount": amount + ((amount * 5) / 100)
+      "final_amount": amount + ((amount * 5) / 100),
+      "services": selectedOrderIds
     })
+    this.enabled = true
+
 
   }
 
   finalSubmit() {
+
     this.submitted = true
     if (this.form.status == "INVALID") {
       return
     }
-    console.log(this.form.value)
+    let formData = {
+      "customerName": this.form.value.name,
+      "customerEmail": this.form.value.email,
+      "customerAddress": this.form.value.address,
+      "customerCity": this.form.value.city,
+      "customerCountry": "Canada",
+      "customerPostalCode": this.form.value.postal_code,
+      "customerPhone": this.form.value.mobile_no,
+      "customerProvince": this.form.value.province,
+      "discount": this.form.value.discount.toString(),
+      "total": this.form.value.total_amount.toString(),
+      "final_amount": this.form.value.final_amount.toString(),
+      "services": this.form.value.services
+    }
+    this.commonService.submitFeedback(formData).subscribe(data => {
+      this.toastr.success(data.message, "SUCCESS")
+      this.router.navigateByUrl('admin/feedbacks')
+    })
   }
 
   get f() { return this.form.controls; }
@@ -85,6 +114,30 @@ export class IndexComponent implements OnInit {
     this.form.patchValue({
       "final_amount": (discountedAmount + (discountedAmount * 5) / 100).toFixed(2)
     })
+  }
+
+  clear() {
+    this.form.controls['services_dropdown'].reset()
+    this.enabled = false
+    this.form.controls['total_amount'].reset()
+    this.form.controls['final_amount'].reset()
+    this.form.controls['discount'].reset()
+  }
+
+  getProvinceList() {
+    this.commonService.provinceList().subscribe(data => {
+      this.provinces = data.data
+    })
+  }
+
+  onChange(evt: any) {
+
+    let provinceId = evt.target.value
+    if (provinceId) {
+      this.commonService.citiesList(provinceId).subscribe(data => {
+        this.cities = data.data
+      })
+    }
   }
 
 }
