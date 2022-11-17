@@ -37,6 +37,8 @@ import { ServiceListComponent } from './views/admin/services/service-list/servic
 import { ToastrModule } from 'ngx-toastr'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceCreateComponent } from './views/admin/services/service-create/service-create.component';
+import { SettingsListComponent } from './views/admin/settings/settings-list/settings-list.component';
+import { SettingsCreateComponent } from './views/admin/settings/settings-create/settings-create.component';
 
 
 @NgModule({
@@ -66,7 +68,9 @@ import { ServiceCreateComponent } from './views/admin/services/service-create/se
     ListComponent,
     CreateComponent,
     ServiceListComponent,
-    ServiceCreateComponent
+    ServiceCreateComponent,
+    SettingsListComponent,
+    SettingsCreateComponent
   ],
   imports: [
     BrowserModule,

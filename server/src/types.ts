@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, IsNumber, Matches, IsNotIn } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsNumber, Matches, IsNotIn, IsBoolean } from 'class-validator';
 import { Form } from './entity/Form';
 import { FormToServices } from './entity/FormToServices';
 import { Service } from './entity/Services';
@@ -188,4 +188,15 @@ export class EntityId {
 export class CityParams {
   @IsNotEmpty()
   province_id: string;
+}
+
+export class ConfigurationParams {
+  @IsString()
+  key: string;
+
+  @IsString()
+  value: string
+
+  @IsBoolean()
+  isImage: Boolean
 }
