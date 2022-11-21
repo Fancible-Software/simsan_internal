@@ -96,11 +96,113 @@ export class FormController {
             const serviceMap: Map<number, Service> = new Map<number, Service>();
             services.forEach((service: Service) => serviceMap.set(service.serviceId, service));
             const newFormRecord: Form = body.toForm(user.id.toString());
-            await queryRunner.manager.save(newFormRecord);
+            const formAdded = await queryRunner.manager.save(newFormRecord);
+
             await queryRunner.manager.save(newFormRecord.formToServices.map((service: FormToServices) => {
                 service.form = newFormRecord
                 return service;
             }));
+            const formRepository: Repository<Form> = getConnection().getRepository(Form);
+            const formRecord: Form | undefined = await formRepository.findOne(formAdded.formId, {
+                relations: ["formToServices", "formToServices.service"]
+            });
+            if (formRecord) {
+                const today = date.format(new Date(), 'YYYY-MM-DD')
+
+                const configRepo: Repository<Configurations> = getConnection().getRepository(Configurations)
+                const configRecord = await configRepo.find();
+                // console.log(configRecord)
+                const invoiceNumber = Date.now()
+                let products: any = []
+                formRecord?.formToServices.map(element => {
+                    let obj = {
+                        "quantity": 1,
+                        "description": element.service.serviceName,
+                        "price": +element.service.price,
+                    }
+                    products.push(obj)
+                })
+
+                let logoDetails = ""
+                let taxDetails = ""
+                let companyName = ""
+                let companyAddress = ""
+                let companyCity = ""
+                let companyCountry = ""
+                let companyZip = ""
+
+                configRecord.filter(element => {
+                    if (element.key === "logo") {
+                        logoDetails = element.value
+                    }
+                    else if (element.key === "gst") {
+                        taxDetails = element.value
+                    }
+                    else if (element.key === "company_name") {
+                        companyName = element.value
+                    }
+                    else if (element.key === "company_address") {
+                        companyAddress = element.value
+                    }
+                    else if (element.key === "company_city") {
+                        companyCity = element.value
+                    }
+                    else if (element.key === "company_country") {
+                        companyCountry = element.value
+                    }
+                    else if (element.key === "company_zip") {
+                        companyZip = element.value
+                    }
+                })
+
+                let data = {
+                    "images": {
+                        "logo": logoDetails
+                    },
+                    "company_details": {
+                        "name": companyName,
+                        "address": companyAddress,
+                        "zip": companyZip,
+                        "city": companyCity,
+                        "country": companyCountry
+                    },
+                    "client": {
+                        "name": formRecord.customerName,
+                        "address": formRecord.customerAddress,
+                        "zip": formRecord.customerPostalCode,
+                        "city": formRecord.customerCity,
+                        "country": formRecord.customerCountry
+                    },
+                    "information": {
+                        "invoice_number": invoiceNumber,
+                        "date": today,
+                        "total": formRecord.final_amount,
+                        "sub_total": formRecord.total,
+                        "discount": formRecord.discount,
+                        "tax": taxDetails
+                    },
+                    "products": products,
+                    // "bottom-notice": "Kindly pay your invoice within 15 days.",
+                    // Settings to customize your invoice
+                    "settings": {
+                        "currency": "CAD",
+                        "tax-notation": "gst",
+                    },
+                }
+                let invoiceDetails: any = {}
+                invoiceDetails = await generateInvoice(data)
+                if (invoiceDetails) {
+                    // const formObj: Form | undefined = await formRepository.findOne(id);
+                    formRecord.invoice_id = invoiceDetails?.invoice_id
+                    formRecord.invoice_path = invoiceDetails?.path
+                    formRecord.is_invoice_generated = true
+                    formRepository.manager.save(formRecord)
+                }
+            }
+
+
+
+
 
             return res.status(ResponseStatus.SUCCESS_UPDATE).send({
                 status: true,
