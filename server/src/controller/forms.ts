@@ -9,6 +9,8 @@ import { FormToServices } from "src/entity/FormToServices";
 import { Service } from "../entity/Services";
 import { User } from '../entity/User'
 import generateInvoice from "../utils/generateInvoice";
+import date from 'date-and-time';
+import { Configurations } from "../entity/Configurations";
 
 @Controller("/form")
 export class FormController {
@@ -183,91 +185,102 @@ export class FormController {
         { id }: EntityId
     ) {
         try {
-            console.log(id)
+            const today = date.format(new Date(), 'YYYY-MM-DD')
             const formRepository: Repository<Form> = getConnection().getRepository(Form);
             const formRecord: Form | undefined = await formRepository.findOne(id, {
-                relations: ["formToServices"]
+                relations: ["formToServices", "formToServices.service"]
             });
-
             if (formRecord) {
+                // console.log(formRecord)
+                const configRepo: Repository<Configurations> = getConnection().getRepository(Configurations)
+                const configRecord = await configRepo.find();
+                // console.log(configRecord)
+                const invoiceNumber = Date.now()
+                let products: any = []
+                formRecord.formToServices.map(element => {
+                    let obj = {
+                        "quantity": 1,
+                        "description": element.service.serviceName,
+                        "price": +element.service.price,
+                    }
+                    products.push(obj)
+                })
+
+                let logoDetails = ""
+                let taxDetails = ""
+                let companyName = ""
+                let companyAddress = ""
+                let companyCity = ""
+                let companyCountry = ""
+                let companyZip = ""
+
+                configRecord.filter(element => {
+                    if (element.key === "logo") {
+                        logoDetails = element.value
+                    }
+                    else if (element.key === "gst") {
+                        taxDetails = element.value
+                    }
+                    else if (element.key === "company_name") {
+                        companyName = element.value
+                    }
+                    else if (element.key === "company_address") {
+                        companyAddress = element.value
+                    }
+                    else if (element.key === "company_city") {
+                        companyCity = element.value
+                    }
+                    else if (element.key === "company_country") {
+                        companyCountry = element.value
+                    }
+                    else if (element.key === "company_zip") {
+                        companyZip = element.value
+                    }
+                })
+
                 let data = {
                     "images": {
-                        "logo": "https://public.easyinvoice.cloud/img/logo_en_original.png",
+                        "logo": logoDetails
                     },
-                    "sender": {
-                        "company": "Sample Corp",
-                        "address": "Sample Street 123",
-                        "zip": "1234 AB",
-                        "city": "Sampletown",
-                        "country": "Samplecountry"
+                    "company_details": {
+                        "name": companyName,
+                        "address": companyAddress,
+                        "zip": companyZip,
+                        "city": companyCity,
+                        "country": companyCountry
                     },
                     "client": {
-                        "company": "Client Corp",
-                        "address": "Clientstreet 456",
-                        "zip": "4567 CD",
-                        "city": "Clientcity",
-                        "country": "Clientcountry"
+                        "name": formRecord.customerName,
+                        "address": formRecord.customerAddress,
+                        "zip": formRecord.customerPostalCode,
+                        "city": formRecord.customerCity,
+                        "country": formRecord.customerCountry
                     },
                     "information": {
-                        // Invoice number
-                        "number": "2021.0001",
-                        // Invoice data
-                        "date": "12-12-2021",
-                        // Invoice due date
-                        "due-date": "31-12-2021"
+                        "invoice_number": invoiceNumber,
+                        "date": today,
+                        "total": formRecord.final_amount,
+                        "sub_total": formRecord.total,
+                        "discount": formRecord.discount,
+                        "tax": taxDetails
                     },
-                    "products": [
-                        {
-                            "quantity": 2,
-                            "description": "Product 1",
-                            "tax-rate": 6,
-                            "price": 33.87
-                        },
-                        {
-                            "quantity": 4.1,
-                            "description": "Product 2",
-                            "tax-rate": 6,
-                            "price": 12.34
-                        },
-                        {
-                            "quantity": 4.5678,
-                            "description": "Product 3",
-                            "tax-rate": 21,
-                            "price": 6324.453456
-                        }
-                    ],
-                    // The message you would like to display on the bottom of your invoice
-                    "bottom-notice": "Kindly pay your invoice within 15 days.",
+                    "products": products,
+                    // "bottom-notice": "Kindly pay your invoice within 15 days.",
                     // Settings to customize your invoice
                     "settings": {
-                        "currency": "CAD", // See documentation 'Locales and Currency' for more info. Leave empty for no currency.
+                        "currency": "CAD",
                         "tax-notation": "gst",
-                        // "locale": "nl-NL", // Defaults to en-US, used for number formatting (See documentation 'Locales and Currency')
-                        // "margin-top": 25, // Defaults to '25'
-                        // "margin-right": 25, // Defaults to '25'
-                        // "margin-left": 25, // Defaults to '25'
-                        // "margin-bottom": 25, // Defaults to '25'
-                        // "format": "A4", // Defaults to A4, options: A3, A4, A5, Legal, Letter, Tabloid
-                        // "height": "1000px", // allowed units: mm, cm, in, px
-                        // "width": "500px", // allowed units: mm, cm, in, px
-                        // "orientation": "landscape", // portrait or landscape, defaults to portrait
-                    },
-                    // Translate your invoice to your preferred language
-                    "translate": {
-                        // "invoice": "FACTUUR",  // Default to 'INVOICE'
-                        // "number": "Nummer", // Defaults to 'Number'
-                        // "date": "Datum", // Default to 'Date'
-                        // "due-date": "Verloopdatum", // Defaults to 'Due Date'
-                        // "subtotal": "Subtotaal", // Defaults to 'Subtotal'
-                        // "products": "Producten", // Defaults to 'Products'
-                        // "quantity": "Aantal", // Default to 'Quantity'
-                        // "price": "Prijs", // Defaults to 'Price'
-                        // "product-total": "Totaal", // Defaults to 'Total'
-                        // "total": "Totaal" // Defaults to 'Total'
                     },
                 }
-    
-                await generateInvoice(data)
+                let invoiceDetails: any = {}
+                invoiceDetails = await generateInvoice(data)
+                if (invoiceDetails) {
+                    // const formObj: Form | undefined = await formRepository.findOne(id);
+                    formRecord.invoice_id = invoiceDetails?.invoice_id
+                    formRecord.invoice_path = invoiceDetails?.path
+                    formRecord.is_invoice_generated = true
+                    formRepository.manager.save(formRecord)
+                }
                 return res.status(ResponseStatus.SUCCESS_UPDATE).send({
                     status: true,
                     data: formRecord
@@ -278,12 +291,71 @@ export class FormController {
                     message: "Could not find form record with given id"
                 })
             }
-            
+
         }
         catch (error) {
             logger.log(error.message)
             return new APIError(error.message, ResponseStatus.API_ERROR)
         }
     }
+
+
+    // @Authorized(UserPermissions.admin)
+    // @Post('/generate/invoice/pdfkit')
+    // async generateInvoicePdfkit(
+    //     @Res() res: Response,
+    //     @Body()
+    //     { id }: EntityId
+    // ) {
+    //     try {
+    //         const formRepository: Repository<Form> = getConnection().getRepository(Form);
+    //         const formRecord: Form | undefined = await formRepository.findOne(id, {
+    //             relations: ["formToServices", "formToServices.service"]
+    //         });
+    //         if (formRecord) {
+    //             const invoiceNumber = Date.now()
+    //             let products: any = []
+    //             formRecord.formToServices.map(element => {
+    //                 let obj = {
+    //                     "quantity": 1,
+    //                     "description": element.service.serviceName,
+    //                     "amount": +element.service.price
+    //                 }
+    //                 products.push(obj)
+    //             })
+    //             const invoice = {
+    //                 shipping: {
+    //                     name: 'John Doe',
+    //                     address: '1234 Main Street',
+    //                     city: 'San Francisco',
+    //                     state: 'CA',
+    //                     country: 'US',
+    //                     postal_code: 94111,
+    //                 },
+    //                 items: products,
+    //                 subtotal: 8000,
+    //                 paid: 0,
+    //                 invoice_nr: invoiceNumber,
+    //             };
+    //             await generateInvoicePdkit(invoice)
+    //             return res.status(200).send({
+    //                 status: true,
+    //                 message: "Invoice created!",
+    //                 data: formRecord
+    //             })
+
+    //         }
+    //         else {
+    //             return res.status(ResponseStatus.API_ERROR).send({
+    //                 status: false,
+    //                 message: "Could not find form record with given id"
+    //             })
+    //         }
+    //     }
+    //     catch (error) {
+    //         logger.log(error.message)
+    //         return new APIError(error.message, ResponseStatus.API_ERROR)
+    //     }
+    // }
 
 }

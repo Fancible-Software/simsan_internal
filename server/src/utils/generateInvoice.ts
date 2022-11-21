@@ -1,10 +1,31 @@
-import easyinvoice from 'easyinvoice';
-import fs from 'fs';
+import axios from "axios"
 
 
+export default async (options: any) => {
+    return new Promise((resolve, reject) => {
 
-export default async (data: any) => {
-    const result = await easyinvoice.createInvoice(data);
-    await fs.writeFileSync("public/invoice.pdf", result.pdf, 'base64')
-    return true
+        const url = 'https://marswellfoods.com/api/generate/invoice';
+
+
+        const config = {
+            headers: {
+                'easyinvoice-source': 'npm'
+            }
+        };
+        axios.post(url, options, config).then((response) => {
+            // console.log(response.data.data)
+            if (response.data.success) {
+
+                resolve(response.data.data);
+            } else {
+                resolve(false)
+            }
+
+        }).catch((error) => {
+            console.log(error.response.data);
+
+            reject(false);
+        })
+    })
+
 }

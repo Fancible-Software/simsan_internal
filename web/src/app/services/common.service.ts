@@ -61,4 +61,8 @@ export class CommonService {
     return this.httpClient.get<any>(environment.endPoint + "/form/all/" + skip + "/" + limit).pipe()
   }
 
+  settingsList(skip: number, limit: number): Observable<any> {
+    return this.httpClient.get<any>(environment.endPoint + "/configuration/all/" + skip + "/" + limit).pipe()
+  }
+
 }

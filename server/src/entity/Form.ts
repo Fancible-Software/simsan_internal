@@ -39,6 +39,16 @@ export class Form {
     @Column({ nullable: false })
     final_amount: string;
 
+    @Column({ nullable: true, default: false })
+    is_invoice_generated: boolean
+
+    @Column({ nullable: true })
+    invoice_id: string
+
+    @Column({ nullable: true })
+    invoice_path: string
+
+
     @OneToMany(() => FormToServices, (formToServices: FormToServices) => formToServices.form)
     formToServices: FormToServices[];
 

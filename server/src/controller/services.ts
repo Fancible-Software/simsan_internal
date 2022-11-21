@@ -32,7 +32,7 @@ export class ServicesController {
             }
         }
         catch (err) {
-            console.log(err.message);
+            // console.log(err.message);
             logger.error(err);
             return new APIError(err.message, 500);
         }
@@ -99,7 +99,7 @@ export class ServicesController {
                         message: "Service with this name already exist!"
                     })
                 }
-                console.log(serviceObj)
+                // console.log(serviceObj)
                 serviceObj.serviceName = body.serviceName;
                 serviceObj.price = body.price;
                 serviceObj.isActive = +body.isActive
