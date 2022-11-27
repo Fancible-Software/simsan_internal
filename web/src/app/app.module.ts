@@ -39,6 +39,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceCreateComponent } from './views/admin/services/service-create/service-create.component';
 import { SettingsListComponent } from './views/admin/settings/settings-list/settings-list.component';
 import { SettingsCreateComponent } from './views/admin/settings/settings-create/settings-create.component';
+import { VerificationComponent } from './views/auth/verify/verification/verification.component';
 
 
 @NgModule({
@@ -70,7 +71,8 @@ import { SettingsCreateComponent } from './views/admin/settings/settings-create/
     ServiceListComponent,
     ServiceCreateComponent,
     SettingsListComponent,
-    SettingsCreateComponent
+    SettingsCreateComponent,
+    VerificationComponent
   ],
   imports: [
     BrowserModule,
@@ -82,7 +84,11 @@ import { SettingsCreateComponent } from './views/admin/settings/settings-create/
     HttpClientModule,
     NgxPaginationModule,
     AngularMultiSelectModule,
-    ToastrModule.forRoot({ positionClass: 'inline' })
+    ToastrModule.forRoot({
+      timeOut: 10000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+    })
   ],
   providers: [UserInterceptor, { provide: HTTP_INTERCEPTORS, useClass: UserInterceptor, multi: true }, CommonService],
   bootstrap: [AppComponent]

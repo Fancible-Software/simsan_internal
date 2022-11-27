@@ -13,7 +13,7 @@ import { ServiceListComponent } from './views/admin/services/service-list/servic
 import { ServiceCreateComponent } from './views/admin/services/service-create/service-create.component';
 import { SettingsListComponent } from './views/admin/settings/settings-list/settings-list.component';
 import { SettingsCreateComponent } from './views/admin/settings/settings-create/settings-create.component';
-
+import { VerificationComponent } from './views/auth/verify/verification/verification.component'
 
 const routes: Routes = [
   { path: "", redirectTo: "auth", pathMatch: "full" },
@@ -22,7 +22,8 @@ const routes: Routes = [
     component: AuthComponent,
     children: [
       { path: "login", component: LoginComponent },
-      { path: "", redirectTo: "login", pathMatch: "full" }
+      { path: "", redirectTo: "login", pathMatch: "full" },
+      { path: "verify/user/:type", component: VerificationComponent },
     ]
   },
   { path: "collect/feedback", component: IndexComponent, canActivate: [AuthGuard] },
@@ -40,6 +41,7 @@ const routes: Routes = [
       { path: "services/edit/:id", component: ServiceCreateComponent },
       { path: "configurations", component: SettingsListComponent },
       { path: "configurations/create", component: SettingsCreateComponent }
+      // { path: "verify/user", component: VerificationComponent }
     ]
   }
 

@@ -49,7 +49,7 @@ export class customerSignupRequest {
   @IsNotEmpty()
   email: string;
 
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
   mobile_no: string;
 
@@ -216,3 +216,28 @@ export class invoiceResp {
   path: string
   invoice_id: string
 }
+
+export enum tokenType {
+  otp = "otp",
+  forget_pwd = "forget_pwd"
+}
+
+export class verificationRequest {
+  @IsString()
+  @IsNotEmpty()
+  type: string;
+
+  @IsString()
+  @IsNotEmpty()
+  otp: string;
+
+}
+
+export class ResendOtpRequest {
+
+  @IsString()
+  @IsNotEmpty()
+  type: string;
+
+}
+

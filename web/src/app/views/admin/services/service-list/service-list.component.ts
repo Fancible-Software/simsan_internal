@@ -64,8 +64,12 @@ export class ServiceListComponent implements OnInit {
   }
 
   deleteService(serviceId: number) {
-    // console.log(serviceId)
-    this.showModal = true
+    this.commonService.deleteService(serviceId).subscribe(data => {
+      if (data.status) {
+        alert(data.message)
+        this.ngOnInit()
+      }
+    })
   }
 
   toggleModal() {

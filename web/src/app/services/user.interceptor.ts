@@ -17,7 +17,7 @@ export class UserInterceptor implements HttpInterceptor {
   constructor(private router: Router) { }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    console.log(this.router.url)
+    // console.log(this.router.url)
     if (this.router.url == "/auth/login") {
       return next.handle(request);
     }
