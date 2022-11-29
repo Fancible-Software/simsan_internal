@@ -1,4 +1,4 @@
-import { response, Response } from "express";
+import { Response } from "express";
 import { Body, Controller, Post, Res, CurrentUser, Get, Params, Authorized } from "routing-controllers";
 import { customerSignupRequest, ResponseStatus, SkipLimitURLParams, UserPermissions, tokenType, verificationRequest, ResendOtpRequest } from '../types'
 import { getConnection } from "typeorm";
@@ -185,7 +185,7 @@ export class AdminController {
         @CurrentUser() user: User
     ) {
         try {
-            console.log(user)
+            // console.log(user)
             if (type === tokenType.otp && user.is_verified) {
                 return res.status(ResponseStatus.ALREADY_EXISTS).send({
                     status: true,
