@@ -208,7 +208,6 @@ export class ConfigurationParams {
     config.isImage = this.isImage
     config.createdBy = userId
     return config
-
   }
 }
 

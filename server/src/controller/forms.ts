@@ -393,7 +393,6 @@ export class FormController {
                     message: "Could not find form record with given id"
                 })
             }
-
         }
         catch (error) {
             logger.log(error.message)
