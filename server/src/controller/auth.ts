@@ -24,9 +24,9 @@ export class AuthController {
 
       const ifUserExist = await queryRunner.manager.getRepository(User).findOne({
         where: [
-          { email: obj.email }
+          { email: obj.email },
         ],
-        select: ["id", "first_name", "last_name", "mobile_no", "email", "is_active", "password", "is_active"]
+        select: ["id", "first_name", "last_name", "mobile_no", "email", "is_active", "password", "is_active", "is_verified"]
       })
 
       if (!ifUserExist) {
@@ -61,7 +61,8 @@ export class AuthController {
         last_name: ifUserExist.last_name,
         email: ifUserExist.email,
         mobile_no: ifUserExist.mobile_no,
-        token: auth_token
+        token: auth_token,
+        is_verified: ifUserExist.is_verified
       }
 
       return res.status(200).send({

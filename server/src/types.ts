@@ -1,4 +1,5 @@
 import { IsEmail, IsNotEmpty, IsString, IsNumber, Matches, IsNotIn, IsBoolean } from 'class-validator';
+import { Configurations } from './entity/Configurations';
 import { Form } from './entity/Form';
 import { FormToServices } from './entity/FormToServices';
 import { Service } from './entity/Services';
@@ -48,7 +49,7 @@ export class customerSignupRequest {
   @IsNotEmpty()
   email: string;
 
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
   mobile_no: string;
 
@@ -199,4 +200,43 @@ export class ConfigurationParams {
 
   @IsBoolean()
   isImage: Boolean
+
+  public toConfiguration(userId: string): Configurations {
+    const config: Configurations = new Configurations()
+    config.key = this.key.toLowerCase();
+    config.value = this.value
+    config.isImage = this.isImage
+    config.createdBy = userId
+    return config
+  }
 }
+
+export class invoiceResp {
+  path: string
+  invoice_id: string
+}
+
+export enum tokenType {
+  otp = "otp",
+  forget_pwd = "forget_pwd"
+}
+
+export class verificationRequest {
+  @IsString()
+  @IsNotEmpty()
+  type: string;
+
+  @IsString()
+  @IsNotEmpty()
+  otp: string;
+
+}
+
+export class ResendOtpRequest {
+
+  @IsString()
+  @IsNotEmpty()
+  type: string;
+
+}
+

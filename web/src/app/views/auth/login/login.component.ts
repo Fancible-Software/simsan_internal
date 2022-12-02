@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { CommonService } from '../../../services/common.service'
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { ToastrService } from 'ngx-toastr'
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ export class LoginComponent implements OnInit {
 
   loginForm: FormGroup | any
 
-  constructor(public router: Router, private formBuilder: FormBuilder, public loader: NgxUiLoaderService, private service: CommonService) { }
+  constructor(public router: Router, private formBuilder: FormBuilder, public loader: NgxUiLoaderService, private service: CommonService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     if (localStorage.getItem('token')) {
@@ -35,11 +36,18 @@ export class LoginComponent implements OnInit {
     this.service.login(this.loginForm.value).subscribe(data => {
       if (data.status) {
         this.loader.stop()
+        this.toastr.success(data.message, "SUCCESS")
         localStorage.setItem("token", data.data.token)
-        this.router.navigate(['/admin/dashboard'])
+        localStorage.setItem("is_verified", data.data.is_verified)
+
+        if (data.data.is_verified) {
+          this.router.navigate(['/admin/dashboard'])
+        } else {
+          this.router.navigate(['/auth/verify/user', 'otp'])
+        }
       }
       else {
-        alert('Login failed!')
+        this.toastr.error(data.message)
         this.loader.stop()
       }
     })

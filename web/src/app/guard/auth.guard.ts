@@ -13,7 +13,15 @@ export class AuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     if (localStorage.getItem('token')) {
-      return true
+      // console.log(localStorage.getItem('is_verified'))
+      if (localStorage.getItem('is_verified') === "false") {
+        this.router.navigate(["auth/verify/user/otp"])
+        return false
+      }
+      else{
+        return true
+      }
+      
     } else {
       this.router.navigate(["auth/login"]);
       return false

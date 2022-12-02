@@ -18,7 +18,7 @@ export class ServiceCreateComponent implements OnInit {
 
   ngOnInit(): void {
     this.serviceForm = this.formBuilder.group({
-      serviceName: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]*[a-zA-Z]+[a-zA-Z0-9]*$')]],
+      serviceName: ['', [Validators.required]],
       price: ['', [Validators.required, Validators.pattern('^[1-9][0-9]*$')]],
       isActive: ['', [Validators.required]]
     })
@@ -66,9 +66,13 @@ export class ServiceCreateComponent implements OnInit {
       this.loader.stop()
       return
     }
+    let body = {
+      serviceName: this.serviceForm.value.serviceName,
+      isActive: this.serviceForm.value.isActive.toString(),
+      price: this.serviceForm.value.price
+    }
 
-    this.service.updateService(this.serviceForm.value, this.serviceId).subscribe(data => {
-      // alert(data.message)
+    this.service.updateService(body, this.serviceId).subscribe(data => {
       if (data.status) {
         alert(data.message)
         this.router.navigateByUrl('/admin/services')

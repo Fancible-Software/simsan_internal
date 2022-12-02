@@ -42,15 +42,11 @@ export class User {
   @Column({ nullable: false })
   createdBy: string
 
+  @Column({ default: false })
+  is_verified: Boolean
 
   @Column({ nullable: true })
-  forget_pwd_otp: number
-
-  @Column({ nullable: true })
-  forget_pwd_otp_generated_at: number
-
-  @Column({ nullable: true })
-  is_forget_pwd_otp_verified: number
+  verified_at?: Date
 
   @UpdateDateColumn({ nullable: true })
   updatedAt?: Date;
