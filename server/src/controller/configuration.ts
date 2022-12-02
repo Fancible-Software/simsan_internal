@@ -1,6 +1,6 @@
-import { Authorized, Body, Controller, Get, Params, Post, Res } from "routing-controllers";
+import { Authorized, Controller, Get, Params, Post, Res } from "routing-controllers";
 import logger from "../utils/logger";
-import { UserPermissions, ResponseStatus, SkipLimitURLParams, ConfigurationParams } from "../types";
+import { UserPermissions, ResponseStatus, SkipLimitURLParams } from "../types";
 import { APIError } from "../utils/APIError";
 import { getConnection, Repository } from "typeorm";
 import { Configurations } from "../entity/Configurations";
@@ -42,9 +42,6 @@ export class ConfigurationController {
     @Authorized(UserPermissions.admin)
     @Post("/create")
     async createSettings(
-        @Body()
-        body: ConfigurationParams,
-        @Res() res: Response
     ) {
         try {
 
