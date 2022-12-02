@@ -29,8 +29,10 @@ export class IndexComponent implements OnInit {
       services_dropdown: new FormArray([]),
       services: [[], Validators.required],
       total_amount: ['', [Validators.required]],
+      discount_percent: [''],
       discount: [''],
-      final_amount: ['', [Validators.required]]
+      final_amount: ['', [Validators.required]],
+      tax_applicable: [false]
     });
   }
 
@@ -72,12 +74,18 @@ export class IndexComponent implements OnInit {
     }
     this.form.patchValue({
       "total_amount": amount,
-      "final_amount": amount + ((amount * 5) / 100),
       "services": selectedOrderIds
     })
+    if (this.form.value.tax_applicable) {
+      this.form.patchValue({
+        "final_amount": amount + ((amount * 5) / 100),
+      })
+    } else {
+      this.form.patchValue({
+        "final_amount": amount
+      })
+    }
     this.enabled = true
-
-
   }
 
   finalSubmit() {
@@ -110,10 +118,18 @@ export class IndexComponent implements OnInit {
 
   applyDiscount(evt: any) {
     const discPerc = evt.target.value
+    const discountAmount = this.form.value.total_amount * (discPerc / 100)
+    // this.form.value.discount = discountAmount
     let discountedAmount = this.form.value.total_amount - (this.form.value.total_amount * (discPerc / 100))
     this.form.patchValue({
-      "final_amount": (discountedAmount + (discountedAmount * 5) / 100).toFixed(2)
+      "discount": discountAmount
     })
+
+    if (this.form.value.tax_applicable) {
+      this.form.patchValue({
+        "final_amount": (discountedAmount + (discountedAmount * 5) / 100).toFixed(2),
+      })
+    }
   }
 
   clear() {
@@ -122,6 +138,7 @@ export class IndexComponent implements OnInit {
     this.form.controls['total_amount'].reset()
     this.form.controls['final_amount'].reset()
     this.form.controls['discount'].reset()
+    this.form.controls['discount_percent'].reset()
   }
 
   getProvinceList() {
@@ -136,6 +153,17 @@ export class IndexComponent implements OnInit {
     if (provinceId) {
       this.commonService.citiesList(provinceId).subscribe(data => {
         this.cities = data.data
+      })
+    }
+  }
+
+  isTaxApplicable(evt: any) {
+    const discPerc = this.form.value.discount_percent
+    let discountedAmount = this.form.value.total_amount - (this.form.value.total_amount * (discPerc / 100))
+
+    if (this.form.value.tax_applicable) {
+      this.form.patchValue({
+        "final_amount": (discountedAmount + (discountedAmount * 5) / 100).toFixed(2),
       })
     }
   }

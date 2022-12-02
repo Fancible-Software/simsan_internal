@@ -33,6 +33,10 @@ export class CommonService {
     return this.httpClient.post<any>(environment.endPoint + "/services/create", body).pipe()
   }
 
+  deleteService(id: number): Observable<any> {
+    return this.httpClient.delete<any>(environment.endPoint + "/services/" + id).pipe()
+  }
+
   serviceDetail(id: number): Observable<any> {
     return this.httpClient.get<any>(environment.endPoint + "/services/service/" + id).pipe()
   }
@@ -59,6 +63,22 @@ export class CommonService {
 
   feedbackList(skip: number, limit: number): Observable<any> {
     return this.httpClient.get<any>(environment.endPoint + "/form/all/" + skip + "/" + limit).pipe()
+  }
+
+  settingsList(skip: number, limit: number): Observable<any> {
+    return this.httpClient.get<any>(environment.endPoint + "/configuration/all/" + skip + "/" + limit).pipe()
+  }
+
+  createUser(body: any) {
+    return this.httpClient.post<any>(environment.endPoint + "/admin/create/user", body).pipe()
+  }
+
+  verifyUser(body: any) {
+    return this.httpClient.post<any>(environment.endPoint + "/admin/verify/user", body).pipe()
+  }
+
+  resendOtp(type: string) {
+    return this.httpClient.get<any>(environment.endPoint + "/admin/resend/otp/" + type).pipe()
   }
 
 }

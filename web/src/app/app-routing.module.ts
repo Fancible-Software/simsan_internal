@@ -11,6 +11,9 @@ import { LoginComponent } from './views/auth/login/login.component';
 import { IndexComponent } from './views/index/index.component';
 import { ServiceListComponent } from './views/admin/services/service-list/service-list.component'
 import { ServiceCreateComponent } from './views/admin/services/service-create/service-create.component';
+import { SettingsListComponent } from './views/admin/settings/settings-list/settings-list.component';
+import { SettingsCreateComponent } from './views/admin/settings/settings-create/settings-create.component';
+import { VerificationComponent } from './views/auth/verify/verification/verification.component'
 
 const routes: Routes = [
   { path: "", redirectTo: "auth", pathMatch: "full" },
@@ -19,7 +22,8 @@ const routes: Routes = [
     component: AuthComponent,
     children: [
       { path: "login", component: LoginComponent },
-      { path: "", redirectTo: "login", pathMatch: "full" }
+      { path: "", redirectTo: "login", pathMatch: "full" },
+      { path: "verify/user/:type", component: VerificationComponent },
     ]
   },
   { path: "collect/feedback", component: IndexComponent, canActivate: [AuthGuard] },
@@ -28,15 +32,16 @@ const routes: Routes = [
     component: AdminComponent,
     canActivate: [AuthGuard],
     children: [
-
       { path: "dashboard", component: DashboardComponent },
       { path: "feedbacks", component: FeedbacksComponent },
       { path: "users", component: ListComponent },
       { path: "users/create", component: CreateComponent },
       { path: "services", component: ServiceListComponent },
       { path: "services/create", component: ServiceCreateComponent },
-      { path: "services/edit/:id", component: ServiceCreateComponent }
-
+      { path: "services/edit/:id", component: ServiceCreateComponent },
+      { path: "configurations", component: SettingsListComponent },
+      { path: "configurations/create", component: SettingsCreateComponent }
+      // { path: "verify/user", component: VerificationComponent }
     ]
   }
 

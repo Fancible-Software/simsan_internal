@@ -6,5 +6,6 @@ declare namespace NodeJS {
     REPORTING_API_KEY: string;
     EMAIL_USER: string;
     EMAIL_PWD: string;
+    IMAGE_UPLOAD_PATH: string;
   }
 }

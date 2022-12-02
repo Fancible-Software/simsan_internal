@@ -17,6 +17,7 @@ export class SidebarComponent implements OnInit {
 
   onLogout() {
     localStorage.removeItem('token')
+    localStorage.removeItem('is_verified')
     this.router.navigate(['/auth/login'])
   }
 

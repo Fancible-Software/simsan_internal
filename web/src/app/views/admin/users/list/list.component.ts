@@ -25,13 +25,11 @@ export class ListComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllUsers()
-
   }
 
   getAllUsers() {
     this.commonService.usersList(0, 10).subscribe(data => {
       if (data.status) {
-        // this.toastr.success(data.message)
         this.usersData = data.data.rows
         this.totalUsers = data.data.total
       }
@@ -45,7 +43,6 @@ export class ListComponent implements OnInit {
     this.page = evt
     this.commonService.usersList((this.page - 1) * 10, 10).subscribe(data => {
       if (data.status) {
-        // this.toastr.success(data.message)
         this.usersData = data.data.rows
         this.totalUsers = data.data.total
       }

@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-
+import { Router } from '@angular/router'
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { CommonService } from '../../../../services/common.service';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
@@ -7,53 +10,41 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CreateComponent implements OnInit {
 
-  dropdownList: any = [];
-  selectedItems: any = [];
-  dropdownSettings = {};
-  constructor() { }
+  userForm: FormGroup | any
+  submitted = false
+
+
+  constructor(private router: Router, private formBuilder: FormBuilder, private commonService: CommonService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
-    this.dropdownList = [
-      { id: 1, itemName: 'India' },
-      { id: 2, itemName: 'Singapore' },
-      { id: 3, itemName: 'Australia' },
-      { id: 4, itemName: 'Canada' },
-      { id: 5, itemName: 'South Korea' },
-      { id: 6, itemName: 'Germany' },
-      { id: 7, itemName: 'France' },
-      { id: 8, itemName: 'Russia' },
-      { id: 9, itemName: 'Italy' },
-      { id: 10, itemName: 'Sweden' }
-    ];
-    this.selectedItems = [
-      { id: 2, itemName: 'Singapore' },
-      { id: 3, itemName: 'Australia' },
-      { id: 4, itemName: 'Canada' },
-      { id: 5, itemName: 'South Korea' }
-    ];
-    this.dropdownSettings = {
-      singleSelection: false,
-      text: 'Select Countries',
-      selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
-      enableSearchFilter: true,
-      classes: 'myclass custom-class'
-    };
+    this.userForm = this.formBuilder.group({
+      first_name: ['', [Validators.required]],
+      last_name: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]],
+      mobile_no: ['', [Validators.required]],
+      roles: ['', [Validators.required]]
+    })
   }
 
-  onItemSelect(item: any) {
-    console.log(item);
-    console.log(this.selectedItems);
+  submit() {
+    this.submitted = true
+    if (this.userForm.status == "INVALID") {
+      return;
+    }
+    this.commonService.createUser(this.userForm.value).subscribe(data => {
+      if (data.status) {
+        this.toastr.success(data.message, "SUCCESS")
+        this.router.navigateByUrl('/admin/users')
+      }
+    })
   }
-  OnItemDeSelect(item: any) {
-    console.log(item);
-    console.log(this.selectedItems);
-  }
-  onSelectAll(items: any) {
-    console.log(items);
-  }
-  onDeSelectAll(items: any) {
-    console.log(items);
+
+  get f() { return this.userForm.controls; }
+
+
+  cancel() {
+    this.router.navigateByUrl('/admin/users')
   }
 
 }

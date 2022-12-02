@@ -11,7 +11,8 @@ export class defaultUser1667841299086 implements MigrationInterface {
         "mobile_no": "1234567890",
         "password": "admin@123",
         "roles": UserPermissions.admin,
-        "createdBy": "default"
+        "createdBy": "default",
+        "is_verified": true
     }
     public async up(queryRunner: QueryRunner): Promise<void> {
         const userRepo = await queryRunner.manager.getRepository(User)
