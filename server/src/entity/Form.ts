@@ -37,6 +37,12 @@ export class Form {
     discount: string;
 
     @Column({ nullable: false })
+    discount_percent: string
+
+    @Column({ nullable: false })
+    is_taxable: boolean
+
+    @Column({ nullable: false })
     final_amount: string;
 
     @Column({ nullable: true, default: false })

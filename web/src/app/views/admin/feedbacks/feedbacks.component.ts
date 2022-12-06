@@ -44,4 +44,8 @@ export class FeedbacksComponent implements OnInit {
     })
   }
 
+  generateInvoice() {
+    // this.commonService.
+  }
+
 }

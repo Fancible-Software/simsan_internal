@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Res, CurrentUser, Get, Params, Authorized } from "routing-controllers";
+import { Controller, Res, Get, Authorized } from "routing-controllers";
 import { APIError } from "../utils/APIError";
 import { ResponseStatus, UserPermissions } from '../types'
 import { getConnection } from "typeorm";
@@ -51,9 +51,9 @@ export class DashboardController {
             let today = new Date()
             today = new Date(today.setMonth(today.getMonth() - 1))
             let formattedDate = DateAndTime.format(today, "DD-MM-YYYY")
-            
+
             const feedbackRepo = getConnection().getRepository(Form)
-            const feedbackResult = await feedbackRepo.createQueryBuilder("form").select("COUNT(form.formId)", "sum").addSelect("to_char(form.createdAt,'DD-MM-YYYY')").groupBy("to_char(form.createdAt,'DD-MM-YYYY')").where("to_char(form.createdAt,'DD-MM-YYYY') >= :date", { date: formattedDate }).getRawMany()
+            const feedbackResult = await feedbackRepo.createQueryBuilder("form").select("COUNT(form.formId)", "x").addSelect("to_char(form.createdAt,'DD-MM-YYYY')", "y").groupBy("to_char(form.createdAt,'DD-MM-YYYY')").andWhere("to_char(form.createdAt,'DD-MM-YYYY') >= :date", { date: formattedDate }).getRawMany()
 
             return res.status(ResponseStatus.SUCCESS_FETCH).send({
                 status: true,

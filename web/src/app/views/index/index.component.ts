@@ -106,8 +106,11 @@ export class IndexComponent implements OnInit {
       "discount": this.form.value.discount.toString(),
       "total": this.form.value.total_amount.toString(),
       "final_amount": this.form.value.final_amount.toString(),
-      "services": this.form.value.services
+      "services": this.form.value.services,
+      "is_taxable": this.form.value.tax_applicable,
+      "discount_percent": this.form.value.discount_percent
     }
+    // console.log(formData)
     this.commonService.submitFeedback(formData).subscribe(data => {
       this.toastr.success(data.message, "SUCCESS")
       this.router.navigateByUrl('admin/feedbacks')

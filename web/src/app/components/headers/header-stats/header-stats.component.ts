@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonService } from '../../../services/common.service'
 
 @Component({
   selector: 'app-header-stats',
@@ -7,9 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeaderStatsComponent implements OnInit {
 
-  constructor() { }
+  stats: any
+  constructor(private commonService: CommonService) { }
 
   ngOnInit(): void {
+    this.getDashboardCount()
+  }
+
+  getDashboardCount() {
+    this.commonService.headerCount().subscribe(data => {
+      if (data.status) {
+        this.stats = data.data
+      }
+    })
   }
 
 }

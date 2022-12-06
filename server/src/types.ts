@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, IsNumber, Matches, IsNotIn, IsBoolean } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, Matches, IsNotIn, IsBoolean } from 'class-validator';
 import { Configurations } from './entity/Configurations';
 import { Form } from './entity/Form';
 import { FormToServices } from './entity/FormToServices';
@@ -138,8 +138,15 @@ export class FormType {
   @IsString()
   discount: string;
 
+  @IsString()
+  discount_percent: string;
+
   @IsNotEmpty()
   services: FormToServiceType[];
+
+  @IsBoolean()
+  @IsNotEmpty()
+  is_taxable: boolean;
 
 
 
@@ -155,7 +162,9 @@ export class FormType {
     form.customerProvince = this.customerProvince;
     form.discount = this.discount ? this.discount : '0';
     form.total = this.total;
+    form.is_taxable = this.is_taxable
     form.final_amount = this.final_amount;
+    form.discount_percent = this.discount_percent
     form.createdBy = userId
     form.formToServices = this.services.map((s: FormToServiceType) => {
       let obj: FormToServices = new FormToServices();
