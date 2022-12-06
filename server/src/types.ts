@@ -74,7 +74,7 @@ export class ServiceType {
   @Matches(/^\d+\.?\d*$/)
   price: string;
 
-  @IsString()
+  @IsNumber()
   isActive: string
 }
 
