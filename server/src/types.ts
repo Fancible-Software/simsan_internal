@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, Matches, IsNotIn, IsBoolean } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsNumber, Matches, IsNotIn, IsBoolean } from 'class-validator';
 import { Configurations } from './entity/Configurations';
 import { Form } from './entity/Form';
 import { FormToServices } from './entity/FormToServices';
@@ -74,7 +74,7 @@ export class ServiceType {
   @Matches(/^\d+\.?\d*$/)
   price: string;
 
-  @IsString()
+  @IsNumber()
   isActive: string
 }
 

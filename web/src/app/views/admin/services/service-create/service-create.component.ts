@@ -49,7 +49,10 @@ export class ServiceCreateComponent implements OnInit {
       this.loader.stop()
       return
     }
-    this.service.addService(this.serviceForm.value).subscribe(data => {
+    this.service.addService({
+      ...this.serviceForm.value,
+      isActive : parseInt(this.serviceForm.controls['isActive'].value)
+    }).subscribe(data => {
 
       this.loader.stop()
       alert(data.message)
@@ -72,7 +75,15 @@ export class ServiceCreateComponent implements OnInit {
       price: this.serviceForm.value.price
     }
 
+<<<<<<< HEAD
     this.service.updateService(body, this.serviceId).subscribe(data => {
+=======
+    this.service.updateService({
+      ...this.serviceForm.value,
+      isActive : parseInt(this.serviceForm.controls['isActive'].value)
+    }, this.serviceId).subscribe(data => {
+      // alert(data.message)
+>>>>>>> e8fae95603a07d998439489fcc7c235a1a384bc0
       if (data.status) {
         alert(data.message)
         this.router.navigateByUrl('/admin/services')

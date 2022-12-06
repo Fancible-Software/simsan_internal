@@ -57,8 +57,8 @@
                                     class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                     formControlName="isActive">
                                     <option value="">Select Status</option>
-                                    <option value="1">Active</option>
-                                    <option value="0">In-Active</option>
+                                    <option value=1>Active</option>
+                                    <option value=0>In-Active</option>
                                 </select>
                                 <div *ngIf="submitted && f.isActive.errors" class="invalid-feedback">
                                     <div *ngIf="f.isActive.errors.required">Status is required</div>
