@@ -95,6 +95,14 @@ export class SkipLimitURLParams {
   limit: string;
 }
 
+export class InvoiceParams{
+  @IsNotEmpty()
+  id : number | string;
+
+  @IsNotEmpty()
+  uuid : string;
+}
+
 export class FormType {
   @IsNotEmpty()
   @IsString()

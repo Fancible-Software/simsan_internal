@@ -8,6 +8,7 @@ import logger from "../utils/logger"
 import generateOtp from '../utils/generateOtp'
 import dateDifference from "../utils/dateDifference";
 import { UserVerification } from "../entity/UserVerification";
+import sendMail from "../utils/sendMail";
 const bcrypt = require('bcryptjs')
 
 @Controller("/admin")
@@ -111,6 +112,7 @@ export class AdminController {
         @CurrentUser() user: User
     ) {
         try {
+            console.log(obj)
             if (user.is_verified) {
                 return res.status(ResponseStatus.ALREADY_EXISTS).send({
                     status: true,
@@ -121,11 +123,14 @@ export class AdminController {
 
             const fetchRecord: UserVerification | undefined = await queryRunner.manager.getRepository(UserVerification).findOne({
                 where: [
-                    { type: obj.type },
-                    { token: obj.otp },
-                    { userId: user.id }
+                    {
+                        type: obj.type,
+                        token: obj.otp,
+                        userId: user.id
+                    }
                 ]
             })
+            console.log(fetchRecord)
 
             if (!fetchRecord) {
                 return res.status(ResponseStatus.FAILED_UPDATE).send({
@@ -196,13 +201,19 @@ export class AdminController {
             const verificationRepo = getConnection().getRepository(UserVerification)
             const userVerificationObj: UserVerification | undefined = await verificationRepo.findOne({
                 where: [
-                    { type: type },
-                    { userId: user.id }
+                    {
+                        type: type,
+                        userId: user.id
+                    },
+
                 ]
             });
             if (userVerificationObj) {
                 userVerificationObj.token = await generateOtp()
                 await queryRunner.manager.save(userVerificationObj)
+
+                const info = await sendMail({ from: process.env.EMAIL_USER, to: user.email, subject: "Verification Code", html: `<strong>Your verification OTP is ${userVerificationObj.token}</strong>` })
+                console.log(info)
                 return res.status(ResponseStatus.SUCCESS_UPDATE).send({
                     status: true,
                     message: "OTP generated successfully!"

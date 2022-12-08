@@ -3,11 +3,9 @@ import logger from "./logger";
 
 const transport = nodemailer.createTransport({
   port: 587,
-  host: "smtp-mail.outlook.com",
+  host: "smtp.gmail.com",
   secure: false,
-  tls: {
-    ciphers: "SSLv3",
-  },
+  requireTLS: true,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PWD,

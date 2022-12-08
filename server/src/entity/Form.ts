@@ -1,10 +1,14 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, Generated, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { FormToServices } from "./FormToServices";
 
 @Entity()
 export class Form {
     @PrimaryGeneratedColumn()
     readonly formId: number;
+
+    @Generated("uuid")
+    @Column()
+    invoiceUuid : string;
 
     @Column({ nullable: false })
     customerName: string;
@@ -53,7 +57,6 @@ export class Form {
 
     @Column({ nullable: true })
     invoice_path: string
-
 
     @OneToMany(() => FormToServices, (formToServices: FormToServices) => formToServices.form)
     formToServices: FormToServices[];
