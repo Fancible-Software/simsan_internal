@@ -5,6 +5,7 @@ import express, { Request } from "express";
 import actuator from "express-actuator";
 import jwt, { TokenExpiredError } from "jsonwebtoken";
 import morgan from "morgan";
+import path from "path";
 import { Action, useExpressServer } from "routing-controllers";
 import { getConnection } from "typeorm";
 import { AdminController } from "./controller/admin";
@@ -12,6 +13,7 @@ import { AuthController } from "./controller/auth";
 import { ConfigurationController } from "./controller/configuration";
 import { DashboardController } from './controller/dashboard'
 import { FormController } from "./controller/forms";
+import { InvoiceController } from "./controller/invoice";
 import { LocationController } from "./controller/location";
 import { ServicesController } from "./controller/services";
 import { UserController } from "./controller/user";
@@ -40,6 +42,7 @@ async function run() {
 
         app.use(express.json());
         app.use(express.urlencoded({ extended: true }));
+        app.use(express.static(path.join(__dirname, '../public')));
 
         app.use(
             morgan("combined", {
@@ -58,7 +61,8 @@ async function run() {
                 credentials: true,
             },
             defaultErrorHandler: false,
-            controllers: [UserController, AuthController, AdminController, ServicesController, FormController, LocationController, ConfigurationController, DashboardController],
+            controllers: [UserController, AuthController, AdminController, ServicesController,
+                 FormController, LocationController, ConfigurationController, DashboardController,InvoiceController],
             middlewares: [CustomErrorHandler],
             authorizationChecker: (action: Action): boolean => {
                 const { authorization } = (action.request as Request).headers || {};
