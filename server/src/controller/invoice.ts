@@ -122,65 +122,6 @@ export class InvoiceController{
                         ...data,
                         img_path : `http://localhost:4000/assets/logo.png`
                 });
-
-                // console.log(data);
-                // console.log(path.join(__dirname, "/../../public/views/", "invoice.ejs"));
-                // // Render ejs file into static html
-                // let tempData : any = await ejs.renderFile(
-                //     path.join(__dirname, "/../../public/views/", "invoice.ejs"),
-                //     {
-                //     ...data,
-                //     img_path : `http://localhost:4000/download.jpeg`
-                //     }
-                // );
-                // console.log("After");
-            
-                // // pdf conversion options
-                // let pdfOptions = {
-                //     border: "1cm",
-                //     childProcessOptions: {
-                //         env: {
-                //           OPENSSL_CONF: '/dev/null',
-                //         },
-                //     }
-                // };
-            
-                // // create pdf stream and pipe it to response
-                // // @ts-ignore: Unreachable code error
-                // create(tempData, pdfOptions).toBuffer((err : Error, buffer : any) => {
-                //     if (err) {
-                //         console.log("SOMETHING WRONG WITH FILE PDF",err);
-                //         return res.send(err);
-                //     }
-                //     else{
-                //         return res.end(buffer, 'binary');
-                //     }
-                    
-                    
-                    // if (err) {
-                    //     // handle error and return a error response code
-                    //     console.log("ERROR",err);
-                    //     return res.status(500).json({
-                    //         status: false,
-                    //         message: "Error occured when converting html to pdf file",
-                    //     });
-                    // } else {
-                    //     console.log("WE ARE HERE !");
-                    //     // once we are done reading end the response
-                    //     pdfStream.on("error",(err:any)=>{
-                    //         console.log('STREAMERROR',err);
-                    //     });
-
-                    //     pdfStream.on("end", () => {
-                    //         // done reading
-                    //         res.end();
-                    //     });
-            
-                    //     // pipe the contents of the PDF directly to the response
-                    //     // res.attachment('invoice.pdf');
-                    //     pdfStream.pipe(res);
-                    // }
-                // });
             } else {
                 console.log("CANNOT FIND");
                 return res.status(ResponseStatus.API_ERROR).send({
