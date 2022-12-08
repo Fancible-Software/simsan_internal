@@ -44,4 +44,8 @@ export class FeedbacksComponent implements OnInit {
     })
   }
 
+  getInvoiceUrl(feedBack:any){
+    return `http://localhost:4000/invoice/${feedBack.formId}/${feedBack.invoiceUuid}`;
+  }
+
 }

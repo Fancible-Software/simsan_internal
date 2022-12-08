@@ -118,9 +118,9 @@
                             </td>
                             <td
                                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right">
-                                <a href="https://marswellfoods.com{{feedback.invoice_path}}" style="color:dodgerblue"
-                                    download target="m1">
-                                    {{feedback.invoice_id}}
+                                <a [href]="getInvoiceUrl(feedback)" style="color:dodgerblue"
+                                    target="m1">
+                                    Invoice
                                 </a>
                             </td>
                         </tr>
