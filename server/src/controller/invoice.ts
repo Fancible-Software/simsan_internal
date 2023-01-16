@@ -120,7 +120,7 @@ export class InvoiceController{
 
                 return res.render(path.join(__dirname, "/../../public/views/", "invoice.ejs"),{
                         ...data,
-                        img_path : `http://localhost:4000/assets/logo.png`
+                        img_path : `/assets/logo.png`
                 });
             } else {
                 console.log("CANNOT FIND");
@@ -131,7 +131,6 @@ export class InvoiceController{
             }
         }
         catch (error) {
-            console.log("OOPS");
             console.log(error);
             logger.log(error.message)
             return new APIError(error.message, ResponseStatus.API_ERROR)

@@ -6,7 +6,7 @@ import { Service } from '../entity/Services'
 import { Response } from "express";
 import { Form } from "../entity/Form";
 import { User } from "../entity/User";
-import DateAndTime from 'date-and-time';
+import DateAndTime from 'date-and-time'
 
 @Controller("/dashboard")
 export class DashboardController {
@@ -52,9 +52,9 @@ export class DashboardController {
             let today = new Date()
             today = new Date(today.setMonth(today.getMonth() - 1))
             let formattedDate = DateAndTime.format(today, "DD-MM-YYYY")
-            
+
             const feedbackRepo = getConnection().getRepository(Form)
-            const feedbackResult = await feedbackRepo.createQueryBuilder("form").select("COUNT(form.formId)", "sum").addSelect("to_char(form.createdAt,'DD-MM-YYYY')").groupBy("to_char(form.createdAt,'DD-MM-YYYY')").where("to_char(form.createdAt,'DD-MM-YYYY') >= :date", { date: formattedDate }).getRawMany()
+            const feedbackResult = await feedbackRepo.createQueryBuilder("form").select("COUNT(form.formId)", "x").addSelect("to_char(form.createdAt,'DD-MM-YYYY')", "y").groupBy("to_char(form.createdAt,'DD-MM-YYYY')").andWhere("to_char(form.createdAt,'DD-MM-YYYY') >= :date", { date: formattedDate }).getRawMany()
 
             return res.status(ResponseStatus.SUCCESS_FETCH).send({
                 status: true,

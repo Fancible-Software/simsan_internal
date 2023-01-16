@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { environment } from '../../../../environments/environment.prod';
 import { CommonService } from '../../../services/common.service';
 
 @Component({
@@ -44,8 +45,8 @@ export class FeedbacksComponent implements OnInit {
     })
   }
 
-  getInvoiceUrl(feedBack:any){
-    return `http://localhost:4000/invoice/${feedBack.formId}/${feedBack.invoiceUuid}`;
+  getInvoiceUrl(feedBack: any) {
+    return `${environment.endPoint}/invoice/${feedBack.formId}/${feedBack.invoiceUuid}`;
   }
 
 }

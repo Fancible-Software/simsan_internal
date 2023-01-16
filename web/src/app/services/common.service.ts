@@ -81,4 +81,15 @@ export class CommonService {
     return this.httpClient.get<any>(environment.endPoint + "/admin/resend/otp/" + type).pipe()
   }
 
+  headerCount() {
+    return this.httpClient.get<any>(environment.endPoint + "/dashboard/count").pipe()
+  }
+
+  getInvoiceDashboardGraph() {
+    return this.httpClient.get<any>(environment.endPoint + "/dashboard/graph").pipe()
+  }
+
+  generateInvoice(body: any) {
+    return this.httpClient.post<any>("http://localhost:4100/invoice", body).pipe()
+  }
 }

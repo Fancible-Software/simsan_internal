@@ -51,7 +51,7 @@ export class ServiceCreateComponent implements OnInit {
     }
     this.service.addService({
       ...this.serviceForm.value,
-      isActive : parseInt(this.serviceForm.controls['isActive'].value)
+      isActive: parseInt(this.serviceForm.controls['isActive'].value)
     }).subscribe(data => {
 
       this.loader.stop()
@@ -77,7 +77,7 @@ export class ServiceCreateComponent implements OnInit {
 
     this.service.updateService({
       ...this.serviceForm.value,
-      isActive : parseInt(this.serviceForm.controls['isActive'].value)
+      isActive: parseInt(this.serviceForm.controls['isActive'].value)
     }, this.serviceId).subscribe(data => {
       // alert(data.message)
       if (data.status) {
