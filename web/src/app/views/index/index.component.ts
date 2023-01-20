@@ -1,23 +1,37 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonService } from '../../services/common.service';
-import { FormBuilder, FormGroup, FormArray, FormControl, ValidatorFn, Validators } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr'
+import {
+  FormBuilder,
+  FormGroup,
+  FormArray,
+  FormControl,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'app-index',
   templateUrl: './index.component.html',
-  styleUrls: ['./index.component.css']
+  styleUrls: ['./index.component.css'],
 })
 export class IndexComponent implements OnInit {
-
-  enabled = false
+  enabled = false;
   form: FormGroup;
-  submitted = false
-  services: any = []
-  provinces: any = []
-  cities: any = []
-  constructor(private commonService: CommonService, private formBuilder: FormBuilder, private toastr: ToastrService, private router: Router) {
+  submitted = false;
+  services: any = [];
+  provinces: any = [];
+  cities: any = [];
+
+  constructor(
+    private commonService: CommonService,
+    private formBuilder: FormBuilder,
+    private toastr: ToastrService,
+    private router: Router,
+    private loader: NgxUiLoaderService
+  ) {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
@@ -30,15 +44,16 @@ export class IndexComponent implements OnInit {
       services: [[], Validators.required],
       total_amount: ['', [Validators.required]],
       discount_percent: [''],
+      amount_after_discount: [''],
       discount: [''],
       final_amount: ['', [Validators.required]],
-      tax_applicable: [false]
+      tax_applicable: [false],
     });
   }
 
   ngOnInit(): void {
-    this.getActiveServicesList()
-    this.getProvinceList()
+    this.getActiveServicesList();
+    this.getProvinceList();
   }
 
   get servicesFormArray() {
@@ -46,129 +61,155 @@ export class IndexComponent implements OnInit {
   }
 
   getActiveServicesList() {
-    this.commonService.activeServicesList().subscribe(data => {
+    this.commonService.activeServicesList().subscribe((data) => {
       if (data.status) {
-        this.services = data.data.rows
+        this.services = data.data.rows;
         this.addCheckboxesToForm();
       }
-    })
+    });
   }
 
   private addCheckboxesToForm() {
-    this.services.forEach(() => this.servicesFormArray.push(new FormControl(false)));
+    this.services.forEach(() =>
+      this.servicesFormArray.push(new FormControl(false))
+    );
   }
 
   generateAmount() {
-    const selectedOrderIds: any = []
-    let amount: number = 0
+    const selectedOrderIds: any = [];
+    let amount: number = 0;
     // console.log(this.form.value.services_dropdown)
-    this.form.value.services_dropdown.map((checked: any, i: number) => {
-      if (checked) {
-        selectedOrderIds.push({ "serviceId": this.services[i].serviceId, "price": this.services[i].price })
-        amount = amount + (+this.services[i].price)
-      }
-    }).filter((v: number) => v !== null);
+    this.form.value.services_dropdown
+      .map((checked: any, i: number) => {
+        if (checked) {
+          selectedOrderIds.push({
+            serviceId: this.services[i].serviceId,
+            price: this.services[i].price,
+          });
+          amount = amount + +this.services[i].price;
+        }
+      })
+      .filter((v: number) => v !== null);
     if (!selectedOrderIds.length) {
-      alert('Please select any of the above service!')
-      return
+      alert('Please select any of the above service!');
+      return;
     }
     this.form.patchValue({
-      "total_amount": amount,
-      "services": selectedOrderIds
-    })
+      total_amount: amount,
+      services: selectedOrderIds,
+    });
     if (this.form.value.tax_applicable) {
       this.form.patchValue({
-        "final_amount": amount + ((amount * 5) / 100),
-      })
+        final_amount: amount + (amount * 5) / 100,
+      });
     } else {
       this.form.patchValue({
-        "final_amount": amount
-      })
+        final_amount: amount,
+      });
     }
-    this.enabled = true
+    this.enabled = true;
   }
 
   finalSubmit() {
-
-    this.submitted = true
-    if (this.form.status == "INVALID") {
-      return
+    // console.log(this.form.value);
+    // return;
+    this.loader.start();
+    this.submitted = true;
+    if (this.form.status == 'INVALID') {
+      this.loader.stop();
+      return;
     }
     let formData = {
-      "customerName": this.form.value.name,
-      "customerEmail": this.form.value.email,
-      "customerAddress": this.form.value.address,
-      "customerCity": this.form.value.city,
-      "customerCountry": "Canada",
-      "customerPostalCode": this.form.value.postal_code,
-      "customerPhone": this.form.value.mobile_no,
-      "customerProvince": this.form.value.province,
-      "discount": this.form.value.discount.toString(),
-      "total": this.form.value.total_amount.toString(),
-      "final_amount": this.form.value.final_amount.toString(),
-      "services": this.form.value.services,
-      "is_taxable": this.form.value.tax_applicable,
-      "discount_percent": this.form.value.discount_percent
-    }
+      customerName: this.form.value.name,
+      customerEmail: this.form.value.email,
+      customerAddress: this.form.value.address,
+      customerCity: this.form.value.city,
+      customerCountry: 'Canada',
+      customerPostalCode: this.form.value.postal_code,
+      customerPhone: this.form.value.mobile_no,
+      customerProvince: this.form.value.province,
+      discount: this.form.value.discount.toString(),
+      total: this.form.value.total_amount.toString(),
+      final_amount: this.form.value.final_amount.toString(),
+      services: this.form.value.services,
+      is_taxable: this.form.value.tax_applicable,
+      discount_percent: this.form.value.discount_percent,
+    };
     // console.log(formData)
-    this.commonService.submitFeedback(formData).subscribe(data => {
-      this.toastr.success(data.message, "SUCCESS")
-      this.router.navigateByUrl('admin/feedbacks')
-    })
+    this.commonService.submitFeedback(formData).subscribe((data) => {
+      this.loader.stop();
+      this.toastr.success(data.message, 'SUCCESS');
+      this.router.navigateByUrl('admin/feedbacks');
+    });
   }
 
-  get f() { return this.form.controls; }
+  get f() {
+    return this.form.controls;
+  }
 
   applyDiscount(evt: any) {
-    const discPerc = evt.target.value
-    const discountAmount = this.form.value.total_amount * (discPerc / 100)
+    const discPerc = evt.target.value;
+    const discountAmount = this.form.value.total_amount * (discPerc / 100);
     // this.form.value.discount = discountAmount
-    let discountedAmount = this.form.value.total_amount - (this.form.value.total_amount * (discPerc / 100))
+    let discountedAmount =
+      this.form.value.total_amount -
+      this.form.value.total_amount * (discPerc / 100);
     this.form.patchValue({
-      "discount": discountAmount
-    })
+      discount: discountAmount,
+      amount_after_discount: discountedAmount,
+      final_amount: discountedAmount,
+    });
 
     if (this.form.value.tax_applicable) {
       this.form.patchValue({
-        "final_amount": (discountedAmount + (discountedAmount * 5) / 100).toFixed(2),
-      })
+        final_amount: (discountedAmount + (discountedAmount * 5) / 100).toFixed(
+          2
+        ),
+      });
     }
   }
 
   clear() {
-    this.form.controls['services_dropdown'].reset()
-    this.enabled = false
-    this.form.controls['total_amount'].reset()
-    this.form.controls['final_amount'].reset()
-    this.form.controls['discount'].reset()
-    this.form.controls['discount_percent'].reset()
+    this.form.controls['services_dropdown'].reset();
+    this.enabled = false;
+    this.form.controls['total_amount'].reset();
+    this.form.controls['final_amount'].reset();
+    this.form.controls['discount'].reset();
+    this.form.controls['discount_percent'].reset();
   }
 
   getProvinceList() {
-    this.commonService.provinceList().subscribe(data => {
-      this.provinces = data.data
-    })
+    this.commonService.provinceList().subscribe((data) => {
+      this.provinces = data.data;
+    });
   }
 
   onChange(evt: any) {
-
-    let provinceId = evt.target.value
+    let provinceId = evt.target.value;
     if (provinceId) {
-      this.commonService.citiesList(provinceId).subscribe(data => {
-        this.cities = data.data
-      })
+      this.commonService.citiesList(provinceId).subscribe((data) => {
+        this.cities = data.data;
+      });
     }
   }
 
-  isTaxApplicable(evt: any) {
-    const discPerc = this.form.value.discount_percent
-    let discountedAmount = this.form.value.total_amount - (this.form.value.total_amount * (discPerc / 100))
+  isTaxApplicable() {
+    // console.log(this.form.value.tax_applicable);
+    const discPerc = this.form.value.discount_percent;
+    let discountedAmount =
+      this.form.value.total_amount -
+      this.form.value.total_amount * (discPerc / 100);
 
     if (this.form.value.tax_applicable) {
       this.form.patchValue({
-        "final_amount": (discountedAmount + (discountedAmount * 5) / 100).toFixed(2),
-      })
+        final_amount: (discountedAmount + (discountedAmount * 5) / 100).toFixed(
+          2
+        ),
+      });
+    } else {
+      this.form.patchValue({
+        final_amount: this.form.value.amount_after_discount,
+      });
     }
   }
-
 }
