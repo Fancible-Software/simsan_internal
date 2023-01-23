@@ -139,7 +139,7 @@ export class FormController {
           html: `<html><head></head><body><div>Click on the below link to check your invoice <br/> <a href="/invoice/${formRecord.formId}/${formRecord.invoiceUuid}">Link to Invoice</a></div></body></html>`,
           subject: "Invoice - SimsanFraserMain",
         });
-        // console.log(info);
+        console.log(info);
       }
 
       return res.status(ResponseStatus.SUCCESS_UPDATE).send({

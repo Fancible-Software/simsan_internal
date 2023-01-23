@@ -30,15 +30,6 @@ export class SettingsCreateComponent implements OnInit {
     });
     if (this.route.snapshot.params['id']) {
       this.serviceId = this.route.snapshot.params['id'];
-      // this.service.
-        // .serviceDetail(this.serviceId)
-        // .subscribe((serviceDetail: any) => {
-        //   this.serviceForm.patchValue({
-        //     serviceName: serviceDetail.data.serviceName,
-        //     isActive: serviceDetail.data.isActive,
-        //     price: serviceDetail.data.price,
-        //   });
-        // });
     }
   }
 
