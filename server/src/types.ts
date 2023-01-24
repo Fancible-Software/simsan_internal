@@ -1,17 +1,25 @@
-import { IsEmail, IsNotEmpty, IsString, IsNumber, Matches, IsNotIn, IsBoolean } from 'class-validator';
-import { Configurations } from './entity/Configurations';
-import { Form } from './entity/Form';
-import { FormToServices } from './entity/FormToServices';
-import { Service } from './entity/Services';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  IsNumber,
+  Matches,
+  IsNotIn,
+  IsBoolean,
+} from "class-validator";
+import { Configurations } from "./entity/Configurations";
+import { Form } from "./entity/Form";
+import { FormToServices } from "./entity/FormToServices";
+import { Service } from "./entity/Services";
 
 export interface TokenData {
   email: string;
-  roles: string
+  roles: string;
 }
 
 export enum UserPermissions {
   admin = "admin",
-  sub_admin = "sub_admin"
+  sub_admin = "sub_admin",
 }
 
 export enum ResponseStatus {
@@ -23,7 +31,6 @@ export enum ResponseStatus {
 }
 
 export class customerSigninRequest {
-
   @IsString()
   @IsEmail()
   @IsNotEmpty()
@@ -32,7 +39,6 @@ export class customerSigninRequest {
   @IsString()
   @IsNotEmpty()
   password: string;
-
 }
 
 export class customerSignupRequest {
@@ -61,7 +67,6 @@ export class customerSignupRequest {
   @IsString()
   @IsNotEmpty()
   roles: UserPermissions;
-
 }
 
 export class ServiceType {
@@ -75,7 +80,7 @@ export class ServiceType {
   price: string;
 
   @IsNumber()
-  isActive: string
+  isActive: string;
 }
 
 export class FormToServiceType {
@@ -95,12 +100,12 @@ export class SkipLimitURLParams {
   limit: string;
 }
 
-export class InvoiceParams{
+export class InvoiceParams {
   @IsNotEmpty()
-  id : number | string;
+  id: number | string;
 
   @IsNotEmpty()
-  uuid : string;
+  uuid: string;
 }
 
 export class FormType {
@@ -156,8 +161,6 @@ export class FormType {
   @IsNotEmpty()
   is_taxable: boolean;
 
-
-
   public toForm(userId: string): Form {
     const form: Form = new Form();
     form.customerName = this.customerName;
@@ -168,12 +171,12 @@ export class FormType {
     form.customerPostalCode = this.customerPostalCode;
     form.customerPhone = this.customerPhone;
     form.customerProvince = this.customerProvince;
-    form.discount = this.discount ? this.discount : '0';
+    form.discount = this.discount ? this.discount : "0";
     form.total = this.total;
-    form.is_taxable = this.is_taxable
+    form.is_taxable = this.is_taxable;
     form.final_amount = this.final_amount;
-    form.discount_percent = this.discount_percent
-    form.createdBy = userId
+    form.discount_percent = this.discount_percent;
+    form.createdBy = userId;
     form.formToServices = this.services.map((s: FormToServiceType) => {
       let obj: FormToServices = new FormToServices();
       obj.service = new Service();
@@ -202,7 +205,6 @@ export class EntityId {
   id: number | string;
 }
 
-
 export class CityParams {
   @IsNotEmpty()
   province_id: string;
@@ -213,29 +215,50 @@ export class ConfigurationParams {
   key: string;
 
   @IsString()
-  value: string
+  value: string;
 
   @IsBoolean()
-  isImage: Boolean
+  isImage: Boolean;
 
   public toConfiguration(userId: string): Configurations {
-    const config: Configurations = new Configurations()
+    const config: Configurations = new Configurations();
     config.key = this.key.toLowerCase();
-    config.value = this.value
-    config.isImage = this.isImage
-    config.createdBy = userId
-    return config
+    config.value = this.value;
+    config.isImage = this.isImage;
+    config.createdBy = userId;
+    return config;
+  }
+}
+
+export class UpdateConfigurationRequest {
+  @IsNumber()
+  id: number;
+
+  @IsString()
+  key: string;
+
+  @IsString()
+  value: string;
+
+  @IsBoolean()
+  isImage: Boolean;
+
+  public toConfiguration(): Configurations {
+    const config: Configurations = new Configurations();
+    config.value = this.value;
+    config.isImage = this.isImage;
+    return config;
   }
 }
 
 export class invoiceResp {
-  path: string
-  invoice_id: string
+  path: string;
+  invoice_id: string;
 }
 
 export enum tokenType {
   otp = "otp",
-  forget_pwd = "forget_pwd"
+  forget_pwd = "forget_pwd",
 }
 
 export class verificationRequest {
@@ -246,14 +269,10 @@ export class verificationRequest {
   @IsString()
   @IsNotEmpty()
   otp: string;
-
 }
 
 export class ResendOtpRequest {
-
   @IsString()
   @IsNotEmpty()
   type: string;
-
 }
-
