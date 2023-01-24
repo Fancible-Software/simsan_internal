@@ -1,151 +1,242 @@
 <div class="flex flex-wrap mt-4">
-    <div class="w-full mb-12 px-4">
-        <div class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded"
-            [ngClass]="color === 'light' ? 'bg-white' : 'bg-red-900 text-white'">
-            <div class="rounded-t mb-0 px-4 py-3 border-0">
-                <div class="flex flex-wrap items-center">
-                    <div class="relative w-full px-4 max-w-full flex-grow flex-1">
-                        <h3 class="font-semibold text-lg"
-                            [ngClass]="color === 'light' ? 'text-blueGray-700' : 'text-white'">
-                            Feedbacks
-                        </h3>
-                    </div>
-                </div>
-                <div class="relative w-full px-4 max-w-full flex-grow flex-1 text-right">
-                    <a [routerLink]="['/collect/feedback']"
-                        class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150">
-                        Create
-                    </a>
-                </div>
-            </div>
-            <div class="block w-full overflow-x-auto">
-                <!-- Projects table -->
-                <table class="items-center w-full bg-transparent border-collapse">
-                    <thead>
-                        <tr>
-                            <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-                                [ngClass]="
-              color === 'light'
-                ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                : 'bg-red-800 text-red-300 border-red-700'
-            ">
-                                Captured On
-                            </th>
-                            <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-                                [ngClass]="
-              color === 'light'
-                ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                : 'bg-red-800 text-red-300 border-red-700'
-            ">
-                                Customer Details
-                            </th>
-                            <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-                                [ngClass]="
-              color === 'light'
-                ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                : 'bg-red-800 text-red-300 border-red-700'
-            ">
-                                Address Details
-                            </th>
-                            <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-                                [ngClass]="
-              color === 'light'
-                ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                : 'bg-red-800 text-red-300 border-red-700'
-            ">
-                                Amount<br />(CAD)
-                            </th>
-                            <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-                                [ngClass]="
-              color === 'light'
-                ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                : 'bg-red-800 text-red-300 border-red-700'
-            ">
-                                Discount<br /> (CAD)
-                            </th>
-
-                            <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-                                [ngClass]="
-              color === 'light'
-                ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                : 'bg-red-800 text-red-300 border-red-700'
-            ">
-                                Final Amount<br />(CAD)
-                            </th>
-                            <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-                                [ngClass]="
-              color === 'light'
-                ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                : 'bg-red-800 text-red-300 border-red-700'
-            ">
-                                Invoice Id
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            *ngFor="let feedback of feedbackListData| paginate: {itemsPerPage: 10, currentPage: page,totalItems: totalCount}">
-                            <td
-                                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                {{feedback.createdAt | date: 'dd-MM-YYYY HH:MM a'}}
-                            </td>
-                            <th
-                                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
-                                <span class="ml-3 font-bold"
-                                    [ngClass]="color === 'light' ? 'text-blueGray-600' : 'text-white'">
-                                    {{feedback.customerName}}<br />
-                                    {{feedback.customerEmail}}<br />
-                                    {{feedback.customerPhone}}
-
-                                </span>
-                            </th>
-                            <td
-                                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                <span class="ml-3 font-bold"
-                                    [ngClass]="color === 'light' ? 'text-blueGray-600' : 'text-white'">
-
-                                    {{feedback.customerAddress}}, {{feedback.customerCity}},
-                                    {{feedback.customerProvince}},
-                                    {{feedback.customerPostalCode }}
-
-                                </span>
-                            </td>
-                            <td
-                                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                <i class="fas fa-circle text-orange-500 mr-2"></i> {{feedback.total }}
-                            </td>
-                            <td
-                                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                <span class="ml-3 font-bold"
-                                    [ngClass]="color === 'light' ? 'text-blueGray-600' : 'text-white'">
-                                    {{feedback.discount}}
-
-                                </span>
-                            </td>
-                            <td
-                                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                <div class="flex items-center">
-                                    {{feedback.final_amount}}
-                                </div>
-                            </td>
-                            <td
-                                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right">
-                                <a [href]="getInvoiceUrl(feedback)" style="color:dodgerblue"
-                                    target="m1">
-                                    Invoice
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="onPageChange($event)">
-                        </pagination-controls>
-                    </tfoot>
-                </table>
-            </div>
+  <div class="w-full mb-12 px-4">
+    <div
+      class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded"
+      [ngClass]="color === 'light' ? 'bg-white' : 'bg-red-900 text-white'"
+    >
+      <div class="rounded-t mb-0 px-4 py-3 border-0">
+        <div class="flex flex-wrap items-center">
+          <div class="relative w-full px-4 max-w-full flex-grow flex-1">
+            <h3
+              class="font-semibold text-lg"
+              [ngClass]="color === 'light' ? 'text-blueGray-700' : 'text-white'"
+            >
+              Invoices
+            </h3>
+          </div>
         </div>
+        <div
+          class="relative w-full px-4 max-w-full flex-grow flex-1 text-right"
+        >
+          <input
+            type="search"
+            class="form-control"
+            placeholder="Search by customer name, email and phone"
+            style="
+              float: left;
+              border-radius: 10px;
+              height: 36px;
+              width: 60%;
+              border: 1px solid #c7c2c2;
+            "
+            [(ngModel)]="searchTerm"
+          />
+          <button
+            class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+            (click)="search()"
+            style="margin-left: 10px; float: left"
+          >
+            Search
+          </button>
+          <button
+            class="bg-red-600 text-white active:bg-aqua-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+            (click)="clear()"
+            style="margin-left: 10px; float: left"
+          >
+            Clear
+          </button>
+          <a
+            [routerLink]="['/collect/feedback', { type: type }]"
+            class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+          >
+            Create
+          </a>
+        </div>
+      </div>
+      <div class="block w-full overflow-x-auto">
+        <!-- Projects table -->
+        <table class="items-center w-full bg-transparent border-collapse">
+          <thead>
+            <tr>
+              <th
+                class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                [ngClass]="
+                  color === 'light'
+                    ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                    : 'bg-red-800 text-red-300 border-red-700'
+                "
+              >
+                Captured On
+              </th>
+              <th
+                class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                [ngClass]="
+                  color === 'light'
+                    ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                    : 'bg-red-800 text-red-300 border-red-700'
+                "
+              >
+                Customer Details
+              </th>
+              <th
+                class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                [ngClass]="
+                  color === 'light'
+                    ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                    : 'bg-red-800 text-red-300 border-red-700'
+                "
+              >
+                Address Details
+              </th>
+              <th
+                class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                [ngClass]="
+                  color === 'light'
+                    ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                    : 'bg-red-800 text-red-300 border-red-700'
+                "
+              >
+                Amount<br />(CAD)
+              </th>
+              <th
+                class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                [ngClass]="
+                  color === 'light'
+                    ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                    : 'bg-red-800 text-red-300 border-red-700'
+                "
+              >
+                Discount<br />
+                (CAD)
+              </th>
+
+              <th
+                class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                [ngClass]="
+                  color === 'light'
+                    ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                    : 'bg-red-800 text-red-300 border-red-700'
+                "
+              >
+                Final Amount<br />(CAD)
+              </th>
+              <th
+                class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                [ngClass]="
+                  color === 'light'
+                    ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                    : 'bg-red-800 text-red-300 border-red-700'
+                "
+              >
+                Invoice Id
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container
+              *ngIf="feedbackListData.length !== 0; else noDataAvail"
+            >
+              <tr
+                *ngFor="
+                  let feedback of feedbackListData
+                    | paginate
+                      : {
+                          itemsPerPage: 10,
+                          currentPage: page,
+                          totalItems: totalCount
+                        }
+                "
+              >
+                <td
+                  class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+                >
+                  {{ feedback.createdAt | date : "dd-MM-YYYY HH:MM a" }}
+                </td>
+                <th
+                  class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center"
+                >
+                  <span
+                    class="ml-3 font-bold"
+                    [ngClass]="
+                      color === 'light' ? 'text-blueGray-600' : 'text-white'
+                    "
+                  >
+                    {{ feedback.customerName }}<br />
+                    {{ feedback.customerEmail }}<br />
+                    {{ feedback.customerPhone }}
+                  </span>
+                </th>
+                <td
+                  class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+                >
+                  <span
+                    class="ml-3 font-bold"
+                    [ngClass]="
+                      color === 'light' ? 'text-blueGray-600' : 'text-white'
+                    "
+                  >
+                    {{ feedback.customerAddress }}, {{ feedback.customerCity }},
+                    {{ feedback.customerProvince }},
+                    {{ feedback.customerPostalCode }}
+                  </span>
+                </td>
+                <td
+                  class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+                >
+                  <i class="fas fa-circle text-orange-500 mr-2"></i>
+                  {{ feedback.total }}
+                </td>
+                <td
+                  class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+                >
+                  <span
+                    class="ml-3 font-bold"
+                    [ngClass]="
+                      color === 'light' ? 'text-blueGray-600' : 'text-white'
+                    "
+                  >
+                    {{ feedback.discount }}
+                  </span>
+                </td>
+                <td
+                  class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+                >
+                  <div class="flex items-center">
+                    {{ feedback.final_amount }}
+                  </div>
+                </td>
+                <td
+                  class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right"
+                >
+                  <a
+                    [href]="getInvoiceUrl(feedback)"
+                    style="color: dodgerblue"
+                    target="m1"
+                  >
+                    Invoice
+                  </a>
+                </td>
+              </tr>
+            </ng-container>
+            <ng-template #noDataAvail>
+              <tr>
+                <td colspan="7" class="text-center">No Data Available</td>
+              </tr>
+            </ng-template>
+          </tbody>
+          <tfoot>
+            <pagination-controls
+              previousLabel="Prev"
+              nextLabel="Next"
+              (pageChange)="onPageChange($event)"
+            >
+            </pagination-controls>
+          </tfoot>
+        </table>
+      </div>
     </div>
-    <!-- <div class="w-full mb-12 px-4">
+  </div>
+  <!-- <div class="w-full mb-12 px-4">
         <app-card-table color="dark"></app-card-table>
     </div> -->
 </div>

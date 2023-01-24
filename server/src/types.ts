@@ -161,6 +161,9 @@ export class FormType {
   @IsNotEmpty()
   is_taxable: boolean;
 
+  @IsString()
+  type: formTypes;
+
   public toForm(userId: string): Form {
     const form: Form = new Form();
     form.customerName = this.customerName;
@@ -177,6 +180,7 @@ export class FormType {
     form.final_amount = this.final_amount;
     form.discount_percent = this.discount_percent;
     form.createdBy = userId;
+    form.type = this.type;
     form.formToServices = this.services.map((s: FormToServiceType) => {
       let obj: FormToServices = new FormToServices();
       obj.service = new Service();
@@ -275,4 +279,9 @@ export class ResendOtpRequest {
   @IsString()
   @IsNotEmpty()
   type: string;
+}
+
+export enum formTypes {
+  form = "form",
+  quote = "quote",
 }

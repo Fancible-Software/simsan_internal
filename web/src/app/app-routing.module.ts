@@ -38,6 +38,7 @@ const routes: Routes = [
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'feedbacks', component: FeedbacksComponent },
+      { path: 'quotes', component: FeedbacksComponent },
       { path: 'users', component: ListComponent },
       { path: 'users/create', component: CreateComponent },
       { path: 'services', component: ServiceListComponent },

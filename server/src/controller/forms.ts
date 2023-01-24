@@ -10,8 +10,9 @@ import {
   Put,
   Res,
   CurrentUser,
+  QueryParams,
 } from "routing-controllers";
-import { getConnection, In, QueryRunner, Repository } from "typeorm";
+import { Brackets, getConnection, In, QueryRunner, Repository } from "typeorm";
 import {
   EntityId,
   FormToServiceType,
@@ -38,20 +39,51 @@ export class FormController {
   async getAllForms(
     @Params()
     { skip, limit }: SkipLimitURLParams,
+    @QueryParams({ validate: true })
+    { type, searchTerm }: { type: string; searchTerm?: string },
     @Res() res: Response
   ) {
     try {
-      const formRepository: Repository<Form> =
-        getConnection().getRepository(Form);
-      const forms: Form[] = await formRepository.find({
-        order: {
-          formId: "DESC",
-        },
-        skip: +skip,
-        take: +limit,
-      });
+      if (searchTerm) {
+        searchTerm = searchTerm.trim();
+        if (!searchTerm) {
+          searchTerm = undefined;
+        }
+      }
+      const conn = getConnection();
+      const qb = conn.createQueryBuilder(Form, "form");
 
-      const formCount = await formRepository.count();
+      qb.where("form.type = :type", { type: type });
+
+      if (searchTerm) {
+        qb.andWhere(
+          new Brackets((q) => {
+            q.where("form.customerName ilike :searchTerm", {
+              searchTerm: `%${searchTerm}%`,
+            })
+              .orWhere("form.customerEmail ilike :searchTerm", {
+                searchTerm: `%${searchTerm}%`,
+              })
+              .orWhere("form.customerPhone ilike :searchTerm", {
+                searchTerm: `%${searchTerm}%`,
+              });
+          })
+        );
+      }
+
+      const formCount = await qb
+        .clone()
+        .select("COUNT(1) as count")
+        .getRawOne<{ count: string }>();
+
+      const forms = await qb
+        .select([
+          'form."formId" as "formId", form."customerName" as "customerName",form."customerEmail" as "customerEmail", form."customerPhone" as "customerPhone", form."createdAt" as "createdAt", form."customerAddress" as "customerAddress",form."customerPostalCode" as "customerPostalCode", form."customerCity" as "customerCity",form."customerProvince" as "customerProvince", form."customerCountry" as "customerCountry", form."total" as "total", form."discount" as "discount", form."discount_percent" as "discount_percent", form."type" as "type", form."invoiceUuid" as "invoiceUuid",form."final_amount" as "final_amount"',
+        ])
+        .orderBy("form.formId", "DESC")
+        .offset(+skip)
+        .limit(+limit)
+        .getRawMany<Form[]>();
 
       return res.status(ResponseStatus.SUCCESS_FETCH).send({
         status: true,
