@@ -31,6 +31,7 @@ import generateInvoice from "../utils/generateInvoice";
 import date from "date-and-time";
 import { Configurations } from "../entity/Configurations";
 import sendMail from "../utils/sendMail";
+import { getInvoiceHtml } from "../utils/htmlTemplateUtil";
 
 @Controller("/form")
 export class FormController {
@@ -164,14 +165,15 @@ export class FormController {
           relations: ["formToServices", "formToServices.service"],
         }
       );
+
       if (formRecord) {
-        const info = await sendMail({
+        const htmlInvoice  = await getInvoiceHtml(formRecord.formId,formRecord.invoiceUuid);
+        await sendMail({
           from: process.env.EMAIL_USER,
           to: body.customerEmail,
-          html: `<html><head></head><body><div>Click on the below link to check your invoice <br/> <a href="/invoice/${formRecord.formId}/${formRecord.invoiceUuid}">Link to Invoice</a></div></body></html>`,
+          html: `<html><head></head><body><div>Click on the below link to check your invoice <br/> <a href="${process.env.BACKEND_URI}/invoice/${formRecord.formId}/${formRecord.invoiceUuid}">Link to Invoice</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
           subject: "Invoice - SimsanFraserMain",
         });
-        console.log(info);
       }
 
       return res.status(ResponseStatus.SUCCESS_UPDATE).send({
