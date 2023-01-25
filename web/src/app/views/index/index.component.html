@@ -352,7 +352,10 @@
               type="button"
               (click)="finalSubmit()"
             >
-              Submit
+              <ng-container *ngIf="formType === 'FORM'; else quoteSubmitButton">
+                Submit
+              </ng-container>
+              <ng-template #quoteSubmitButton> Submit Quote </ng-template>
             </button>
           </div>
         </form>

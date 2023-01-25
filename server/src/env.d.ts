@@ -7,5 +7,6 @@ declare namespace NodeJS {
     EMAIL_USER: string;
     EMAIL_PWD: string;
     IMAGE_UPLOAD_PATH: string;
+    BACKEND_URI : string;
   }
 }

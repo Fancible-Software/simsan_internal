@@ -9,7 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
@@ -24,13 +24,15 @@ export class IndexComponent implements OnInit {
   services: any = [];
   provinces: any = [];
   cities: any = [];
+  formType: string = 'FORM';
 
   constructor(
     private commonService: CommonService,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
     private router: Router,
-    private loader: NgxUiLoaderService
+    private loader: NgxUiLoaderService,
+    private route: ActivatedRoute
   ) {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required]],
@@ -54,6 +56,15 @@ export class IndexComponent implements OnInit {
   ngOnInit(): void {
     this.getActiveServicesList();
     this.getProvinceList();
+    // console.log(this.route.snapshot.params['type']);
+    if (this.route.snapshot.params['type'] === 'FORM') {
+      this.formType = this.route.snapshot.params['type'];
+    } else if (this.route.snapshot.params['type'] === 'QUOTE') {
+      this.formType = this.route.snapshot.params['type'];
+    } else {
+      this.toastr.warning('Invalid URL', 'WARNING');
+      this.router.navigateByUrl('admin/feedbacks');
+    }
   }
 
   get servicesFormArray() {
@@ -134,6 +145,7 @@ export class IndexComponent implements OnInit {
       services: this.form.value.services,
       is_taxable: this.form.value.tax_applicable,
       discount_percent: this.form.value.discount_percent,
+      type: this.formType,
     };
     // console.log(formData)
     this.commonService.submitFeedback(formData).subscribe((data) => {
