@@ -7,6 +7,9 @@ services:
       dockerfile : Dockerfile
     ports:
     - "80:80"
+    - "443:443"
+    volumes:
+      - /etc/certificates:/etc/certificates
     depends_on:
       - back-end
 
