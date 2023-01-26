@@ -1,7 +1,7 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Simsan Fraser Ltd. Invoice</title>
+    <title>Simsan Fraser Ltd. Quote</title>
     <link rel="stylesheet" href="css/print.css" media="print" />
     <script>
       function printFunction() {
@@ -77,14 +77,14 @@
           <table style="width: 100%">
             <tr>
               <td>
-                <img width="25%" height="100px" src="<%= images['logo'] %>" />
+                <img width="25%" height="100px" src="<%= img_path %>" />
               </td>
             </tr>
             <tr>
               <td style="text-align: right">
-                <strong>Invoice Number</strong>: <%=
+                <strong>Quote Number</strong>: <%=
                 information['invoice_number'] %><br />
-                <strong>Inovice Date</strong>:<%= information['date'] %><br />
+                <strong>Quote Date</strong>:<%= information['date'] %><br />
               </td>
             </tr>
           </table>
@@ -175,7 +175,5 @@
         </td>
       </tr>
     </table>
-    <br />
-    <button onclick="printFunction()">Print</button>
   </body>
 </html>

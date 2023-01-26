@@ -14,7 +14,7 @@
     </button>
     <!-- Brand -->
     <a
-      [routerLink]="['/admin/dashboard']"
+      [routerLink]="['/admin/feedbacks', { type: 'FORM' }]"
       class="md:block text-left md:pb-2 text-blueGray-600 mr-0 inline-block whitespace-nowrap text-sm uppercase font-bold p-4 px-0"
     >
       <img
@@ -40,12 +40,12 @@
       >
         <div class="flex flex-wrap">
           <div class="w-6/12">
-            <a
+            <!-- <a
               [routerLink]="['/']"
               class="md:block text-left md:pb-2 text-blueGray-600 mr-0 inline-block whitespace-nowrap text-sm uppercase font-bold p-4 px-0"
             >
               Notus Angular
-            </a>
+            </a> -->
           </div>
           <div class="w-6/12 flex justify-end">
             <button
@@ -78,7 +78,7 @@
       <!-- Navigation -->
 
       <ul class="md:flex-col md:min-w-full flex flex-col list-none">
-        <li class="items-center">
+        <!-- <li class="items-center">
           <a
             [routerLink]="['/admin/dashboard']"
             class="text-xs uppercase py-3 font-bold block"
@@ -98,7 +98,7 @@
             ></i>
             Dashboard
           </a>
-        </li>
+        </li> -->
 
         <li class="items-center">
           <a

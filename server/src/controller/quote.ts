@@ -11,8 +11,8 @@ import { Response } from "express";
 import path from "path";
 // import {create} from "html-pdf";
 
-@Controller("/invoice")
-export class InvoiceController {
+@Controller("/quote")
+export class QuoteController {
   @Get("/:id/:uuid")
   // @ts-ignore: Unreachable code error
   async generateInvoice(
@@ -29,7 +29,7 @@ export class InvoiceController {
       });
 
       // @ts-ignore: Unreachable code error
-      if (formRecord && uuid && formRecord.type.toLocaleLowerCase() === formTypes.form) {
+      if (formRecord && uuid && formRecord.type.toLocaleLowerCase() === formTypes.quote) {
         // console.log(formRecord)
         const configRepo: Repository<Configurations> =
           getConnection().getRepository(Configurations);
@@ -122,7 +122,7 @@ export class InvoiceController {
         };
 
         return res.render(
-          path.join(__dirname, "/../../public/views/", "invoice.ejs"),
+          path.join(__dirname, "/../../public/views/", "quoteEmail.ejs"),
           {
             ...data,
             img_path: `/assets/logo.png`,

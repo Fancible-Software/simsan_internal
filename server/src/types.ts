@@ -285,3 +285,12 @@ export enum formTypes {
   form = "form",
   quote = "quote",
 }
+
+export enum EmailDays{
+  CanadaDay = "canadaDay",
+  Christmas = "christmas",
+  Thanksgiving = "thanksgiving",
+  Summer = "summer",
+  Winter = "winter",
+  Generic = "generic"
+} 

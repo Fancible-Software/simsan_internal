@@ -1,9 +1,19 @@
+@import "~@ng-select/ng-select/themes/default.theme.css";
+.ng-select.custom {
+  border: 1px solid #ced4da;
+  
+  border-radius: 10px;
+}
+.ng-select.custom .ng-select-container {
+  min-height: 0px;
+  border-radius: 0;
+}
 .invalid-feedback {
-    color: #e34242
+  color: #e34242;
 }
 
-.bg-grey-btn{
-    cursor: not-allowed;
-    background-color: azure;
-    color: black
+.bg-grey-btn {
+  cursor: not-allowed;
+  background-color: azure;
+  color: black;
 }
