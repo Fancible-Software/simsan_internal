@@ -16,6 +16,7 @@ import { EmailController } from "./controller/EmailController";
 import { FormController } from "./controller/forms";
 import { InvoiceController } from "./controller/invoice";
 import { LocationController } from "./controller/location";
+import { QuoteController } from "./controller/quote";
 import { ServicesController } from "./controller/services";
 import { UserController } from "./controller/user";
 import { User } from "./entity/User";
@@ -63,7 +64,7 @@ async function run() {
             },
             defaultErrorHandler: false,
             controllers: [UserController, AuthController, AdminController, ServicesController,
-                 FormController, LocationController, ConfigurationController, DashboardController,InvoiceController,EmailController],
+                 FormController, LocationController, ConfigurationController, DashboardController,InvoiceController,EmailController,QuoteController],
             middlewares: [CustomErrorHandler],
             authorizationChecker: (action: Action): boolean => {
                 const { authorization } = (action.request as Request).headers || {};

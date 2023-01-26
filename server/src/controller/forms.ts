@@ -20,6 +20,7 @@ import {
   ResponseStatus,
   UserPermissions,
   SkipLimitURLParams,
+  formTypes,
 } from "../types";
 import { Form } from "../entity/Form";
 import logger from "../utils/logger";
@@ -168,12 +169,24 @@ export class FormController {
 
       if (formRecord) {
         const htmlInvoice  = await getInvoiceHtml(formRecord.formId,formRecord.invoiceUuid);
-        await sendMail({
-          from: process.env.EMAIL_USER,
-          to: body.customerEmail,
-          html: `<html><head></head><body><div>Click on the below link to check your invoice <br/> <a href="${process.env.BACKEND_URI}/invoice/${formRecord.formId}/${formRecord.invoiceUuid}">Link to Invoice</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
-          subject: "Invoice - SimsanFraserMain",
-        });
+        const formType = formRecord.type.toLocaleLowerCase() === formTypes.form ? "Invoice" : "Quote";
+        if(formType === "Quote"){
+          await sendMail({
+            from: process.env.EMAIL_USER,
+            to: body.customerEmail,
+            html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/quote/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
+            subject: `${formType} - Simsan Fraser Main`,
+          });
+        }
+        else{
+          await sendMail({
+            from: process.env.EMAIL_USER,
+            to: body.customerEmail,
+            html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/invoice/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
+            subject: `${formType} - Simsan Fraser Main`,
+          });
+        }
+        
       }
 
       return res.status(ResponseStatus.SUCCESS_UPDATE).send({

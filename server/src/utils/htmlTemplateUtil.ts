@@ -2,7 +2,7 @@ import * as ejs from 'ejs';
 import path from 'path';
 import { Configurations } from '../entity/Configurations';
 import { Form } from '../entity/Form';
-import { EmailDays, ResponseStatus } from '../types';
+import { EmailDays, formTypes, ResponseStatus } from '../types';
 import { getConnection, Repository } from 'typeorm';
 import { APIError } from './APIError';
 import logger from './logger';
@@ -111,7 +111,7 @@ export const getInvoiceHtml = async (formId : number , formUUID : string) => {
           };
           console.log("rendering html");
           return ejs.renderFile(
-            path.join(__dirname, "/../../public/views/", "invoiceEmail.ejs"),
+            path.join(__dirname, "/../../public/views/", formRecord.type.toLocaleLowerCase() === formTypes.form ? "invoiceEmail.ejs" : "quoteEmail.ejs"),
             {
               ...data,
               img_path: `${process.env.BACKEND_URI}/assets/logo.png`,
