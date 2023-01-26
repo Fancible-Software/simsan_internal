@@ -10,8 +10,9 @@ import {
   Put,
   Res,
   CurrentUser,
+  QueryParams,
 } from "routing-controllers";
-import { getConnection, In, QueryRunner, Repository } from "typeorm";
+import { Brackets, getConnection, In, QueryRunner, Repository } from "typeorm";
 import {
   EntityId,
   FormToServiceType,
@@ -30,6 +31,7 @@ import generateInvoice from "../utils/generateInvoice";
 import date from "date-and-time";
 import { Configurations } from "../entity/Configurations";
 import sendMail from "../utils/sendMail";
+import { getInvoiceHtml } from "../utils/htmlTemplateUtil";
 
 @Controller("/form")
 export class FormController {
@@ -38,20 +40,51 @@ export class FormController {
   async getAllForms(
     @Params()
     { skip, limit }: SkipLimitURLParams,
+    @QueryParams({ validate: true })
+    { type, searchTerm }: { type: string; searchTerm?: string },
     @Res() res: Response
   ) {
     try {
-      const formRepository: Repository<Form> =
-        getConnection().getRepository(Form);
-      const forms: Form[] = await formRepository.find({
-        order: {
-          formId: "DESC",
-        },
-        skip: +skip,
-        take: +limit,
-      });
+      if (searchTerm) {
+        searchTerm = searchTerm.trim();
+        if (!searchTerm) {
+          searchTerm = undefined;
+        }
+      }
+      const conn = getConnection();
+      const qb = conn.createQueryBuilder(Form, "form");
 
-      const formCount = await formRepository.count();
+      qb.where("form.type = :type", { type: type });
+
+      if (searchTerm) {
+        qb.andWhere(
+          new Brackets((q) => {
+            q.where("form.customerName ilike :searchTerm", {
+              searchTerm: `%${searchTerm}%`,
+            })
+              .orWhere("form.customerEmail ilike :searchTerm", {
+                searchTerm: `%${searchTerm}%`,
+              })
+              .orWhere("form.customerPhone ilike :searchTerm", {
+                searchTerm: `%${searchTerm}%`,
+              });
+          })
+        );
+      }
+
+      const formCount = await qb
+        .clone()
+        .select("COUNT(1) as count")
+        .getRawOne<{ count: string }>();
+
+      const forms = await qb
+        .select([
+          'form."formId" as "formId", form."customerName" as "customerName",form."customerEmail" as "customerEmail", form."customerPhone" as "customerPhone", form."createdAt" as "createdAt", form."customerAddress" as "customerAddress",form."customerPostalCode" as "customerPostalCode", form."customerCity" as "customerCity",form."customerProvince" as "customerProvince", form."customerCountry" as "customerCountry", form."total" as "total", form."discount" as "discount", form."discount_percent" as "discount_percent", form."type" as "type", form."invoiceUuid" as "invoiceUuid",form."final_amount" as "final_amount"',
+        ])
+        .orderBy("form.formId", "DESC")
+        .offset(+skip)
+        .limit(+limit)
+        .getRawMany<Form[]>();
 
       return res.status(ResponseStatus.SUCCESS_FETCH).send({
         status: true,
@@ -132,14 +165,15 @@ export class FormController {
           relations: ["formToServices", "formToServices.service"],
         }
       );
+
       if (formRecord) {
-        const info = await sendMail({
+        const htmlInvoice  = await getInvoiceHtml(formRecord.formId,formRecord.invoiceUuid);
+        await sendMail({
           from: process.env.EMAIL_USER,
           to: body.customerEmail,
-          html: `<html><head></head><body><div>Click on the below link to check your invoice <br/> <a href="/invoice/${formRecord.formId}/${formRecord.invoiceUuid}">Link to Invoice</a></div></body></html>`,
+          html: `<html><head></head><body><div>Click on the below link to check your invoice <br/> <a href="${process.env.BACKEND_URI}/invoice/${formRecord.formId}/${formRecord.invoiceUuid}">Link to Invoice</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
           subject: "Invoice - SimsanFraserMain",
         });
-        console.log(info);
       }
 
       return res.status(ResponseStatus.SUCCESS_UPDATE).send({
@@ -327,62 +361,4 @@ export class FormController {
       return new APIError(error.message, ResponseStatus.API_ERROR);
     }
   }
-
-  // @Authorized(UserPermissions.admin)
-  // @Post('/generate/invoice/pdfkit')
-  // async generateInvoicePdfkit(
-  //     @Res() res: Response,
-  //     @Body()
-  //     { id }: EntityId
-  // ) {
-  //     try {
-  //         const formRepository: Repository<Form> = getConnection().getRepository(Form);
-  //         const formRecord: Form | undefined = await formRepository.findOne(id, {
-  //             relations: ["formToServices", "formToServices.service"]
-  //         });
-  //         if (formRecord) {
-  //             const invoiceNumber = Date.now()
-  //             let products: any = []
-  //             formRecord.formToServices.map(element => {
-  //                 let obj = {
-  //                     "quantity": 1,
-  //                     "description": element.service.serviceName,
-  //                     "amount": +element.service.price
-  //                 }
-  //                 products.push(obj)
-  //             })
-  //             const invoice = {
-  //                 shipping: {
-  //                     name: 'John Doe',
-  //                     address: '1234 Main Street',
-  //                     city: 'San Francisco',
-  //                     state: 'CA',
-  //                     country: 'US',
-  //                     postal_code: 94111,
-  //                 },
-  //                 items: products,
-  //                 subtotal: 8000,
-  //                 paid: 0,
-  //                 invoice_nr: invoiceNumber,
-  //             };
-  //             await generateInvoicePdkit(invoice)
-  //             return res.status(200).send({
-  //                 status: true,
-  //                 message: "Invoice created!",
-  //                 data: formRecord
-  //             })
-
-  //         }
-  //         else {
-  //             return res.status(ResponseStatus.API_ERROR).send({
-  //                 status: false,
-  //                 message: "Could not find form record with given id"
-  //             })
-  //         }
-  //     }
-  //     catch (error) {
-  //         logger.log(error.message)
-  //         return new APIError(error.message, ResponseStatus.API_ERROR)
-  //     }
-  // }
 }

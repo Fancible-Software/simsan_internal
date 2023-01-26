@@ -1,1 +1,97 @@
-<p>settings-create works!</p>
+<div class="flex flex-wrap">
+  <div class="w-full lg:w-12 px-4">
+    <div
+      class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 border-0"
+    >
+      <div class="rounded-t bg-white mb-0 px-6 py-6">
+        <div class="text-center flex justify-between">
+          <h6 class="text-blueGray-700 text-xl font-bold">Service</h6>
+        </div>
+      </div>
+      <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
+        <form [formGroup]="serviceForm">
+          <h6 class="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
+            <!-- Service Information -->
+          </h6>
+          <div class="flex flex-wrap">
+            <div class="w-full lg:w-6/12 px-4">
+              <div class="relative w-full mb-3">
+                <label
+                  class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                  htmlFor="grid-password"
+                >
+                  Key
+                </label>
+                <input
+                  type="text"
+                  class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                  formControlName="key"
+                  readonly="true"
+                />
+              </div>
+            </div>
+            <div class="w-full lg:w-6/12 px-4">
+              <div class="relative w-full mb-3">
+                <label
+                  class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                  htmlFor="grid-password"
+                >
+                  Value
+                </label>
+                <input
+                  type="text"
+                  class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                  formControlName="value"
+                />
+                <div
+                  *ngIf="submitted && f.value.errors"
+                  class="invalid-feedback"
+                >
+                  <div *ngIf="f.value.errors.required">value is required</div>
+                </div>
+              </div>
+            </div>
+            <div class="w-full lg:w-6/12 px-4">
+              <div class="relative w-full mb-3">
+                <label
+                  class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                  htmlFor="grid-password"
+                >
+                  Is Image?
+                </label>
+                <input
+                  class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                  formControlName="isImage"
+                  type="checkbox"
+                />
+                <div
+                  *ngIf="submitted && f.isImage.errors"
+                  class="invalid-feedback"
+                ></div>
+              </div>
+            </div>
+            <div class="w-full lg:w-6/12 px-4"></div>
+            <div class="w-full lg:w-12/12 px-4">
+              <div class="relative w-full mb-3">
+                <button
+                  class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                  type="button"
+                  (click)="update()"
+                >
+                  Update
+                </button>
+                <button
+                  class="bg-gray-600 hover:bg-gray-600 text-black active:bg-gray-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                  type="button"
+                  (click)="cancel()"
+                >
+                  cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
