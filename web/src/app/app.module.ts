@@ -45,6 +45,7 @@ import { SettingsListComponent } from './views/admin/settings/settings-list/sett
 import { SettingsCreateComponent } from './views/admin/settings/settings-create/settings-create.component';
 import { VerificationComponent } from './views/auth/verify/verification/verification.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { EmailComponent } from './views/admin/email/email.component';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
     SettingsListComponent,
     SettingsCreateComponent,
     VerificationComponent,
+    EmailComponent,
   ],
   imports: [
     BrowserModule,

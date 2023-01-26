@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { FormToServices } from "./FormToServices";
-import { formTypes } from "../types";
+import { originalFormTypes } from "../types";
 @Entity()
 export class Form {
   @PrimaryGeneratedColumn()
@@ -19,10 +19,10 @@ export class Form {
   invoiceUuid: string;
 
   @Column({
-    enum: formTypes,
+    enum: originalFormTypes,
     nullable: false,
   })
-  type: formTypes;
+  type: originalFormTypes;
 
   @Column({ nullable: false })
   customerName: string;

@@ -140,4 +140,10 @@ export class CommonService {
       .post<any>('http://localhost:4100/invoice', body)
       .pipe();
   }
+  
+  markQuoteAsInvoice(formId: number, invoiceUuid: string){
+    return this.httpClient
+      .get<any>(environment.endPoint + '/invoice/mark-as-invoice/'+formId+'/'+invoiceUuid)
+      .pipe();
+  }
 }
