@@ -26,6 +26,7 @@ export class IndexComponent implements OnInit {
   cities: any = [];
   formType: string = 'FORM';
   selectedCity: string = '';
+  isFormSubmitted: boolean = false;
 
   constructor(
     private commonService: CommonService,
@@ -64,7 +65,7 @@ export class IndexComponent implements OnInit {
       this.formType = this.route.snapshot.params['type'];
     } else {
       this.toastr.warning('Invalid URL', 'WARNING');
-      this.router.navigateByUrl('admin/feedbacks');
+      this.router.navigateByUrl('admin/services');
     }
   }
 
@@ -126,10 +127,11 @@ export class IndexComponent implements OnInit {
     // console.log(this.form.value);
     this.loader.start();
     this.submitted = true;
+    this.isFormSubmitted = true
     if (this.form.status == 'INVALID') {
       // console.log(this.form.status);
       this.loader.stop();
-      this.submitted = false;
+      this.isFormSubmitted = false;
       return;
     }
     let formData = {
@@ -153,7 +155,11 @@ export class IndexComponent implements OnInit {
     this.commonService.submitFeedback(formData).subscribe((data) => {
       this.loader.stop();
       this.toastr.success(data.message, 'SUCCESS');
-      this.router.navigate(['admin/feedbacks', { type: 'FORM' }]);
+      if (this.formType === 'QUOTE') {
+        this.router.navigate(['admin/feedbacks', { type: 'QUOTE' }]);
+      } else {
+        this.router.navigate(['admin/feedbacks', { type: 'FORM' }]);
+      }
     });
   }
 
@@ -225,9 +231,5 @@ export class IndexComponent implements OnInit {
         final_amount: this.form.value.amount_after_discount,
       });
     }
-  }
-
-  onSelectCityDropdownChange() {
-    console.log(this.selectedCity);
   }
 }

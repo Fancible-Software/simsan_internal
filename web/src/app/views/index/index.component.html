@@ -158,7 +158,6 @@
 
                 <ng-select
                   formControlName="city"
-                  (change)="onSelectCityDropdownChange()"
                   style="
                     border: 1px solid #e1e1e1;
                     padding: 4px 10px 5px 10px;
@@ -366,8 +365,8 @@
               class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
               type="button"
               (click)="finalSubmit()"
-              [ngClass]="submitted ? 'bg-grey-btn' : 'bg-red-600'"
-              [disabled]="submitted"
+              [ngClass]="isFormSubmitted ? 'bg-grey-btn' : 'bg-red-600'"
+              [disabled]="isFormSubmitted"
             >
               <ng-container *ngIf="formType === 'FORM'; else quoteSubmitButton">
                 Submit

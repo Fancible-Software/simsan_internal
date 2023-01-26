@@ -40,7 +40,7 @@ export class EmailController{
             });
         }
         catch (err) {
-            console.log(err.message);
+            // console.log(err.message);
             logger.error(err.message);
             return new APIError(err.message, ResponseStatus.API_ERROR);
           }

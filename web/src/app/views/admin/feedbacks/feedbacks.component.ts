@@ -32,14 +32,6 @@ export class FeedbacksComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.route.snapshot.params['type']);
-    // if (
-    //   this.route.snapshot.params['type'] !== 'FORM' ||
-    //   this.route.snapshot.params['type'] !== 'QUOTE'
-    // ) {
-    //   this.toastr.error('Invalid URL');
-    //   return;
-    // }
     this.type = this.route.snapshot.params['type'];
     this.getAllFeedbacks();
   }
@@ -65,7 +57,7 @@ export class FeedbacksComponent implements OnInit {
 
   search() {
     if (this.searchTerm === '') return;
-    console.log(this.searchTerm);
+    // console.log(this.searchTerm);
     this.commonService
       .feedbackList(0, 10, this.type, this.searchTerm)
       .subscribe((data) => {
