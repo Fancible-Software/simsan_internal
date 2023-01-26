@@ -45,10 +45,12 @@ export class FeedbacksComponent implements OnInit {
 
   onPageChange(evt: any) {
     this.page = evt;
-    this.commonService.usersList((this.page - 1) * 10, 10).subscribe((data) => {
-      this.feedbackListData = data.data;
-      this.totalCount = data.count;
-    });
+    this.commonService
+      .feedbackList((this.page - 1) * 10, 10, this.type, '')
+      .subscribe((data) => {
+        this.feedbackListData = data.data;
+        this.totalCount = data.count;
+      });
   }
 
   getInvoiceUrl(feedBack: any) {
