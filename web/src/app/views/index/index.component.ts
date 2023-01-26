@@ -25,6 +25,7 @@ export class IndexComponent implements OnInit {
   provinces: any = [];
   cities: any = [];
   formType: string = 'FORM';
+  selectedCity: string = '';
 
   constructor(
     private commonService: CommonService,
@@ -123,11 +124,12 @@ export class IndexComponent implements OnInit {
 
   finalSubmit() {
     // console.log(this.form.value);
-    // return;
     this.loader.start();
     this.submitted = true;
     if (this.form.status == 'INVALID') {
+      // console.log(this.form.status);
       this.loader.stop();
+      this.submitted = false;
       return;
     }
     let formData = {
@@ -151,7 +153,7 @@ export class IndexComponent implements OnInit {
     this.commonService.submitFeedback(formData).subscribe((data) => {
       this.loader.stop();
       this.toastr.success(data.message, 'SUCCESS');
-      this.router.navigateByUrl('admin/feedbacks');
+      this.router.navigate(['admin/feedbacks', { type: 'FORM' }]);
     });
   }
 
@@ -223,5 +225,9 @@ export class IndexComponent implements OnInit {
         final_amount: this.form.value.amount_after_discount,
       });
     }
+  }
+
+  onSelectCityDropdownChange() {
+    console.log(this.selectedCity);
   }
 }

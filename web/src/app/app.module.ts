@@ -24,24 +24,27 @@ import { CardLineChartComponent } from './components/cards/card-line-chart/card-
 import { FeedbacksComponent } from './views/admin/feedbacks/feedbacks.component';
 import { CardTableComponent } from './components/cards/card-table/card-table.component';
 import { TableDropdownComponent } from './components/dropdowns/table-dropdown/table-dropdown.component';
-import { NgxUiLoaderModule } from "ngx-ui-loader";
+import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonService } from './services/common.service';
-import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpClientModule,
+  HTTP_INTERCEPTORS,
+} from '@angular/common/http';
 import { ListComponent } from './views/admin/users/list/list.component';
-import { UserInterceptor } from "./services/user.interceptor";
+import { UserInterceptor } from './services/user.interceptor';
 import { CreateComponent } from './views/admin/users/create/create.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
 import { ServiceListComponent } from './views/admin/services/service-list/service-list.component';
-import { ToastrModule } from 'ngx-toastr'
+import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceCreateComponent } from './views/admin/services/service-create/service-create.component';
 import { SettingsListComponent } from './views/admin/settings/settings-list/settings-list.component';
 import { SettingsCreateComponent } from './views/admin/settings/settings-create/settings-create.component';
 import { VerificationComponent } from './views/auth/verify/verification/verification.component';
-
-
+import { NgSelectModule } from '@ng-select/ng-select';
 @NgModule({
   declarations: [
     AppComponent,
@@ -72,7 +75,7 @@ import { VerificationComponent } from './views/auth/verify/verification/verifica
     ServiceCreateComponent,
     SettingsListComponent,
     SettingsCreateComponent,
-    VerificationComponent
+    VerificationComponent,
   ],
   imports: [
     BrowserModule,
@@ -88,9 +91,14 @@ import { VerificationComponent } from './views/auth/verify/verification/verifica
       timeOut: 10000,
       positionClass: 'toast-top-right',
       preventDuplicates: true,
-    })
+    }),
+    NgSelectModule,
   ],
-  providers: [UserInterceptor, { provide: HTTP_INTERCEPTORS, useClass: UserInterceptor, multi: true }, CommonService],
-  bootstrap: [AppComponent]
+  providers: [
+    UserInterceptor,
+    { provide: HTTP_INTERCEPTORS, useClass: UserInterceptor, multi: true },
+    CommonService,
+  ],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
