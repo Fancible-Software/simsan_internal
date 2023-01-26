@@ -67,6 +67,16 @@
                     : 'bg-red-800 text-red-300 border-red-700'
                 "
               >
+                ID
+              </th>
+              <th
+                class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                [ngClass]="
+                  color === 'light'
+                    ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                    : 'bg-red-800 text-red-300 border-red-700'
+                "
+              >
                 Captured On
               </th>
               <th
@@ -132,6 +142,17 @@
                 <span *ngIf="type === 'FORM'">Invoice Id</span>
                 <span *ngIf="type === 'QUOTE'">Quote Id</span>
               </th>
+              <th
+                class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                [ngClass]="
+                  color === 'light'
+                    ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                    : 'bg-red-800 text-red-300 border-red-700'
+                "
+                *ngIf="type === 'QUOTE'"
+              >
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -149,6 +170,11 @@
                         }
                 "
               >
+                <td
+                  class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+                >
+                  {{ feedback.formId }}
+                </td>
                 <td
                   class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
                 >
@@ -217,6 +243,19 @@
                   >
                     View
                   </a>
+                </td>
+                <td
+                  class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right"
+                  *ngIf="type === 'QUOTE'"
+                >
+                  <span
+                    style="cursor: pointer"
+                    (click)="
+                      markQuoteAsInvoice(feedback.formId, feedback.invoiceUuid)
+                    "
+                  >
+                    Mark as invoice
+                  </span>
                 </td>
               </tr>
             </ng-container>

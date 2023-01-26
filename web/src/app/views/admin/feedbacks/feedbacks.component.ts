@@ -52,7 +52,7 @@ export class FeedbacksComponent implements OnInit {
   }
 
   getInvoiceUrl(feedBack: any) {
-    let path = this.type === "FORM" ? "invoice" : "quote";
+    let path = this.type === 'FORM' ? 'invoice' : 'quote';
     return `${environment.endPoint}/${path}/${feedBack.formId}/${feedBack.invoiceUuid}`;
   }
 
@@ -66,8 +66,20 @@ export class FeedbacksComponent implements OnInit {
         this.totalCount = data.count;
       });
   }
+
   clear() {
     this.searchTerm = '';
     this.ngOnInit();
+  }
+
+  markQuoteAsInvoice(formId: number, invoiceUuid: string) {
+    if (confirm('Are you sure you want to mark this quote as invoice?')) {
+      this.commonService
+        .markQuoteAsInvoice(formId, invoiceUuid)
+        .subscribe((data) => {
+          this.toastr.success('Marked as Invoice');
+          this.ngOnInit();
+        });
+    }
   }
 }

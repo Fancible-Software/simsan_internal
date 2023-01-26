@@ -1,7 +1,13 @@
-import { Controller, Get, Params, Res } from "routing-controllers";
+import { Authorized, Controller, Get, Params, Res } from "routing-controllers";
 import { Configurations } from "../entity/Configurations";
 import { Form } from "../entity/Form";
-import { formTypes, InvoiceParams, ResponseStatus } from "../types";
+import {
+  formTypes,
+  InvoiceParams,
+  originalFormTypes,
+  ResponseStatus,
+  UserPermissions,
+} from "../types";
 import { APIError } from "../utils/APIError";
 // import ejs from 'ejs';
 import logger from "../utils/logger";
@@ -12,6 +18,7 @@ import path from "path";
 // import {create} from "html-pdf";
 
 @Controller("/invoice")
+@Authorized(UserPermissions.admin || UserPermissions.sub_admin)
 export class InvoiceController {
   @Get("/:id/:uuid")
   // @ts-ignore: Unreachable code error
@@ -29,7 +36,11 @@ export class InvoiceController {
       });
 
       // @ts-ignore: Unreachable code error
-      if (formRecord && uuid && formRecord.type.toLocaleLowerCase() === formTypes.form) {
+      if (
+        formRecord &&
+        uuid &&
+        formRecord.type.toLocaleLowerCase() === formTypes.form
+      ) {
         // console.log(formRecord)
         const configRepo: Repository<Configurations> =
           getConnection().getRepository(Configurations);
@@ -139,6 +150,39 @@ export class InvoiceController {
       console.log(error);
       logger.log(error.message);
       return new APIError(error.message, ResponseStatus.API_ERROR);
+    }
+  }
+
+  @Get("/mark-as-invoice/:id/:uuid")
+  async convertQuoteToInvoice(
+    @Res() res: Response,
+    @Params()
+    { id, uuid }: InvoiceParams
+  ) {
+    try {
+      const formRepository: Repository<Form> =
+        getConnection().getRepository(Form);
+      const formRecord: Form | undefined = await formRepository.findOne({
+        where: {
+          formId: id,
+          invoiceUuid: uuid,
+        },
+      });
+
+      if (formRecord) {
+        formRecord.type = originalFormTypes.form;
+        await formRepository.save(formRecord);
+        return res.status(ResponseStatus.SUCCESS_UPDATE).send({
+          status: true,
+          message: "Successfully converted quote to invoice",
+        });
+      }
+      return res.status(ResponseStatus.FAILED_UPDATE).send({
+        status: false,
+        message: "Could not find form record!",
+      });
+    } catch (error) {
+      throw new APIError(error.message, ResponseStatus.API_ERROR);
     }
   }
 }
