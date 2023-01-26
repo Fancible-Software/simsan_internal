@@ -11,7 +11,8 @@
               class="font-semibold text-lg"
               [ngClass]="color === 'light' ? 'text-blueGray-700' : 'text-white'"
             >
-              Invoices
+              <span *ngIf="type === 'FORM'">Invoices</span>
+              <span *ngIf="type === 'QUOTE'">Quotes</span>
             </h3>
           </div>
         </div>
@@ -128,7 +129,8 @@
                     : 'bg-red-800 text-red-300 border-red-700'
                 "
               >
-                Invoice Id
+                <span *ngIf="type === 'FORM'">Invoice Id</span>
+                <span *ngIf="type === 'QUOTE'">Quote Id</span>
               </th>
             </tr>
           </thead>
@@ -213,7 +215,7 @@
                     style="color: dodgerblue"
                     target="m1"
                   >
-                    Invoice
+                    View
                   </a>
                 </td>
               </tr>

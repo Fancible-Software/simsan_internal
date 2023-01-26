@@ -52,7 +52,8 @@ export class FeedbacksComponent implements OnInit {
   }
 
   getInvoiceUrl(feedBack: any) {
-    return `${environment.endPoint}/invoice/${feedBack.formId}/${feedBack.invoiceUuid}`;
+    let path = this.type === "FORM" ? "invoice" : "quote";
+    return `${environment.endPoint}/${path}/${feedBack.formId}/${feedBack.invoiceUuid}`;
   }
 
   search() {
