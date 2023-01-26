@@ -162,7 +162,7 @@ export class FormType {
   is_taxable: boolean;
 
   @IsString()
-  type: formTypes;
+  type: originalFormTypes;
 
   public toForm(userId: string): Form {
     const form: Form = new Form();
@@ -286,11 +286,16 @@ export enum formTypes {
   quote = "quote",
 }
 
-export enum EmailDays{
+export enum EmailDays {
   CanadaDay = "canadaDay",
   Christmas = "christmas",
   Thanksgiving = "thanksgiving",
   Summer = "summer",
   Winter = "winter",
-  Generic = "generic"
-} 
+  Generic = "generic",
+}
+
+export enum originalFormTypes {
+  form = "FORM",
+  quote = "QUOTE",
+}

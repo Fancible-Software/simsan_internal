@@ -14,6 +14,7 @@ import { ServiceCreateComponent } from './views/admin/services/service-create/se
 import { SettingsListComponent } from './views/admin/settings/settings-list/settings-list.component';
 import { SettingsCreateComponent } from './views/admin/settings/settings-create/settings-create.component';
 import { VerificationComponent } from './views/auth/verify/verification/verification.component';
+import { EmailComponent } from './views/admin/email/email.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'auth', pathMatch: 'full' },
@@ -47,6 +48,7 @@ const routes: Routes = [
       { path: 'configurations', component: SettingsListComponent },
       { path: 'configurations/create', component: SettingsCreateComponent },
       { path: 'configurations/edit/:id', component: SettingsCreateComponent },
+      { path: 'mails', component: EmailComponent },
       // { path: "verify/user", component: VerificationComponent }
     ],
   },
