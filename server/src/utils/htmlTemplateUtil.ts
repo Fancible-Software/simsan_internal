@@ -2,7 +2,7 @@ import * as ejs from 'ejs';
 import path from 'path';
 import { Configurations } from '../entity/Configurations';
 import { Form } from '../entity/Form';
-import { ResponseStatus } from '../types';
+import { EmailDays, ResponseStatus } from '../types';
 import { getConnection, Repository } from 'typeorm';
 import { APIError } from './APIError';
 import logger from './logger';
@@ -125,4 +125,28 @@ export const getInvoiceHtml = async (formId : number , formUUID : string) => {
         logger.log(error.message);
         return new APIError(error.message, ResponseStatus.API_ERROR);
       }
+}
+
+export const getPromotionalEmailHtml = (day : EmailDays)=>{
+  let emailPath = "genericEmail.ejs";
+  if(day === EmailDays.CanadaDay) emailPath = "canadaDayEmail.ejs";
+  else if(day === EmailDays.Christmas) emailPath = "christmasEmail.ejs";
+  else if(day === EmailDays.Thanksgiving) emailPath = "thanksgivingEmail.ejs";
+  else if(day === EmailDays.Summer) emailPath = "summerEmail.ejs";
+  else if(day === EmailDays.Winter) emailPath = "winterEmail.ejs";
+  else emailPath = "genericEmail.ejs";
+
+  return ejs.renderFile(path.join(__dirname, "/../../public/views/", emailPath));
+}
+
+export const getPromotiomalEmailSubject = (day : EmailDays)=>{
+  let emailSubject= "Need some maintenance at home ?";
+  if(day === EmailDays.CanadaDay) emailSubject = "A very happy Canada Day !";
+  else if(day === EmailDays.Christmas) emailSubject = "Wishing you Merry Christmas and a very happy new year";
+  else if(day === EmailDays.Thanksgiving) emailSubject = "This Thanksgiving, let's give your home a cleanup !";
+  else if(day === EmailDays.Summer) emailSubject = "Summer is here. Don't miss out on offers ! ";
+  else if(day === EmailDays.Winter) emailSubject = "Winter is here. Don't miss out on offers !";
+  else emailSubject = "Need some maintenance at home ?";
+
+  return emailSubject;
 }
