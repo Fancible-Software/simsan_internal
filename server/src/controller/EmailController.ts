@@ -1,7 +1,19 @@
 import { Response } from "express";
-import { Controller, Param, Post, Res } from "routing-controllers";
+import {
+  Authorized,
+  Controller,
+  CurrentUser,
+  Param,
+  Post,
+  Res,
+} from "routing-controllers";
 import { APIError } from "../utils/APIError";
-import { EmailDays, originalFormTypes, ResponseStatus } from "../types";
+import {
+  EmailDays,
+  originalFormTypes,
+  ResponseStatus,
+  UserPermissions,
+} from "../types";
 import logger from "../utils/logger";
 import sendMail from "../utils/sendMail";
 import {
@@ -10,15 +22,24 @@ import {
 } from "../utils/htmlTemplateUtil";
 import { getConnection } from "typeorm";
 import { Form } from "../entity/Form";
+import { User } from "../entity/User";
 
 @Controller("/email")
+@Authorized(UserPermissions.admin)
 export class EmailController {
   @Post("/:day")
   async sendPromotionalEmail(
     @Param("day") day: EmailDays,
+    @CurrentUser() user: User,
     @Res() res: Response
   ) {
     try {
+      if (user.roles !== UserPermissions.admin) {
+        throw new APIError(
+          "Not authorized to send promotional emails",
+          ResponseStatus.API_ERROR
+        );
+      }
       const formRepository = getConnection().getRepository(Form);
       const customers = await formRepository.find();
       const emailPromises: Promise<any>[] = [];
