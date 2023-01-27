@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CommonService } from '../../../services/common.service';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from 'src/environments/environment.prod';
 @Component({
   selector: 'app-email',
   templateUrl: './email.component.html',
@@ -46,5 +47,10 @@ export class EmailComponent implements OnInit {
         }
       });
     }
+  }
+
+  viewTemplate(value: string) {
+    // console.log(`${environment.endPoint}/email/view/${value}`)
+    return `${environment.endPoint}/email/view/${value}`
   }
 }

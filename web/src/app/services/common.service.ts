@@ -173,4 +173,6 @@ export class CommonService {
       .post<any>(environment.endPoint + '/email/' + value, body)
       .pipe();
   }
+
+  
 }
