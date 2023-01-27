@@ -91,9 +91,24 @@ export class CommonService {
       .pipe();
   }
 
-  feedbackList(skip: number, limit: number, type: string,searchTerm?: string): Observable<any> {
+  feedbackList(
+    skip: number,
+    limit: number,
+    type: string,
+    searchTerm?: string
+  ): Observable<any> {
     return this.httpClient
-      .get<any>(environment.endPoint + '/form/all/' + skip + '/' + limit + '?type=' + type+'&searchTerm='+searchTerm)
+      .get<any>(
+        environment.endPoint +
+          '/form/all/' +
+          skip +
+          '/' +
+          limit +
+          '?type=' +
+          type +
+          '&searchTerm=' +
+          searchTerm
+      )
       .pipe();
   }
 
@@ -140,10 +155,22 @@ export class CommonService {
       .post<any>('http://localhost:4100/invoice', body)
       .pipe();
   }
-  
-  markQuoteAsInvoice(formId: number, invoiceUuid: string){
+
+  markQuoteAsInvoice(formId: number, invoiceUuid: string) {
     return this.httpClient
-      .get<any>(environment.endPoint + '/invoice/mark-as-invoice/'+formId+'/'+invoiceUuid)
+      .get<any>(
+        environment.endPoint +
+          '/invoice/mark-as-invoice/' +
+          formId +
+          '/' +
+          invoiceUuid
+      )
+      .pipe();
+  }
+
+  sendMail(value: string, body: undefined) {
+    return this.httpClient
+      .post<any>(environment.endPoint + '/email/' + value, body)
       .pipe();
   }
 }
