@@ -156,15 +156,13 @@
             </tr>
           </thead>
           <tbody>
-            <ng-container
-              *ngIf="feedbackListData.length !== 0; else noDataAvail"
-            >
+            <ng-container *ngIf="totalCount !== 0; else noDataAvail">
               <tr
                 *ngFor="
                   let feedback of feedbackListData
                     | paginate
                       : {
-                          itemsPerPage: 5,
+                          itemsPerPage: 10,
                           currentPage: page,
                           totalItems: totalCount
                         }
@@ -265,15 +263,13 @@
               </tr>
             </ng-template>
           </tbody>
-          <tfoot>
-            <pagination-controls
-              previousLabel="Prev"
-              nextLabel="Next"
-              (pageChange)="onPageChange($event)"
-            >
-            </pagination-controls>
-          </tfoot>
         </table>
+        <pagination-controls
+          previousLabel="Prev"
+          nextLabel="Next"
+          (pageChange)="onPageChange($event)"
+        >
+        </pagination-controls>
       </div>
     </div>
   </div>

@@ -33,14 +33,19 @@ export class FeedbacksComponent implements OnInit {
 
   ngOnInit(): void {
     this.type = this.route.snapshot.params['type'];
+    // console.log(this.totalCount);
+
     this.getAllFeedbacks();
   }
 
   getAllFeedbacks() {
     this.commonService.feedbackList(0, 10, this.type, '').subscribe((data) => {
+      // console.log(data)
       this.feedbackListData = data.data;
-      this.totalCount = data.count;
+      this.totalCount = data.count.count;
+      // console.log(this.totalCount);
     });
+
   }
 
   onPageChange(evt: any) {
@@ -49,7 +54,7 @@ export class FeedbacksComponent implements OnInit {
       .feedbackList((this.page - 1) * 10, 10, this.type, '')
       .subscribe((data) => {
         this.feedbackListData = data.data;
-        this.totalCount = data.count;
+        this.totalCount = data.count.count
       });
   }
 
@@ -65,7 +70,7 @@ export class FeedbacksComponent implements OnInit {
       .feedbackList(0, 10, this.type, this.searchTerm)
       .subscribe((data) => {
         this.feedbackListData = data.data;
-        this.totalCount = data.count;
+        this.totalCount = data.count.count;
       });
   }
 
