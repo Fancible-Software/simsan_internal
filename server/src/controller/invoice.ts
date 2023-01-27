@@ -1,4 +1,4 @@
-import { Authorized, Controller, Get, Params, Res } from "routing-controllers";
+import { Controller, Get, Params, Res } from "routing-controllers";
 import { Configurations } from "../entity/Configurations";
 import { Form } from "../entity/Form";
 import {
@@ -6,7 +6,7 @@ import {
   InvoiceParams,
   originalFormTypes,
   ResponseStatus,
-  UserPermissions,
+  // UserPermissions,
 } from "../types";
 import { APIError } from "../utils/APIError";
 // import ejs from 'ejs';
@@ -18,7 +18,6 @@ import path from "path";
 // import {create} from "html-pdf";
 
 @Controller("/invoice")
-@Authorized(UserPermissions.admin || UserPermissions.sub_admin)
 export class InvoiceController {
   @Get("/:id/:uuid")
   // @ts-ignore: Unreachable code error

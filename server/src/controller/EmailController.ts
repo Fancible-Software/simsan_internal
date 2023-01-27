@@ -1,8 +1,8 @@
 import { Response } from "express";
 import {
-  Authorized,
   Controller,
   CurrentUser,
+  Get,
   Param,
   Post,
   Res,
@@ -25,7 +25,6 @@ import { Form } from "../entity/Form";
 import { User } from "../entity/User";
 
 @Controller("/email")
-@Authorized(UserPermissions.admin)
 export class EmailController {
   @Post("/:day")
   async sendPromotionalEmail(
@@ -66,6 +65,15 @@ export class EmailController {
       // console.log(err.message);
       logger.error(err.message);
       return new APIError(err.message, ResponseStatus.API_ERROR);
+    }
+  }
+
+  @Get("/view/:day")
+  async viewEmailTemplate(@Param("day") day: EmailDays) {
+    try {
+      return await getPromotionalEmailHtml(day);
+    } catch (err) {
+      throw new APIError(err.message, ResponseStatus.API_ERROR);
     }
   }
 }
