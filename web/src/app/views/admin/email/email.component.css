@@ -1,0 +1,6 @@
+td svg {
+    display: inline-block;
+    cursor: pointer;
+    margin-right: 7px;
+    width: 6%;
+}
