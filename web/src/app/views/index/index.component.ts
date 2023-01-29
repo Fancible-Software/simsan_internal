@@ -22,11 +22,14 @@ export class IndexComponent implements OnInit {
   form: FormGroup;
   submitted = false;
   services: any = [];
+  editableServices : any  = [];
   provinces: any = [];
   cities: any = [];
   formType: string = 'FORM';
   selectedCity: string = '';
   isFormSubmitted: boolean = false;
+  selectedServices : any = [];
+  discountPercentage : any = 0;
 
   constructor(
     private commonService: CommonService,
@@ -58,7 +61,7 @@ export class IndexComponent implements OnInit {
   ngOnInit(): void {
     this.getActiveServicesList();
     this.getProvinceList();
-    // console.log(this.route.snapshot.params['type']);
+
     if (this.route.snapshot.params['type'] === 'FORM') {
       this.formType = this.route.snapshot.params['type'];
     } else if (this.route.snapshot.params['type'] === 'QUOTE') {
@@ -67,6 +70,10 @@ export class IndexComponent implements OnInit {
       this.toastr.warning('Invalid URL', 'WARNING');
       this.router.navigateByUrl('admin/services');
     }
+
+    this.form.controls['total_amount'].valueChanges.subscribe((val:any)=>{
+      this.updateValues(val);
+    })
   }
 
   get servicesFormArray() {
@@ -76,60 +83,45 @@ export class IndexComponent implements OnInit {
   getActiveServicesList() {
     this.commonService.activeServicesList().subscribe((data) => {
       if (data.status) {
-        this.services = data.data.rows;
-        this.addCheckboxesToForm();
+        this.services = [...data.data.rows];
+        this.editableServices = [...data.data.rows];
+        // this.addCheckboxesToForm();
       }
     });
-  }
-
-  private addCheckboxesToForm() {
-    this.services.forEach(() =>
-      this.servicesFormArray.push(new FormControl(false))
-    );
   }
 
   generateAmount() {
     const selectedOrderIds: any = [];
     let amount: number = 0;
-    // console.log(this.form.value.services_dropdown)
-    this.form.value.services_dropdown
-      .map((checked: any, i: number) => {
-        if (checked) {
+
+    this.selectedServices
+      .map((service: any) => {
+        if (service) {
           selectedOrderIds.push({
-            serviceId: this.services[i].serviceId,
-            price: this.services[i].price,
+            serviceId: service.serviceId,
+            price: parseInt(service.price),
           });
-          amount = amount + +this.services[i].price;
+          amount = amount + parseInt(service.price);
         }
       })
       .filter((v: number) => v !== null);
-    if (!selectedOrderIds.length) {
-      alert('Please select any of the above service!');
-      return;
-    }
+
     this.form.patchValue({
-      total_amount: amount,
-      services: selectedOrderIds,
+        total_amount: amount,
+        services: selectedOrderIds,
     });
-    if (this.form.value.tax_applicable) {
-      this.form.patchValue({
-        final_amount: amount + (amount * 5) / 100,
-      });
-    } else {
-      this.form.patchValue({
-        final_amount: amount,
-      });
-    }
+
     this.enabled = true;
   }
 
   finalSubmit() {
-    // console.log(this.form.value);
     this.loader.start();
     this.submitted = true;
     this.isFormSubmitted = true
-    if (this.form.status == 'INVALID') {
-      // console.log(this.form.status);
+    if (this.form.status == 'INVALID' || this.selectedServices.length === 0)  {
+      if (this.selectedServices.length === 0) {
+        alert('Please select any of the above service!');
+      }
       this.loader.stop();
       this.isFormSubmitted = false;
       return;
@@ -151,7 +143,7 @@ export class IndexComponent implements OnInit {
       discount_percent: this.form.value.discount_percent,
       type: this.formType,
     };
-    // console.log(formData)
+  
     this.commonService.submitFeedback(formData).subscribe((data) => {
       this.loader.stop();
       this.toastr.success(data.message, 'SUCCESS');
@@ -169,22 +161,28 @@ export class IndexComponent implements OnInit {
 
   applyDiscount(evt: any) {
     const discPerc = evt.target.value;
+    this.discountPercentage = discPerc;
     const discountAmount = this.form.value.total_amount * (discPerc / 100);
     // this.form.value.discount = discountAmount
     let discountedAmount =
       this.form.value.total_amount -
       this.form.value.total_amount * (discPerc / 100);
-    this.form.patchValue({
-      discount: discountAmount,
-      amount_after_discount: discountedAmount,
-      final_amount: discountedAmount,
-    });
 
     if (this.form.value.tax_applicable) {
       this.form.patchValue({
         final_amount: (discountedAmount + (discountedAmount * 5) / 100).toFixed(
           2
         ),
+        discount: discountAmount,
+        amount_after_discount: discountedAmount,
+        discount_percent : discPerc
+      });
+    }else{
+      this.form.patchValue({
+        discount: discountAmount,
+        amount_after_discount: discountedAmount,
+        final_amount: discountedAmount,
+        discount_percent : discPerc
       });
     }
   }
@@ -214,7 +212,6 @@ export class IndexComponent implements OnInit {
   }
 
   isTaxApplicable() {
-    // console.log(this.form.value.tax_applicable);
     const discPerc = this.form.value.discount_percent;
     let discountedAmount =
       this.form.value.total_amount -
@@ -228,7 +225,25 @@ export class IndexComponent implements OnInit {
       });
     } else {
       this.form.patchValue({
-        final_amount: this.form.value.amount_after_discount,
+        final_amount: discountedAmount,
+      });
+    }
+  }
+
+  updateValues(totalAmount : any){
+    totalAmount = parseInt(totalAmount);
+    const discPerc = this.discountPercentage;
+    let discountedAmount = totalAmount - totalAmount * (discPerc / 100);
+
+    if (this.form.value.tax_applicable) {
+      this.form.patchValue({
+        final_amount: (discountedAmount + (discountedAmount * 5) / 100).toFixed(
+          2
+        ),
+      });
+    } else {
+      this.form.patchValue({
+        final_amount: discountedAmount,
       });
     }
   }
