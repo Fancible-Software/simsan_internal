@@ -233,6 +233,8 @@ export class IndexComponent implements OnInit {
   updateValues(totalAmount : any){
     totalAmount = parseInt(totalAmount);
     const discPerc = this.discountPercentage;
+    
+    let discountAmount = totalAmount * (discPerc / 100);
     let discountedAmount = totalAmount - totalAmount * (discPerc / 100);
 
     if (this.form.value.tax_applicable) {
@@ -240,10 +242,16 @@ export class IndexComponent implements OnInit {
         final_amount: (discountedAmount + (discountedAmount * 5) / 100).toFixed(
           2
         ),
+        discount: discountAmount,
+        amount_after_discount: discountedAmount,
+        discount_percent : this.discountPercentage
       });
     } else {
       this.form.patchValue({
         final_amount: discountedAmount,
+        discount: discountAmount,
+        amount_after_discount: discountedAmount,
+        discount_percent : this.discountPercentage
       });
     }
   }
