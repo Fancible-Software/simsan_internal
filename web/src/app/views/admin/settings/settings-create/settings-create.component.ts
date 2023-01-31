@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { CommonService } from 'src/app/services/common.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-settings-create',
@@ -10,13 +11,24 @@ import { CommonService } from 'src/app/services/common.service';
   styleUrls: ['./settings-create.component.css'],
 })
 export class SettingsCreateComponent implements OnInit {
+  userType = 'sub_admin';
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     public loader: NgxUiLoaderService,
     public service: CommonService,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    private toastr: ToastrService
+  ) {
+    this.service.fetchRole().subscribe((data) => {
+      this.userType = data.role;
+      if (this.userType == 'sub_admin') {
+        this.toastr.error('You are not authorized to view this page');
+        this.router.navigate(['/admin/quotes', { type: 'QUOTE' }]);
+        return;
+      }
+    });
+  }
 
   serviceForm: FormGroup | any;
   submitted = false;

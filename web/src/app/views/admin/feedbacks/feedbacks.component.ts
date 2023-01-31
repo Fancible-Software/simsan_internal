@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { environment } from '../../../../environments/environment.prod';
 import { CommonService } from '../../../services/common.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -15,6 +15,7 @@ export class FeedbacksComponent implements OnInit {
   page: number = 1;
   type = 'FORM';
   searchTerm: string = '';
+  userType = 'sub_admin';
 
   @Input()
   get color(): string {
@@ -28,14 +29,23 @@ export class FeedbacksComponent implements OnInit {
   constructor(
     private commonService: CommonService,
     private route: ActivatedRoute,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.type = this.route.snapshot.params['type'];
-    // console.log(this.totalCount);
-
-    this.getAllFeedbacks();
+    this.commonService.fetchRole().subscribe((data) => {
+      this.userType = data.role;
+      console.log(this.userType);
+      if (this.type === 'FORM' && this.userType === 'sub_admin') {
+        this.toastr.error('You are not authorized to view this page');
+        this.router.navigate(['/admin/quotes', { type: 'QUOTE' }]);
+        return;
+      } else {
+        this.getAllFeedbacks();
+      }
+    });
   }
 
   getAllFeedbacks() {
@@ -45,7 +55,6 @@ export class FeedbacksComponent implements OnInit {
       this.totalCount = data.count.count;
       // console.log(this.totalCount);
     });
-
   }
 
   onPageChange(evt: any) {
@@ -54,7 +63,7 @@ export class FeedbacksComponent implements OnInit {
       .feedbackList((this.page - 1) * 10, 10, this.type, '')
       .subscribe((data) => {
         this.feedbackListData = data.data;
-        this.totalCount = data.count.count
+        this.totalCount = data.count.count;
       });
   }
 

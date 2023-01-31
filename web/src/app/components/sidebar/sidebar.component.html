@@ -100,7 +100,7 @@
           </a>
         </li> -->
 
-        <li class="items-center">
+        <li class="items-center" *ngIf="userType === 'admin'">
           <a
             [routerLink]="['/admin/feedbacks', { type: 'FORM' }]"
             class="text-xs uppercase py-3 font-bold block"
@@ -121,7 +121,7 @@
           </a>
         </li>
 
-        <li class="items-center">
+        <li class="items-center" *ngIf="userType === 'admin'">
           <a
             [routerLink]="['/admin/users']"
             class="text-xs uppercase py-3 font-bold block"
@@ -142,7 +142,7 @@
             Users
           </a>
         </li>
-        <li class="items-center">
+        <li class="items-center" *ngIf="userType === 'admin'">
           <a
             [routerLink]="['/admin/services']"
             class="text-xs uppercase py-3 font-bold block"
@@ -163,7 +163,7 @@
             Services
           </a>
         </li>
-        <li class="items-center">
+        <li class="items-center" *ngIf="userType === 'admin'">
           <a
             [routerLink]="['/admin/configurations']"
             class="text-xs uppercase py-3 font-bold block"
@@ -207,7 +207,7 @@
           </a>
         </li>
 
-        <li class="items-center">
+        <li class="items-center" *ngIf="userType === 'admin'">
           <a
             [routerLink]="['/admin/mails']"
             class="text-xs uppercase py-3 font-bold block"

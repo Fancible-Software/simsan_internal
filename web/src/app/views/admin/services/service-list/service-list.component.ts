@@ -14,6 +14,7 @@ export class ServiceListComponent implements OnInit {
   totalServices: number = 0;
   page: number = 1;
   showModal = false;
+  userType = 'sub_admin';
 
   @Input()
   get color(): string {
@@ -32,15 +33,21 @@ export class ServiceListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getAllServices();
+    this.commonService.fetchRole().subscribe((data) => {
+      this.userType = data.role;
+      this.getAllServices();
+    });
   }
 
   getAllServices() {
+    if (this.userType == 'sub_admin') {
+      this.toastr.error('You are not authorized to view this page');
+      this.router.navigate(['/admin/quotes', { type: 'QUOTE' }]);
+      return;
+    }
     this.loader.start();
     this.commonService.servicesList(this.page - 1, 10).subscribe((data) => {
-      // console.log(data)
       if (data.status) {
-        // this.toastr.success(data.message)
         this.servicesData = data.data.rows;
         this.totalServices = data.data.total;
       } else {

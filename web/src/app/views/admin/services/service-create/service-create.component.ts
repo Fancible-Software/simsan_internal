@@ -13,13 +13,19 @@ export class ServiceCreateComponent implements OnInit {
   serviceForm: FormGroup | any;
   submitted = false;
   serviceId: number = 0;
+  userType = 'sub_admin';
+
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     public loader: NgxUiLoaderService,
     public service: CommonService,
     private route: ActivatedRoute
-  ) {}
+  ) {
+    this.service.fetchRole().subscribe((data) => {
+      this.userType = data.role;
+    });
+  }
 
   ngOnInit(): void {
     this.serviceForm = this.formBuilder.group({

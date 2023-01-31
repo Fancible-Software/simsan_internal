@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { CommonService } from '../../../../services/common.service';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-settings-list',
@@ -21,15 +22,25 @@ export class SettingsListComponent implements OnInit {
     this._color = color !== 'light' && color !== 'dark' ? 'light' : color;
   }
   private _color = 'light';
+  userType = 'sub_admin';
 
   constructor(
     private service: CommonService,
     private loader: NgxUiLoaderService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
-    this.getServicesList();
+    this.service.fetchRole().subscribe((data) => {
+      this.userType = data.role;
+      if (this.userType == 'sub_admin') {
+        this.toastr.error('You are not authorized to view this page');
+        this.router.navigate(['/admin/quotes', { type: 'QUOTE' }]);
+        return;
+      }
+      this.getServicesList();
+    });
   }
 
   getServicesList() {
