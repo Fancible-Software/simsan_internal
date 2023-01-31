@@ -68,6 +68,15 @@ export class FormController {
               })
               .orWhere("form.customerPhone ilike :searchTerm", {
                 searchTerm: `%${searchTerm}%`,
+              })
+              .orWhere("form.customerAddress ilike :searchTerm", {
+                searchTerm: `%${searchTerm}%`,
+              })
+              .orWhere("form.customerCity ilike :searchTerm", {
+                searchTerm: `%${searchTerm}%`,
+              })
+              .orWhere("form.customerPostalCode ilike :searchTerm", {
+                searchTerm: `%${searchTerm}%`,
               });
           })
         );
@@ -168,17 +177,22 @@ export class FormController {
       );
 
       if (formRecord) {
-        const htmlInvoice  = await getInvoiceHtml(formRecord.formId,formRecord.invoiceUuid);
-        const formType = formRecord.type.toLocaleLowerCase() === formTypes.form ? "Invoice" : "Quote";
-        if(formType === "Quote"){
+        const htmlInvoice = await getInvoiceHtml(
+          formRecord.formId,
+          formRecord.invoiceUuid
+        );
+        const formType =
+          formRecord.type.toLocaleLowerCase() === formTypes.form
+            ? "Invoice"
+            : "Quote";
+        if (formType === "Quote") {
           await sendMail({
             from: process.env.EMAIL_USER,
             to: body.customerEmail,
             html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/quote/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
             subject: `${formType} - Simsan Fraser Main`,
           });
-        }
-        else{
+        } else {
           await sendMail({
             from: process.env.EMAIL_USER,
             to: body.customerEmail,
@@ -186,7 +200,6 @@ export class FormController {
             subject: `${formType} - Simsan Fraser Main`,
           });
         }
-        
       }
 
       return res.status(ResponseStatus.SUCCESS_UPDATE).send({
