@@ -30,6 +30,9 @@ export class IndexComponent implements OnInit {
   isFormSubmitted: boolean = false;
   selectedServices: any = [];
   discountPercentage: any = 0;
+  formId: number = 0;
+  isFormUpdated: string = 'CREATE';
+  formData: any;
 
   constructor(
     private commonService: CommonService,
@@ -60,8 +63,40 @@ export class IndexComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // console.log(this.route.snapshot.params['formId']);
     this.getActiveServicesList();
     this.getProvinceList();
+    if (this.route.snapshot.params['formId']) {
+      this.isFormUpdated = 'UPDATE';
+      this.formId = this.route.snapshot.params['formId'];
+      this.commonService
+        .getFormDetailsById(+this.route.snapshot.params['formId'])
+        .subscribe((data) => {
+          this.formData = data.data;
+          this.form.patchValue({
+            name: data.data.customerName,
+            email: data.data.customerEmail,
+            mobile_no: data.data.customerPhone,
+            address: data.data.customerAddress,
+            city: data.data.customerCity,
+            province: data.data.customerProvince,
+            postal_code: data.data.customerPostalCode,
+            total_amount: data.data.total,
+            discount_percent: data.data.discount_percent,
+            amount_after_discount: data.data.final_amount,
+            discount: data.data.discount,
+            final_amount: data.data.final_amount,
+            tax_applicable: data.data.is_taxable,
+            comment: data.data.comment,
+          });
+          var event = {
+            target: {
+              value: data.data.customerProvince,
+            },
+          };
+          this.onChange(event);
+        });
+    }
 
     if (this.route.snapshot.params['type'] === 'FORM') {
       this.formType = this.route.snapshot.params['type'];
@@ -146,15 +181,18 @@ export class IndexComponent implements OnInit {
       comment: this.form.value.comment,
     };
 
-    this.commonService.submitFeedback(formData).subscribe((data) => {
-      this.loader.stop();
-      this.toastr.success(data.message, 'SUCCESS');
-      if (this.formType === 'QUOTE') {
-        this.router.navigate(['admin/feedbacks', { type: 'QUOTE' }]);
-      } else {
-        this.router.navigate(['admin/feedbacks', { type: 'FORM' }]);
-      }
-    });
+    if (this.isFormUpdated === 'UPDATE') {
+    } else {
+      this.commonService.submitFeedback(formData).subscribe((data) => {
+        this.loader.stop();
+        this.toastr.success(data.message, 'SUCCESS');
+        if (this.formType === 'QUOTE') {
+          this.router.navigate(['admin/feedbacks', { type: 'QUOTE' }]);
+        } else {
+          this.router.navigate(['admin/feedbacks', { type: 'FORM' }]);
+        }
+      });
+    }
   }
 
   get f() {
@@ -206,6 +244,7 @@ export class IndexComponent implements OnInit {
 
   onChange(evt: any) {
     let provinceId = evt.target.value;
+    // console.log(provinceId);
     if (provinceId) {
       this.commonService.citiesList(provinceId).subscribe((data) => {
         this.cities = data.data;
