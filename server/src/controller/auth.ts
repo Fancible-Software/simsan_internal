@@ -26,6 +26,7 @@ export class AuthController {
           select: [
             "id",
             "first_name",
+            "roles",
             "last_name",
             "mobile_no",
             "email",
@@ -65,6 +66,7 @@ export class AuthController {
       var auth_token = jwt.sign(tokenData, process.env.JWT_SECRET, {
         expiresIn: "2 days",
       });
+      // console.log(ifUserExist);
       let user_details = {
         id: ifUserExist.id,
         first_name: ifUserExist.first_name,
