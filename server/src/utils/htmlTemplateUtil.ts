@@ -43,7 +43,7 @@ export const getInvoiceHtml = async (formId : number , formUUID : string) => {
             let obj = {
               quantity: 1,
               description: element.service.serviceName,
-              price: +element.service.price,
+              price: +element.price,
             };
             products.push(obj);
           });

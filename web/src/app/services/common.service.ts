@@ -174,5 +174,9 @@ export class CommonService {
       .pipe();
   }
 
-  
+  fetchRole() {
+    return this.httpClient
+      .get<any>(environment.endPoint + '/admin/role')
+      .pipe();
+  }
 }

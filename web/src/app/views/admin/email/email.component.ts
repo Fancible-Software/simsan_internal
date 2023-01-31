@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { CommonService } from '../../../services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment.prod';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-email',
   templateUrl: './email.component.html',
@@ -16,13 +17,23 @@ export class EmailComponent implements OnInit {
     { id: 5, name: 'Winter', value: 'winter' },
     { id: 6, name: 'Generic', value: 'generic' },
   ];
-
+  userType = 'sub_admin';
   constructor(
     private commonService: CommonService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.commonService.fetchRole().subscribe((data) => {
+      this.userType = data.role;
+      if (this.userType == 'sub_admin') {
+        this.toastr.error('You are not authorized to view this page');
+        this.router.navigate(['/admin/quotes', { type: 'QUOTE' }]);
+        return;
+      }
+    });
+  }
 
   @Input()
   get color(): string {
@@ -51,6 +62,6 @@ export class EmailComponent implements OnInit {
 
   viewTemplate(value: string) {
     // console.log(`${environment.endPoint}/email/view/${value}`)
-    return `${environment.endPoint}/email/view/${value}`
+    return `${environment.endPoint}/email/view/${value}`;
   }
 }

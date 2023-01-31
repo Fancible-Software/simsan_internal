@@ -34,7 +34,6 @@ export class LoginComponent implements OnInit {
   login() {
     this.loader.start();
     if (this.loginForm.status == 'INVALID') {
-      // this.toastr.warning('All fields are mandatory', 'Warning')
       this.loader.stop();
       return;
     }
@@ -44,7 +43,6 @@ export class LoginComponent implements OnInit {
         this.toastr.success(data.message, 'SUCCESS');
         localStorage.setItem('token', data.data.token);
         localStorage.setItem('is_verified', data.data.is_verified);
-
         if (data.data.is_verified) {
           this.router.navigate(['/admin/feedbacks', { type: 'FORM' }]);
         } else {

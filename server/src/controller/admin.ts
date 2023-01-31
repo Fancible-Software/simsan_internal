@@ -500,7 +500,7 @@ export class AdminController {
     @CurrentUser() user: User
   ) {
     try {
-      console.log(obj);
+      // console.log(obj);
       if (user.is_verified) {
         return res.status(ResponseStatus.ALREADY_EXISTS).send({
           status: true,
@@ -617,5 +617,11 @@ export class AdminController {
       console.log(error);
       throw new APIError(error.message, ResponseStatus.API_ERROR);
     }
+  }
+
+  @Authorized()
+  @Get("/role")
+  async getRole(@CurrentUser() user: User) {
+    return { role: user.roles };
   }
 }

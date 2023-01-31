@@ -64,7 +64,7 @@ export class InvoiceController {
           let obj = {
             quantity: 1,
             description: element.service.serviceName,
-            price: +element.service.price,
+            price: +element.price,
           };
           products.push(obj);
         });
