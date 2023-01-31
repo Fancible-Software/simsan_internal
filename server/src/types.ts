@@ -6,6 +6,7 @@ import {
   Matches,
   IsNotIn,
   IsBoolean,
+  IsOptional,
 } from "class-validator";
 import { Configurations } from "./entity/Configurations";
 import { Form } from "./entity/Form";
@@ -151,7 +152,7 @@ export class FormType {
   @IsString()
   discount: string;
 
-  @IsString()
+  @IsOptional()
   discount_percent: string;
 
   @IsNotEmpty()
@@ -160,6 +161,9 @@ export class FormType {
   @IsBoolean()
   @IsNotEmpty()
   is_taxable: boolean;
+
+  @IsOptional()
+  comment: string;
 
   @IsString()
   type: originalFormTypes;
@@ -181,6 +185,7 @@ export class FormType {
     form.discount_percent = this.discount_percent;
     form.createdBy = userId;
     form.type = this.type;
+    form.comment = this.comment;
     form.formToServices = this.services.map((s: FormToServiceType) => {
       let obj: FormToServices = new FormToServices();
       obj.service = new Service();

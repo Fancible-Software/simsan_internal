@@ -207,6 +207,7 @@ export class FormController {
         messsage: "Successfully created form record",
       });
     } catch (err) {
+      console.log(err);
       logger.error(err.message);
       return new APIError(err.message, ResponseStatus.API_ERROR);
     }

@@ -22,14 +22,14 @@ export class IndexComponent implements OnInit {
   form: FormGroup;
   submitted = false;
   services: any = [];
-  editableServices : any  = [];
+  editableServices: any = [];
   provinces: any = [];
   cities: any = [];
   formType: string = 'FORM';
   selectedCity: string = '';
   isFormSubmitted: boolean = false;
-  selectedServices : any = [];
-  discountPercentage : any = 0;
+  selectedServices: any = [];
+  discountPercentage: any = 0;
 
   constructor(
     private commonService: CommonService,
@@ -55,6 +55,7 @@ export class IndexComponent implements OnInit {
       discount: [''],
       final_amount: ['', [Validators.required]],
       tax_applicable: [false],
+      comment: [''],
     });
   }
 
@@ -71,9 +72,9 @@ export class IndexComponent implements OnInit {
       this.router.navigateByUrl('admin/services');
     }
 
-    this.form.controls['total_amount'].valueChanges.subscribe((val:any)=>{
+    this.form.controls['total_amount'].valueChanges.subscribe((val: any) => {
       this.updateValues(val);
-    })
+    });
   }
 
   get servicesFormArray() {
@@ -107,8 +108,8 @@ export class IndexComponent implements OnInit {
       .filter((v: number) => v !== null);
 
     this.form.patchValue({
-        total_amount: amount,
-        services: selectedOrderIds,
+      total_amount: amount,
+      services: selectedOrderIds,
     });
 
     this.enabled = true;
@@ -117,8 +118,8 @@ export class IndexComponent implements OnInit {
   finalSubmit() {
     this.loader.start();
     this.submitted = true;
-    this.isFormSubmitted = true
-    if (this.form.status == 'INVALID' || this.selectedServices.length === 0)  {
+    this.isFormSubmitted = true;
+    if (this.form.status == 'INVALID' || this.selectedServices.length === 0) {
       if (this.selectedServices.length === 0) {
         alert('Please select any of the above service!');
       }
@@ -140,10 +141,11 @@ export class IndexComponent implements OnInit {
       final_amount: this.form.value.final_amount.toString(),
       services: this.form.value.services,
       is_taxable: this.form.value.tax_applicable,
-      discount_percent: this.form.value.discount_percent,
+      discount_percent: this.form.value.discount_percent.toString(),
       type: this.formType,
+      comment: this.form.value.comment,
     };
-  
+
     this.commonService.submitFeedback(formData).subscribe((data) => {
       this.loader.stop();
       this.toastr.success(data.message, 'SUCCESS');
@@ -175,14 +177,14 @@ export class IndexComponent implements OnInit {
         ),
         discount: discountAmount,
         amount_after_discount: discountedAmount,
-        discount_percent : discPerc
+        discount_percent: discPerc,
       });
-    }else{
+    } else {
       this.form.patchValue({
         discount: discountAmount,
         amount_after_discount: discountedAmount,
         final_amount: discountedAmount,
-        discount_percent : discPerc
+        discount_percent: discPerc,
       });
     }
   }
@@ -230,10 +232,10 @@ export class IndexComponent implements OnInit {
     }
   }
 
-  updateValues(totalAmount : any){
+  updateValues(totalAmount: any) {
     totalAmount = parseInt(totalAmount);
     const discPerc = this.discountPercentage;
-    
+
     let discountAmount = totalAmount * (discPerc / 100);
     let discountedAmount = totalAmount - totalAmount * (discPerc / 100);
 
@@ -244,14 +246,14 @@ export class IndexComponent implements OnInit {
         ),
         discount: discountAmount,
         amount_after_discount: discountedAmount,
-        discount_percent : this.discountPercentage
+        discount_percent: this.discountPercentage,
       });
     } else {
       this.form.patchValue({
         final_amount: discountedAmount,
         discount: discountAmount,
         amount_after_discount: discountedAmount,
-        discount_percent : this.discountPercentage
+        discount_percent: this.discountPercentage,
       });
     }
   }

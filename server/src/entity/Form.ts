@@ -72,6 +72,9 @@ export class Form {
   @Column({ nullable: true })
   invoice_path: string;
 
+  @Column({ nullable: true })
+  comment: string;
+
   @OneToMany(
     () => FormToServices,
     (formToServices: FormToServices) => formToServices.form
