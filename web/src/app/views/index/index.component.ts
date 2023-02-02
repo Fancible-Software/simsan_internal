@@ -63,16 +63,52 @@ export class IndexComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // console.log(this.route.snapshot.params['formId']);
-    this.getActiveServicesList();
+    console.log(this.route.snapshot.params['formId']);
+    
     this.getProvinceList();
     if (this.route.snapshot.params['formId']) {
       this.isFormUpdated = 'UPDATE';
       this.formId = this.route.snapshot.params['formId'];
+      
       this.commonService
         .getFormDetailsById(+this.route.snapshot.params['formId'])
         .subscribe((data) => {
+          // Mark services as selected that were previously attached
+          this.selectedServices = data["data"]["formToServices"].map((record:any)=>{
+            return {
+              ...record["service"],
+              "price" : record["price"]
+            }
+          });
+          // get service ids of previously attached services
+          const serviceIds = this.selectedServices.map((row:any)=>row["serviceId"]);
+          // fetch all services & merge with previously selected services price so that we can get overriden price
+          this.commonService.activeServicesList().subscribe((obj) => {
+            if (obj.status) {
+              const fetchedRows = obj.data.rows.filter((row:any)=>!serviceIds.includes(row["serviceId"]));
+              this.services = [...fetchedRows,...this.selectedServices];
+              this.editableServices = [...fetchedRows,...this.selectedServices];
+            }
+          });
+
+          // create service data for form
+          const selectedOrderIds: any = [];
+          let amount: number = 0;
+      
+          this.selectedServices
+            .map((service: any) => {
+              if (service) {
+                selectedOrderIds.push({
+                  serviceId: service.serviceId,
+                  price: parseInt(service.price),
+                });
+                amount = amount + parseInt(service.price);
+              }
+            })
+            .filter((v: number) => v !== null);
+
           this.formData = data.data;
+          // update form
           this.form.patchValue({
             name: data.data.customerName,
             email: data.data.customerEmail,
@@ -88,6 +124,7 @@ export class IndexComponent implements OnInit {
             final_amount: data.data.final_amount,
             tax_applicable: data.data.is_taxable,
             comment: data.data.comment,
+            services: selectedOrderIds,
           });
           var event = {
             target: {
@@ -96,6 +133,9 @@ export class IndexComponent implements OnInit {
           };
           this.onChange(event);
         });
+    }
+    else{
+      this.getActiveServicesList();
     }
 
     if (this.route.snapshot.params['type'] === 'FORM') {
