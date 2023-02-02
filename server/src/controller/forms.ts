@@ -115,7 +115,7 @@ export class FormController {
       const formRepository: Repository<Form> =
         getConnection().getRepository(Form);
       const formRecord: Form | undefined = await formRepository.findOne(id, {
-        relations: ["formToServices"],
+        relations: ["formToServices","formToServices.service"],
       });
 
       if (formRecord) {
