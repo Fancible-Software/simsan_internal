@@ -11,6 +11,7 @@ import {
   Res,
   CurrentUser,
   QueryParams,
+  Patch,
 } from "routing-controllers";
 import { Brackets, getConnection, In, QueryRunner, Repository } from "typeorm";
 import {
@@ -115,7 +116,7 @@ export class FormController {
       const formRepository: Repository<Form> =
         getConnection().getRepository(Form);
       const formRecord: Form | undefined = await formRepository.findOne(id, {
-        relations: ["formToServices","formToServices.service"],
+        relations: ["formToServices", "formToServices.service"],
       });
 
       if (formRecord) {
@@ -214,7 +215,7 @@ export class FormController {
   }
 
   @Authorized(UserPermissions.admin)
-  @Put("/:id")
+  @Patch("/:id")
   async updateForm(
     @Res() res: Response,
     @Params() { id }: EntityId,

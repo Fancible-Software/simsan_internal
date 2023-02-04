@@ -31,6 +31,7 @@ export class IndexComponent implements OnInit {
   selectedServices: any = [];
   discountPercentage: any = 0;
   formId: number = 0;
+  invoiceUuid: string = '';
   isFormUpdated: string = 'CREATE';
   formData: any;
 
@@ -63,38 +64,47 @@ export class IndexComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.route.snapshot.params['formId']);
-    
+    // console.log(this.route.snapshot.params['formId']);
+
     this.getProvinceList();
     if (this.route.snapshot.params['formId']) {
       this.isFormUpdated = 'UPDATE';
       this.formId = this.route.snapshot.params['formId'];
-      
+
       this.commonService
         .getFormDetailsById(+this.route.snapshot.params['formId'])
         .subscribe((data) => {
           // Mark services as selected that were previously attached
-          this.selectedServices = data["data"]["formToServices"].map((record:any)=>{
-            return {
-              ...record["service"],
-              "price" : record["price"]
+          this.selectedServices = data['data']['formToServices'].map(
+            (record: any) => {
+              return {
+                ...record['service'],
+                price: record['price'],
+              };
             }
-          });
+          );
           // get service ids of previously attached services
-          const serviceIds = this.selectedServices.map((row:any)=>row["serviceId"]);
+          const serviceIds = this.selectedServices.map(
+            (row: any) => row['serviceId']
+          );
           // fetch all services & merge with previously selected services price so that we can get overriden price
           this.commonService.activeServicesList().subscribe((obj) => {
             if (obj.status) {
-              const fetchedRows = obj.data.rows.filter((row:any)=>!serviceIds.includes(row["serviceId"]));
-              this.services = [...fetchedRows,...this.selectedServices];
-              this.editableServices = [...fetchedRows,...this.selectedServices];
+              const fetchedRows = obj.data.rows.filter(
+                (row: any) => !serviceIds.includes(row['serviceId'])
+              );
+              this.services = [...fetchedRows, ...this.selectedServices];
+              this.editableServices = [
+                ...fetchedRows,
+                ...this.selectedServices,
+              ];
             }
           });
 
           // create service data for form
           const selectedOrderIds: any = [];
           let amount: number = 0;
-      
+
           this.selectedServices
             .map((service: any) => {
               if (service) {
@@ -108,6 +118,8 @@ export class IndexComponent implements OnInit {
             .filter((v: number) => v !== null);
 
           this.formData = data.data;
+          this.invoiceUuid = data.data.invoiceUuid;
+          // console.log(data);
           // update form
           this.form.patchValue({
             name: data.data.customerName,
@@ -133,8 +145,7 @@ export class IndexComponent implements OnInit {
           };
           this.onChange(event);
         });
-    }
-    else{
+    } else {
       this.getActiveServicesList();
     }
 
@@ -222,6 +233,15 @@ export class IndexComponent implements OnInit {
     };
 
     if (this.isFormUpdated === 'UPDATE') {
+      this.commonService.updateForm(formData, this.formId).subscribe((data) => {
+        this.loader.stop();
+        this.toastr.success(data.message, 'SUCCESS');
+        if (this.formType === 'QUOTE') {
+          this.router.navigate(['admin/feedbacks', { type: 'QUOTE' }]);
+        } else {
+          this.router.navigate(['admin/feedbacks', { type: 'FORM' }]);
+        }
+      });
     } else {
       this.commonService.submitFeedback(formData).subscribe((data) => {
         this.loader.stop();
@@ -334,6 +354,17 @@ export class IndexComponent implements OnInit {
         amount_after_discount: discountedAmount,
         discount_percent: this.discountPercentage,
       });
+    }
+  }
+
+  markQuoteAsInvoice(formId: number, invoiceUuid: string) {
+    if (confirm('Are you sure you want to mark this quote as invoice?')) {
+      this.commonService
+        .markQuoteAsInvoice(formId, invoiceUuid)
+        .subscribe((data) => {
+          this.toastr.success('Marked as Invoice');
+          this.router.navigate(['/admin/invoices', { type: 'FORM' }]);
+        });
     }
   }
 }

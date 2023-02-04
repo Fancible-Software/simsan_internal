@@ -402,7 +402,16 @@
               <ng-container *ngIf="formType === 'FORM'; else quoteSubmitButton">
                 Submit
               </ng-container>
-              <ng-template #quoteSubmitButton> Submit Quote </ng-template>
+              <ng-template #quoteSubmitButton> Save </ng-template>
+            </button>
+
+            <button
+              *ngIf="formType === 'QUOTE' && isFormUpdated === 'UPDATE'"
+              type="button"
+              class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+              (click)="markQuoteAsInvoice(formId, invoiceUuid)"
+            >
+              Mark as invoice
             </button>
           </div>
         </form>
