@@ -7,7 +7,6 @@ import {
   Get,
   Params,
   Post,
-  Put,
   Res,
   CurrentUser,
   QueryParams,
@@ -26,7 +25,7 @@ import {
 import { Form } from "../entity/Form";
 import logger from "../utils/logger";
 import { APIError } from "../utils/APIError";
-import { FormToServices } from "src/entity/FormToServices";
+import { FormToServices } from "../entity/FormToServices";
 import { Service } from "../entity/Services";
 import { User } from "../entity/User";
 import generateInvoice from "../utils/generateInvoice";
@@ -215,20 +214,71 @@ export class FormController {
   }
 
   @Authorized(UserPermissions.admin)
-  @Patch("/:id")
+  @Patch("/update/:id")
   async updateForm(
     @Res() res: Response,
     @Params() { id }: EntityId,
     @Body() body: FormType
   ) {
+    console.log(body);
+    const queryRunner: QueryRunner = getConnection().createQueryRunner();
     try {
       const formRepository: Repository<Form> =
         getConnection().getRepository(Form);
-      const queryRunner: QueryRunner = getConnection().createQueryRunner();
+
       const formRecord: Form | undefined = await formRepository.findOne(id);
 
       if (formRecord) {
-        queryRunner.manager.save(body.updateForm(formRecord));
+        await queryRunner.startTransaction();
+        queryRunner.manager.update(Form, id, {
+          customerName: body.customerName,
+          customerEmail: body.customerEmail,
+          customerAddress: body.customerAddress,
+          customerCity: body.customerCity,
+          customerCountry: body.customerCountry,
+          customerPostalCode: body.customerPostalCode,
+          customerPhone: body.customerPhone,
+          customerProvince: body.customerProvince,
+          discount: body.discount,
+          total: body.total,
+          is_taxable: body.is_taxable,
+          final_amount: body.final_amount,
+          discount_percent: body.discount_percent,
+          type: body.type,
+          comment: body.comment,
+        });
+        queryRunner.manager.update(Form, id, body);
+
+        await queryRunner.manager.delete(FormToServices, {
+          formId: id,
+        });
+
+        const updateServiceRecord = body.updateFormServices();
+
+        const serviceRepository: Repository<Service> =
+          getConnection().getRepository(Service);
+        const services = await serviceRepository.find({
+          where: {
+            serviceId: In(
+              body.services.map(
+                (service: FormToServiceType) => service.serviceId
+              )
+            ),
+          },
+        });
+
+        const serviceMap: Map<number, Service> = new Map<number, Service>();
+        services.forEach((service: Service) =>
+          serviceMap.set(service.serviceId, service)
+        );
+        await queryRunner.manager.save(
+          updateServiceRecord.formToServices.map((service: FormToServices) => {
+            service.form = formRecord;
+            return service;
+          })
+        );
+        await queryRunner.commitTransaction();
+
         return res.status(ResponseStatus.SUCCESS_UPDATE).send({
           status: true,
           messsage: "Successfully updated form record",
@@ -240,6 +290,8 @@ export class FormController {
         });
       }
     } catch (err) {
+      queryRunner.rollbackTransaction();
+
       console.log(err.message);
       logger.error(err.message);
       return new APIError(err.message, ResponseStatus.API_ERROR);

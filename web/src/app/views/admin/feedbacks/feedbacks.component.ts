@@ -91,8 +91,12 @@ export class FeedbacksComponent implements OnInit {
       this.commonService
         .markQuoteAsInvoice(formId, invoiceUuid)
         .subscribe((data) => {
-          this.toastr.success('Marked as Invoice');
-          this.ngOnInit();
+          if (data.status) {
+            this.toastr.success('Marked as Invoice');
+            this.router.navigate(['/collect/feedback', { type: 'FORM' }]);
+          } else {
+            this.toastr.error(data.message);
+          }
         });
     }
   }

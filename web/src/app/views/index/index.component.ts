@@ -34,6 +34,7 @@ export class IndexComponent implements OnInit {
   invoiceUuid: string = '';
   isFormUpdated: string = 'CREATE';
   formData: any;
+  userType = 'sub_admin';
 
   constructor(
     private commonService: CommonService,
@@ -65,7 +66,9 @@ export class IndexComponent implements OnInit {
 
   ngOnInit(): void {
     // console.log(this.route.snapshot.params['formId']);
-
+    this.commonService.fetchRole().subscribe((data) => {
+      this.userType = data.role;
+    });
     this.getProvinceList();
     if (this.route.snapshot.params['formId']) {
       this.isFormUpdated = 'UPDATE';
