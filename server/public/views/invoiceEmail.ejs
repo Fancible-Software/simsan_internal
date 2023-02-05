@@ -125,7 +125,6 @@
               <th>S.No.</th>
               <th>Description</th>
               <th>Quantity</th>
-              <th>Price <%= settings['currency'] %></th>
             </tr>
 
             <% if(products.length > 0) { %> <%
@@ -134,7 +133,6 @@
               <td align="center"><%= itemcount+1 %></td>
               <td align="center"><%= item['description'] %></td>
               <td align="center"><%= item['quantity'] %></td>
-              <td align="center"><%= item['price'] %></td>
             </tr>
             <% }); %> <% } %>
 
@@ -146,13 +144,15 @@
               </td>
             </tr>
 
-            <tr>
-              <td colspan="3"><strong>Discount</strong></td>
-
-              <td>
-                <%= settings['currency'] %> <%= information['discount'] %>
-              </td>
-            </tr>
+            <% if information['discount'] > 0 {%>
+              <tr>
+                
+                  <td colspan="3"><strong>Discount</strong></td>
+                  <td>
+                    <%= settings['currency'] %> <%= information['discount'] %>
+                  </td>
+              </tr>
+            <% } %>
             <tr>
               <td colspan="3">
                 <strong><%= settings['tax-notation'] %></strong>
