@@ -89,7 +89,7 @@ export class FormController {
 
       const forms = await qb
         .select([
-          'form."formId" as "formId", form."customerName" as "customerName",form."customerEmail" as "customerEmail", form."customerPhone" as "customerPhone", form."createdAt" as "createdAt", form."customerAddress" as "customerAddress",form."customerPostalCode" as "customerPostalCode", form."customerCity" as "customerCity",form."customerProvince" as "customerProvince", form."customerCountry" as "customerCountry", form."total" as "total", form."discount" as "discount", form."discount_percent" as "discount_percent", form."type" as "type", form."invoiceUuid" as "invoiceUuid",form."final_amount" as "final_amount"',
+          'form."formId" as "formId", form."customerName" as "customerName",form."customerEmail" as "customerEmail", form."customerPhone" as "customerPhone", form."createdAt" as "createdAt", form."customerAddress" as "customerAddress",form."customerPostalCode" as "customerPostalCode", form."customerCity" as "customerCity",form."customerProvince" as "customerProvince", form."customerCountry" as "customerCountry", form."total" as "total", form."discount" as "discount", form."discount_percent" as "discount_percent", form."type" as "type", form."invoiceUuid" as "invoiceUuid",form."final_amount" as "final_amount", form."invoiceNumber" as "invoiceNumber"',
         ])
         .orderBy("form.formId", "DESC")
         .offset(+skip)
@@ -220,7 +220,7 @@ export class FormController {
     @Params() { id }: EntityId,
     @Body() body: FormType
   ) {
-    console.log(body);
+    
     const queryRunner: QueryRunner = getConnection().createQueryRunner();
     try {
       const formRepository: Repository<Form> =

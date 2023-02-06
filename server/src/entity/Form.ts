@@ -28,6 +28,9 @@ export class Form {
   customerName: string;
 
   @Column({ nullable: false })
+  invoiceNumber: string;
+
+  @Column({ nullable: false })
   customerEmail: string;
 
   @Column({ nullable: true })

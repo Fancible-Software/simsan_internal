@@ -366,7 +366,7 @@ export class IndexComponent implements OnInit {
         .markQuoteAsInvoice(formId, invoiceUuid)
         .subscribe((data) => {
           this.toastr.success('Marked as Invoice');
-          this.router.navigate(['/admin/invoices', { type: 'FORM' }]);
+          this.router.navigate(['/admin/feedbacks', { type: 'FORM' }]);
         });
     }
   }

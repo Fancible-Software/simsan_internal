@@ -186,6 +186,7 @@ export class FormType {
     form.createdBy = userId;
     form.type = this.type;
     form.comment = this.comment;
+    form.invoiceNumber = (+new Date()).toString();
     form.formToServices = this.services.map((s: FormToServiceType) => {
       let obj: FormToServices = new FormToServices();
       obj.service = new Service();

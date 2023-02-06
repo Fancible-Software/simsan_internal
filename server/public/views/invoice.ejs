@@ -143,14 +143,7 @@
                 <%= settings['currency'] %> <%= information['sub_total'] %>
               </td>
             </tr>
-            <% if information['discount'] > 0 {%>
-              <tr>
-                  <td colspan="3"><strong>Discount</strong></td>
-                  <td>
-                    <%= settings['currency'] %> <%= information['discount'] %>
-                  </td>
-              </tr>
-            <% } %>
+            
             <tr>
               <td colspan="3">
                 <strong><%= settings['tax-notation'] %></strong>

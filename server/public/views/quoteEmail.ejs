@@ -82,7 +82,7 @@
             </tr>
             <tr>
               <td style="text-align: right">
-                <strong>Quote Number</strong>: <%=
+                <strong>Quote Number</strong>: <br /><%=
                 information['invoice_number'] %><br />
                 <strong>Quote Date</strong>:<%= information['date'] %><br />
               </td>
@@ -144,16 +144,6 @@
               </td>
             </tr>
 
-            <% if information['discount'] > 0 {%>
-              <tr>
-                
-                  <td colspan="3"><strong>Discount</strong></td>
-                  <td>
-                    <%= settings['currency'] %> <%= information['discount'] %>
-                  </td>
-                
-              </tr>
-            <% } %>
             <tr>
               <td colspan="3">
                 <strong><%= settings['tax-notation'] %></strong>
