@@ -7,10 +7,10 @@ import {
   Get,
   Params,
   Post,
-  Put,
   Res,
   CurrentUser,
   QueryParams,
+  Patch,
 } from "routing-controllers";
 import { Brackets, getConnection, In, QueryRunner, Repository } from "typeorm";
 import {
@@ -25,7 +25,7 @@ import {
 import { Form } from "../entity/Form";
 import logger from "../utils/logger";
 import { APIError } from "../utils/APIError";
-import { FormToServices } from "src/entity/FormToServices";
+import { FormToServices } from "../entity/FormToServices";
 import { Service } from "../entity/Services";
 import { User } from "../entity/User";
 import generateInvoice from "../utils/generateInvoice";
@@ -68,6 +68,15 @@ export class FormController {
               })
               .orWhere("form.customerPhone ilike :searchTerm", {
                 searchTerm: `%${searchTerm}%`,
+              })
+              .orWhere("form.customerAddress ilike :searchTerm", {
+                searchTerm: `%${searchTerm}%`,
+              })
+              .orWhere("form.customerCity ilike :searchTerm", {
+                searchTerm: `%${searchTerm}%`,
+              })
+              .orWhere("form.customerPostalCode ilike :searchTerm", {
+                searchTerm: `%${searchTerm}%`,
               });
           })
         );
@@ -80,7 +89,7 @@ export class FormController {
 
       const forms = await qb
         .select([
-          'form."formId" as "formId", form."customerName" as "customerName",form."customerEmail" as "customerEmail", form."customerPhone" as "customerPhone", form."createdAt" as "createdAt", form."customerAddress" as "customerAddress",form."customerPostalCode" as "customerPostalCode", form."customerCity" as "customerCity",form."customerProvince" as "customerProvince", form."customerCountry" as "customerCountry", form."total" as "total", form."discount" as "discount", form."discount_percent" as "discount_percent", form."type" as "type", form."invoiceUuid" as "invoiceUuid",form."final_amount" as "final_amount"',
+          'form."formId" as "formId", form."customerName" as "customerName",form."customerEmail" as "customerEmail", form."customerPhone" as "customerPhone", form."createdAt" as "createdAt", form."customerAddress" as "customerAddress",form."customerPostalCode" as "customerPostalCode", form."customerCity" as "customerCity",form."customerProvince" as "customerProvince", form."customerCountry" as "customerCountry", form."total" as "total", form."discount" as "discount", form."discount_percent" as "discount_percent", form."type" as "type", form."invoiceUuid" as "invoiceUuid",form."final_amount" as "final_amount", form."invoiceNumber" as "invoiceNumber"',
         ])
         .orderBy("form.formId", "DESC")
         .offset(+skip)
@@ -106,7 +115,7 @@ export class FormController {
       const formRepository: Repository<Form> =
         getConnection().getRepository(Form);
       const formRecord: Form | undefined = await formRepository.findOne(id, {
-        relations: ["formToServices"],
+        relations: ["formToServices", "formToServices.service"],
       });
 
       if (formRecord) {
@@ -168,17 +177,22 @@ export class FormController {
       );
 
       if (formRecord) {
-        const htmlInvoice  = await getInvoiceHtml(formRecord.formId,formRecord.invoiceUuid);
-        const formType = formRecord.type.toLocaleLowerCase() === formTypes.form ? "Invoice" : "Quote";
-        if(formType === "Quote"){
+        const htmlInvoice = await getInvoiceHtml(
+          formRecord.formId,
+          formRecord.invoiceUuid
+        );
+        const formType =
+          formRecord.type.toLocaleLowerCase() === formTypes.form
+            ? "Invoice"
+            : "Quote";
+        if (formType === "Quote") {
           await sendMail({
             from: process.env.EMAIL_USER,
             to: body.customerEmail,
             html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/quote/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
             subject: `${formType} - Simsan Fraser Main`,
           });
-        }
-        else{
+        } else {
           await sendMail({
             from: process.env.EMAIL_USER,
             to: body.customerEmail,
@@ -186,7 +200,6 @@ export class FormController {
             subject: `${formType} - Simsan Fraser Main`,
           });
         }
-        
       }
 
       return res.status(ResponseStatus.SUCCESS_UPDATE).send({
@@ -194,26 +207,78 @@ export class FormController {
         messsage: "Successfully created form record",
       });
     } catch (err) {
+      console.log(err);
       logger.error(err.message);
       return new APIError(err.message, ResponseStatus.API_ERROR);
     }
   }
 
   @Authorized(UserPermissions.admin)
-  @Put("/:id")
+  @Patch("/update/:id")
   async updateForm(
     @Res() res: Response,
     @Params() { id }: EntityId,
     @Body() body: FormType
   ) {
+    
+    const queryRunner: QueryRunner = getConnection().createQueryRunner();
     try {
       const formRepository: Repository<Form> =
         getConnection().getRepository(Form);
-      const queryRunner: QueryRunner = getConnection().createQueryRunner();
+
       const formRecord: Form | undefined = await formRepository.findOne(id);
 
       if (formRecord) {
-        queryRunner.manager.save(body.updateForm(formRecord));
+        await queryRunner.startTransaction();
+        queryRunner.manager.update(Form, id, {
+          customerName: body.customerName,
+          customerEmail: body.customerEmail,
+          customerAddress: body.customerAddress,
+          customerCity: body.customerCity,
+          customerCountry: body.customerCountry,
+          customerPostalCode: body.customerPostalCode,
+          customerPhone: body.customerPhone,
+          customerProvince: body.customerProvince,
+          discount: body.discount,
+          total: body.total,
+          is_taxable: body.is_taxable,
+          final_amount: body.final_amount,
+          discount_percent: body.discount_percent,
+          type: body.type,
+          comment: body.comment,
+        });
+        queryRunner.manager.update(Form, id, body);
+
+        await queryRunner.manager.delete(FormToServices, {
+          formId: id,
+        });
+
+        const updateServiceRecord = body.updateFormServices();
+
+        const serviceRepository: Repository<Service> =
+          getConnection().getRepository(Service);
+        const services = await serviceRepository.find({
+          where: {
+            serviceId: In(
+              body.services.map(
+                (service: FormToServiceType) => service.serviceId
+              )
+            ),
+          },
+        });
+
+        const serviceMap: Map<number, Service> = new Map<number, Service>();
+        services.forEach((service: Service) =>
+          serviceMap.set(service.serviceId, service)
+        );
+        await queryRunner.manager.save(
+          updateServiceRecord.formToServices.map((service: FormToServices) => {
+            service.form = formRecord;
+            return service;
+          })
+        );
+        await queryRunner.commitTransaction();
+
         return res.status(ResponseStatus.SUCCESS_UPDATE).send({
           status: true,
           messsage: "Successfully updated form record",
@@ -225,6 +290,8 @@ export class FormController {
         });
       }
     } catch (err) {
+      queryRunner.rollbackTransaction();
+
       console.log(err.message);
       logger.error(err.message);
       return new APIError(err.message, ResponseStatus.API_ERROR);

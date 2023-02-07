@@ -37,7 +37,6 @@ export class FeedbacksComponent implements OnInit {
     this.type = this.route.snapshot.params['type'];
     this.commonService.fetchRole().subscribe((data) => {
       this.userType = data.role;
-      console.log(this.userType);
       if (this.type === 'FORM' && this.userType === 'sub_admin') {
         this.toastr.error('You are not authorized to view this page');
         this.router.navigate(['/admin/quotes', { type: 'QUOTE' }]);
@@ -50,10 +49,8 @@ export class FeedbacksComponent implements OnInit {
 
   getAllFeedbacks() {
     this.commonService.feedbackList(0, 10, this.type, '').subscribe((data) => {
-      // console.log(data)
       this.feedbackListData = data.data;
       this.totalCount = data.count.count;
-      // console.log(this.totalCount);
     });
   }
 
@@ -74,7 +71,7 @@ export class FeedbacksComponent implements OnInit {
 
   search() {
     if (this.searchTerm === '') return;
-    // console.log(this.searchTerm);
+
     this.commonService
       .feedbackList(0, 10, this.type, this.searchTerm)
       .subscribe((data) => {
@@ -93,8 +90,12 @@ export class FeedbacksComponent implements OnInit {
       this.commonService
         .markQuoteAsInvoice(formId, invoiceUuid)
         .subscribe((data) => {
-          this.toastr.success('Marked as Invoice');
-          this.ngOnInit();
+          if (data.status) {
+            this.toastr.success('Marked as Invoice');
+            this.router.navigate(['/collect/feedback', { type: 'FORM' }]);
+          } else {
+            this.toastr.error(data.message);
+          }
         });
     }
   }

@@ -6,6 +6,7 @@ import {
   Matches,
   IsNotIn,
   IsBoolean,
+  IsOptional,
 } from "class-validator";
 import { Configurations } from "./entity/Configurations";
 import { Form } from "./entity/Form";
@@ -151,7 +152,7 @@ export class FormType {
   @IsString()
   discount: string;
 
-  @IsString()
+  @IsOptional()
   discount_percent: string;
 
   @IsNotEmpty()
@@ -160,6 +161,9 @@ export class FormType {
   @IsBoolean()
   @IsNotEmpty()
   is_taxable: boolean;
+
+  @IsOptional()
+  comment: string;
 
   @IsString()
   type: originalFormTypes;
@@ -181,6 +185,8 @@ export class FormType {
     form.discount_percent = this.discount_percent;
     form.createdBy = userId;
     form.type = this.type;
+    form.comment = this.comment;
+    form.invoiceNumber = (+new Date()).toString();
     form.formToServices = this.services.map((s: FormToServiceType) => {
       let obj: FormToServices = new FormToServices();
       obj.service = new Service();
@@ -191,15 +197,15 @@ export class FormType {
     return form;
   }
 
-  public updateForm(formRecord: Form): Form {
-    formRecord.customerName = this.customerName;
-    formRecord.customerEmail = this.customerEmail;
-    formRecord.customerAddress = this.customerAddress;
-    formRecord.customerCity = this.customerCity;
-    formRecord.customerCountry = this.customerCountry;
-    formRecord.customerPostalCode = this.customerPostalCode;
-    formRecord.customerPhone = this.customerPhone;
-    formRecord.customerProvince = this.customerProvince;
+  public updateFormServices() {
+    const formRecord: Form = new Form();
+    formRecord.formToServices = this.services.map((s: FormToServiceType) => {
+      let obj: FormToServices = new FormToServices();
+      obj.service = new Service();
+      obj.service.serviceId = s.serviceId;
+      obj.price = s.price;
+      return obj;
+    });
     return formRecord;
   }
 }
