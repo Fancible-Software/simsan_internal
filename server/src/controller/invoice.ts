@@ -40,12 +40,9 @@ export class InvoiceController {
         uuid &&
         formRecord.type.toLocaleLowerCase() === formTypes.form
       ) {
-        // console.log(formRecord)
         const configRepo: Repository<Configurations> =
           getConnection().getRepository(Configurations);
         const configRecord = await configRepo.find();
-        // console.log(configRecord)
-        const invoiceNumber = Date.now();
 
         let products: any = [];
 
@@ -115,7 +112,7 @@ export class InvoiceController {
             country: formRecord.customerCountry,
           },
           information: {
-            invoice_number: invoiceNumber,
+            invoice_number: formRecord.invoiceNumber,
             date: today,
             total: formRecord.final_amount,
             sub_total: formRecord.total,
@@ -130,7 +127,7 @@ export class InvoiceController {
             "tax-notation": "gst",
           },
         };
-
+        
         return res.render(
           path.join(__dirname, "/../../public/views/", "invoice.ejs"),
           {

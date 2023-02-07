@@ -29,13 +29,17 @@ export class QuoteController {
       });
 
       // @ts-ignore: Unreachable code error
-      if (formRecord && uuid && formRecord.type.toLocaleLowerCase() === formTypes.quote) {
+      if (
+        formRecord &&
+        uuid &&
+        formRecord.type.toLocaleLowerCase() === formTypes.quote
+      ) {
         // console.log(formRecord)
         const configRepo: Repository<Configurations> =
           getConnection().getRepository(Configurations);
         const configRecord = await configRepo.find();
         // console.log(configRecord)
-        const invoiceNumber = Date.now();
+        // const invoiceNumber = Date.now();
 
         let products: any = [];
 
@@ -105,7 +109,7 @@ export class QuoteController {
             country: formRecord.customerCountry,
           },
           information: {
-            invoice_number: invoiceNumber,
+            invoice_number: formRecord.invoiceNumber,
             date: today,
             total: formRecord.final_amount,
             sub_total: formRecord.total,
@@ -120,7 +124,7 @@ export class QuoteController {
             "tax-notation": "gst",
           },
         };
-
+        // console.log("data", data);
         return res.render(
           path.join(__dirname, "/../../public/views/", "quoteEmail.ejs"),
           {

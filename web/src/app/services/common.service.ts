@@ -179,4 +179,16 @@ export class CommonService {
       .get<any>(environment.endPoint + '/admin/role')
       .pipe();
   }
+
+  getFormDetailsById(id: number) {
+    return this.httpClient
+      .get<any>(environment.endPoint + '/form/' + id)
+      .pipe();
+  }
+
+  updateForm(body: any, formId: number): Observable<any> {
+    return this.httpClient
+      .patch<any>(environment.endPoint + '/form/update/' + formId, body)
+      .pipe();
+  }
 }

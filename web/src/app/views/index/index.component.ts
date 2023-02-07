@@ -28,8 +28,13 @@ export class IndexComponent implements OnInit {
   formType: string = 'FORM';
   selectedCity: string = '';
   isFormSubmitted: boolean = false;
-  selectedServices : any = [];
-  discountPercentage : any = 0;
+  selectedServices: any = [];
+  discountPercentage: any = 0;
+  formId: number = 0;
+  invoiceUuid: string = '';
+  isFormUpdated: string = 'CREATE';
+  formData: any;
+  userType = 'sub_admin';
 
   constructor(
     private commonService: CommonService,
@@ -55,12 +60,97 @@ export class IndexComponent implements OnInit {
       discount: [''],
       final_amount: ['', [Validators.required]],
       tax_applicable: [false],
+      comment: [''],
     });
   }
 
   ngOnInit(): void {
-    this.getActiveServicesList();
+    // console.log(this.route.snapshot.params['formId']);
+    this.commonService.fetchRole().subscribe((data) => {
+      this.userType = data.role;
+    });
     this.getProvinceList();
+    if (this.route.snapshot.params['formId']) {
+      this.isFormUpdated = 'UPDATE';
+      this.formId = this.route.snapshot.params['formId'];
+
+      this.commonService
+        .getFormDetailsById(+this.route.snapshot.params['formId'])
+        .subscribe((data) => {
+          // Mark services as selected that were previously attached
+          this.selectedServices = data['data']['formToServices'].map(
+            (record: any) => {
+              return {
+                ...record['service'],
+                price: record['price'],
+              };
+            }
+          );
+          // get service ids of previously attached services
+          const serviceIds = this.selectedServices.map(
+            (row: any) => row['serviceId']
+          );
+          // fetch all services & merge with previously selected services price so that we can get overriden price
+          this.commonService.activeServicesList().subscribe((obj) => {
+            if (obj.status) {
+              const fetchedRows = obj.data.rows.filter(
+                (row: any) => !serviceIds.includes(row['serviceId'])
+              );
+              this.services = [...fetchedRows, ...this.selectedServices];
+              this.editableServices = [
+                ...fetchedRows,
+                ...this.selectedServices,
+              ];
+            }
+          });
+
+          // create service data for form
+          const selectedOrderIds: any = [];
+          let amount: number = 0;
+
+          this.selectedServices
+            .map((service: any) => {
+              if (service) {
+                selectedOrderIds.push({
+                  serviceId: service.serviceId,
+                  price: parseInt(service.price),
+                });
+                amount = amount + parseInt(service.price);
+              }
+            })
+            .filter((v: number) => v !== null);
+
+          this.formData = data.data;
+          this.invoiceUuid = data.data.invoiceUuid;
+          // console.log(data);
+          // update form
+          this.form.patchValue({
+            name: data.data.customerName,
+            email: data.data.customerEmail,
+            mobile_no: data.data.customerPhone,
+            address: data.data.customerAddress,
+            city: data.data.customerCity,
+            province: data.data.customerProvince,
+            postal_code: data.data.customerPostalCode,
+            total_amount: data.data.total,
+            discount_percent: data.data.discount_percent,
+            amount_after_discount: data.data.final_amount,
+            discount: data.data.discount,
+            final_amount: data.data.final_amount,
+            tax_applicable: data.data.is_taxable,
+            comment: data.data.comment,
+            services: selectedOrderIds,
+          });
+          var event = {
+            target: {
+              value: data.data.customerProvince,
+            },
+          };
+          this.onChange(event);
+        });
+    } else {
+      this.getActiveServicesList();
+    }
 
     if (this.route.snapshot.params['type'] === 'FORM') {
       this.formType = this.route.snapshot.params['type'];
@@ -71,9 +161,9 @@ export class IndexComponent implements OnInit {
       this.router.navigateByUrl('admin/services');
     }
 
-    this.form.controls['total_amount'].valueChanges.subscribe((val:any)=>{
+    this.form.controls['total_amount'].valueChanges.subscribe((val: any) => {
       this.updateValues(val);
-    })
+    });
   }
 
   get servicesFormArray() {
@@ -117,8 +207,8 @@ export class IndexComponent implements OnInit {
   finalSubmit() {
     this.loader.start();
     this.submitted = true;
-    this.isFormSubmitted = true
-    if (this.form.status == 'INVALID' || this.selectedServices.length === 0)  {
+    this.isFormSubmitted = true;
+    if (this.form.status == 'INVALID' || this.selectedServices.length === 0) {
       if (this.selectedServices.length === 0) {
         alert('Please select any of the above service!');
       }
@@ -140,19 +230,32 @@ export class IndexComponent implements OnInit {
       final_amount: this.form.value.final_amount.toString(),
       services: this.form.value.services,
       is_taxable: this.form.value.tax_applicable,
-      discount_percent: this.form.value.discount_percent,
+      discount_percent: this.form.value.discount_percent.toString(),
       type: this.formType,
+      comment: this.form.value.comment,
     };
-  
-    this.commonService.submitFeedback(formData).subscribe((data) => {
-      this.loader.stop();
-      this.toastr.success(data.message, 'SUCCESS');
-      if (this.formType === 'QUOTE') {
-        this.router.navigate(['admin/feedbacks', { type: 'QUOTE' }]);
-      } else {
-        this.router.navigate(['admin/feedbacks', { type: 'FORM' }]);
-      }
-    });
+
+    if (this.isFormUpdated === 'UPDATE') {
+      this.commonService.updateForm(formData, this.formId).subscribe((data) => {
+        this.loader.stop();
+        this.toastr.success(data.message, 'SUCCESS');
+        if (this.formType === 'QUOTE') {
+          this.router.navigate(['admin/feedbacks', { type: 'QUOTE' }]);
+        } else {
+          this.router.navigate(['admin/feedbacks', { type: 'FORM' }]);
+        }
+      });
+    } else {
+      this.commonService.submitFeedback(formData).subscribe((data) => {
+        this.loader.stop();
+        this.toastr.success(data.message, 'SUCCESS');
+        if (this.formType === 'QUOTE') {
+          this.router.navigate(['admin/feedbacks', { type: 'QUOTE' }]);
+        } else {
+          this.router.navigate(['admin/feedbacks', { type: 'FORM' }]);
+        }
+      });
+    }
   }
 
   get f() {
@@ -175,14 +278,14 @@ export class IndexComponent implements OnInit {
         ),
         discount: discountAmount,
         amount_after_discount: discountedAmount,
-        discount_percent : discPerc
+        discount_percent: discPerc,
       });
-    }else{
+    } else {
       this.form.patchValue({
         discount: discountAmount,
         amount_after_discount: discountedAmount,
         final_amount: discountedAmount,
-        discount_percent : discPerc
+        discount_percent: discPerc,
       });
     }
   }
@@ -204,6 +307,7 @@ export class IndexComponent implements OnInit {
 
   onChange(evt: any) {
     let provinceId = evt.target.value;
+    // console.log(provinceId);
     if (provinceId) {
       this.commonService.citiesList(provinceId).subscribe((data) => {
         this.cities = data.data;
@@ -230,10 +334,10 @@ export class IndexComponent implements OnInit {
     }
   }
 
-  updateValues(totalAmount : any){
+  updateValues(totalAmount: any) {
     totalAmount = parseInt(totalAmount);
     const discPerc = this.discountPercentage;
-    
+
     let discountAmount = totalAmount * (discPerc / 100);
     let discountedAmount = totalAmount - totalAmount * (discPerc / 100);
 
@@ -244,15 +348,26 @@ export class IndexComponent implements OnInit {
         ),
         discount: discountAmount,
         amount_after_discount: discountedAmount,
-        discount_percent : this.discountPercentage
+        discount_percent: this.discountPercentage,
       });
     } else {
       this.form.patchValue({
         final_amount: discountedAmount,
         discount: discountAmount,
         amount_after_discount: discountedAmount,
-        discount_percent : this.discountPercentage
+        discount_percent: this.discountPercentage,
       });
+    }
+  }
+
+  markQuoteAsInvoice(formId: number, invoiceUuid: string) {
+    if (confirm('Are you sure you want to mark this quote as invoice?')) {
+      this.commonService
+        .markQuoteAsInvoice(formId, invoiceUuid)
+        .subscribe((data) => {
+          this.toastr.success('Marked as Invoice');
+          this.router.navigate(['/admin/feedbacks', { type: 'FORM' }]);
+        });
     }
   }
 }
