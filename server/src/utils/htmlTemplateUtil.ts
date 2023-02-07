@@ -9,7 +9,7 @@ import logger from "./logger";
 import date from "date-and-time";
 import sendMail from "./sendMail";
 
-const sendEmail = async (formRecord : Form) =>{
+export const sendFormEmail = async (formRecord : Form) =>{
   const htmlInvoice = await getInvoiceHtml(
     formRecord.formId,
     formRecord.invoiceUuid
