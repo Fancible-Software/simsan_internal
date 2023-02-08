@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
+import { TableModule } from 'primeng/table';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './views/auth/login/login.component';
 import { IndexComponent } from './views/index/index.component';
@@ -90,6 +91,7 @@ import { EmailComponent } from './views/admin/email/email.component';
     HttpClientModule,
     NgxPaginationModule,
     AngularMultiSelectModule,
+    TableModule,
     ToastrModule.forRoot({
       timeOut: 10000,
       positionClass: 'toast-top-right',

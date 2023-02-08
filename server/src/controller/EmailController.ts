@@ -42,9 +42,11 @@ export class EmailController {
       const formRepository = getConnection().getRepository(Form);
       const customers = await formRepository.find();
       const emailPromises: Promise<any>[] = [];
+      const addedCustomer = new Set();
       // Send Email
       customers.forEach(async (customer) => {
-        if (customer.type === originalFormTypes.form) {
+        
+        if (customer.type === originalFormTypes.form && !addedCustomer.has(customer.customerEmail)) {
           emailPromises.push(
             sendMail({
               from: process.env.EMAIL_USER,
@@ -54,6 +56,7 @@ export class EmailController {
             })
           );
         }
+        addedCustomer.add(customer.customerEmail);
       });
 
       await Promise.all(emailPromises);

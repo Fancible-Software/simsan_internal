@@ -222,43 +222,52 @@
           <h6 class="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
             Services
           </h6>
-          <div class="flex flex-wrap">
-            <label
-              class="w-full mb-3 block uppercase text-blueGray-600 text-xs font-bold mb-2 w-full lg:w-4/12 px-4"
-              style="display: inline-flex"
-              htmlFor="grid-password"
-              formArrayName="services_dropdown"
-              *ngFor="let order of servicesFormArray.controls; let i = index"
-            >
-              <input
-                type="checkbox"
-                class="rounded shadow focus:outline-none transition-all"
-                [formControlName]="i"
-              />
-              <span style="padding-left: 8px">{{
-                services[i].serviceName
-              }}</span>
-            </label>
-          </div>
 
-          <div class="flex flex-wrap">
-            <button
-              class="text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-              type="button"
-              (click)="generateAmount()"
-              [ngClass]="enabled ? 'bg-grey-btn' : 'bg-red-600'"
-              [disabled]="enabled"
-            >
-              Generate
-            </button>
-            <button
-              class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-              type="button"
-              (click)="clear()"
-            >
-              Clear
-            </button>
-          </div>
+          <p-table
+            dataKey="serviceId"
+            (onEditComplete)="generateAmount()"
+            (onEditCancel)="generateAmount()"
+            (onRowSelect)="generateAmount()"
+            (onRowUnselect)="generateAmount()"
+            [value]="editableServices"
+            [(selection)]="selectedServices"
+            [tableStyle]="{ 'min-width': '30rem' }"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 4rem">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th>Service Name</th>
+                <th>Price</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row let-editing="editing">
+              <tr>
+                <td>
+                  <p-tableCheckbox [value]="row"></p-tableCheckbox>
+                </td>
+                <td>{{ row.serviceName }}</td>
+                <td pEditableColumn>
+                  <p-cellEditor>
+                    <ng-template pTemplate="input">
+                      <input
+                        pInputText
+                        type="number"
+                        [(ngModel)]="row.price"
+                        [ngModelOptions]="{ standalone: true }"
+                        required
+                      />
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                      {{ row.price }}
+                    </ng-template>
+                  </p-cellEditor>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+
           <h6 class="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
             Pricing
           </h6>
@@ -275,13 +284,17 @@
                   type="text"
                   class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                   formControlName="total_amount"
-                  readonly="true"
                 />
                 <div
                   *ngIf="submitted && f['total_amount'].errors"
                   class="invalid-feedback"
                 >
-                  <div *ngIf="f['total_amount'].errors['required']">
+                  <div
+                    *ngIf="
+                      f['total_amount'].errors['required'] ||
+                      selectedServices.length === 0
+                    "
+                  >
                     Total Amount is required
                   </div>
                 </div>
@@ -347,6 +360,7 @@
                   type="text"
                   class="rounded shadow focus:outline-none transition-all"
                   formControlName="final_amount"
+                  readonly="true"
                 />
                 <div
                   *ngIf="submitted && f['final_amount'].errors"
@@ -358,9 +372,26 @@
                 </div>
               </div>
             </div>
+
+            <div class="w-full lg:w-12/12 px-4">
+              <div class="relative w-full mb-3">
+                <label
+                  class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                  htmlFor="grid-password"
+                >
+                  Comment
+                </label>
+                <textarea
+                  type="text"
+                  class="rounded shadow focus:outline-none transition-all"
+                  formControlName="comment"
+                >
+                </textarea>
+              </div>
+            </div>
           </div>
 
-          <div class="flex flex-wrap">
+          <div class="flex flex-wrap" style="margin-bottom: 22px">
             <button
               class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
               type="button"
@@ -368,10 +399,16 @@
               [ngClass]="isFormSubmitted ? 'bg-grey-btn' : 'bg-red-600'"
               [disabled]="isFormSubmitted"
             >
-              <ng-container *ngIf="formType === 'FORM'; else quoteSubmitButton">
-                Submit
-              </ng-container>
-              <ng-template #quoteSubmitButton> Submit Quote </ng-template>
+              Save
+            </button>
+
+            <button
+              *ngIf="formType === 'QUOTE' && isFormUpdated === 'UPDATE' && userType==='admin'"
+              type="button"
+              class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+              (click)="markQuoteAsInvoice(formId, invoiceUuid)"
+            >
+              Mark as invoice
             </button>
           </div>
         </form>

@@ -49,6 +49,7 @@ const routes: Routes = [
       { path: 'configurations/create', component: SettingsCreateComponent },
       { path: 'configurations/edit/:id', component: SettingsCreateComponent },
       { path: 'mails', component: EmailComponent },
+
       // { path: "verify/user", component: VerificationComponent }
     ],
   },
