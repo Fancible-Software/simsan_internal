@@ -32,7 +32,7 @@ import generateInvoice from "../utils/generateInvoice";
 import date from "date-and-time";
 import { Configurations } from "../entity/Configurations";
 import sendMail from "../utils/sendMail";
-import { getInvoiceHtml } from "../utils/htmlTemplateUtil";
+import { getInvoiceHtml, sendFormEmail } from "../utils/htmlTemplateUtil";
 
 @Controller("/form")
 export class FormController {
@@ -278,7 +278,7 @@ export class FormController {
           })
         );
         await queryRunner.commitTransaction();
-
+        await sendFormEmail(formRecord);
         return res.status(ResponseStatus.SUCCESS_UPDATE).send({
           status: true,
           messsage: "Successfully updated form record",
