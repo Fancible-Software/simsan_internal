@@ -15,7 +15,7 @@ import { Repository, getConnection } from "typeorm";
 import date from "date-and-time";
 import { Response } from "express";
 import path from "path";
-import { sendFormEmail } from "src/utils/htmlTemplateUtil";
+import { sendFormEmail } from "../utils/htmlTemplateUtil";
 // import {create} from "html-pdf";
 
 @Controller("/invoice")
