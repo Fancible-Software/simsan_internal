@@ -105,7 +105,7 @@ async function run() {
                         process.env.JWT_SECRET
                     ) as TokenData;
                     if (!userData) return;
-                    console.log(userData);
+                    // console.log(userData);
                     return getConnection().getRepository(User).findOne({ email: userData.email })
                 } catch (error) {
                     if (error instanceof TokenExpiredError) {
