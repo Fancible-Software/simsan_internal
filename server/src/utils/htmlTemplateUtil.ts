@@ -7,6 +7,33 @@ import { getConnection, Repository } from "typeorm";
 import { APIError } from "./APIError";
 import logger from "./logger";
 import date from "date-and-time";
+import sendMail from "./sendMail";
+
+export const sendFormEmail = async (formRecord : Form) =>{
+  const htmlInvoice = await getInvoiceHtml(
+    formRecord.formId,
+    formRecord.invoiceUuid
+  );
+  const formType =
+    formRecord.type.toLocaleLowerCase() === formTypes.form
+      ? "Invoice"
+      : "Quote";
+  if (formType === "Quote") {
+    return sendMail({
+      from: process.env.EMAIL_USER,
+      to: formRecord.customerEmail,
+      html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/quote/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
+      subject: `${formType} - Simsan Fraser Main`,
+    });
+  } else {
+    return sendMail({
+      from: process.env.EMAIL_USER,
+      to: formRecord.customerEmail,
+      html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/invoice/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
+      subject: `${formType} - Simsan Fraser Main`,
+    });
+  }
+}
 
 export const getInvoiceHtml = async (formId: number, formUUID: string) => {
   try {

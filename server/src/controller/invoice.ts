@@ -15,6 +15,7 @@ import { Repository, getConnection } from "typeorm";
 import date from "date-and-time";
 import { Response } from "express";
 import path from "path";
+import { sendFormEmail } from "../utils/htmlTemplateUtil";
 // import {create} from "html-pdf";
 
 @Controller("/invoice")
@@ -168,6 +169,7 @@ export class InvoiceController {
       if (formRecord) {
         formRecord.type = originalFormTypes.form;
         await formRepository.save(formRecord);
+        await sendFormEmail(formRecord);
         return res.status(ResponseStatus.SUCCESS_UPDATE).send({
           status: true,
           message: "Successfully converted quote to invoice",
