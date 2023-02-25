@@ -44,18 +44,13 @@ export const getInvoiceHtml = async (formId: number, formUUID: string) => {
       relations: ["formToServices", "formToServices.service"],
     });
 
-    // @ts-ignore: Unreachable code error
     if (formRecord && formUUID) {
-      // console.log(formRecord)
       const configRepo: Repository<Configurations> =
         getConnection().getRepository(Configurations);
       const configRecord = await configRepo.find();
-      // console.log(configRecord)
-      // const invoiceNumber = Date.now();
 
       let products: any = [];
 
-      // security check
       if (formRecord.invoiceUuid !== formUUID) {
         return ejs.renderFile(
           path.join(
