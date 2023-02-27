@@ -28,9 +28,9 @@ export class InvoiceController {
     { id, uuid }: InvoiceParams
   ) {
     try {
+      const conn = getConnection();
       const today = date.format(new Date(), "YYYY-MM-DD");
-      const formRepository: Repository<Form> =
-        getConnection().getRepository(Form);
+      const formRepository: Repository<Form> = conn.getRepository(Form);
       const formRecord: Form | undefined = await formRepository.findOne(id, {
         relations: ["formToServices", "formToServices.service"],
       });
@@ -42,7 +42,7 @@ export class InvoiceController {
         formRecord.type.toLocaleLowerCase() === formTypes.form
       ) {
         const configRepo: Repository<Configurations> =
-          getConnection().getRepository(Configurations);
+          conn.getRepository(Configurations);
         const configRecord = await configRepo.find();
 
         let products: any = [];
@@ -128,7 +128,7 @@ export class InvoiceController {
             "tax-notation": "gst",
           },
         };
-        
+
         return res.render(
           path.join(__dirname, "/../../public/views/", "invoice.ejs"),
           {

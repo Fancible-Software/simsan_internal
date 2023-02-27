@@ -22,7 +22,13 @@ import {
 } from "../types";
 import { APIError } from "../utils/APIError";
 import logger from "../utils/logger";
-import { getConnection, QueryRunner, Repository, Not } from "typeorm";
+import {
+  getConnection,
+  QueryRunner,
+  Repository,
+  Not,
+  Connection,
+} from "typeorm";
 import { FormToServices } from "../entity/FormToServices";
 
 @Controller("/services")
@@ -31,6 +37,7 @@ export class ServicesController {
   @Get("/service/:id")
   async getServiceById(@Res() res: Response, @Params() { id }: EntityId) {
     try {
+      Connection;
       const serviceRepository: Repository<Service> =
         getConnection().getRepository(Service);
       const serviceObj: Service | undefined = await serviceRepository.findOne(
@@ -105,9 +112,10 @@ export class ServicesController {
     @Body() body: ServiceType
   ) {
     try {
+      const conn = getConnection();
       const serviceRepository: Repository<Service> =
-        getConnection().getRepository(Service);
-      const queryRunner: QueryRunner = getConnection().createQueryRunner();
+        conn.getRepository(Service);
+
       const serviceObj: Service | undefined = await serviceRepository.findOne(
         id
       );
@@ -129,7 +137,7 @@ export class ServicesController {
         serviceObj.serviceName = body.serviceName;
         serviceObj.price = body.price;
         serviceObj.isActive = +body.isActive;
-        queryRunner.manager.save(serviceObj);
+        serviceRepository.save(serviceObj);
         return res.status(ResponseStatus.SUCCESS_UPDATE).send({
           status: true,
           message: "Service successfully updated",
@@ -149,15 +157,16 @@ export class ServicesController {
   @Authorized(UserPermissions.admin)
   @Delete("/:id")
   async deleteService(@Res() res: Response, @Params() { id }: EntityId) {
+    const conn = getConnection();
+    const queryRunner: QueryRunner = conn.createQueryRunner();
     try {
       const serviceRepository: Repository<Service> =
-        getConnection().getRepository(Service);
-      const queryRunner: QueryRunner = getConnection().createQueryRunner();
+        conn.getRepository(Service);
       const serviceObj: Service | undefined = await serviceRepository.findOne(
         id
       );
       const formToServicesRepository: Repository<FormToServices> =
-        getConnection().getRepository(FormToServices);
+        conn.getRepository(FormToServices);
 
       if (serviceObj) {
         const serviceLinkedToForm = await formToServicesRepository.count({
@@ -186,6 +195,8 @@ export class ServicesController {
       console.log(err.message);
       logger.error(err);
       return new APIError(err.message, ResponseStatus.API_ERROR);
+    } finally {
+      await queryRunner.release();
     }
   }
 
@@ -197,9 +208,10 @@ export class ServicesController {
     @CurrentUser() user: User
   ) {
     try {
+      const conn = getConnection();
       const serviceRepository: Repository<Service> =
-        getConnection().getRepository(Service);
-      const queryRunner: QueryRunner = getConnection().createQueryRunner();
+        conn.getRepository(Service);
+      // const queryRunner: QueryRunner = getConnection().createQueryRunner();
       const isExisting: Service[] = await serviceRepository.find({
         where: {
           serviceName: body.serviceName,
@@ -219,7 +231,7 @@ export class ServicesController {
       service.isActive = +body.isActive;
       service.createdBy = user.first_name + " " + user.last_name;
 
-      await queryRunner.manager.save(service);
+      await serviceRepository.save(service);
 
       return res.status(ResponseStatus.SUCCESS_UPDATE).send({
         status: true,

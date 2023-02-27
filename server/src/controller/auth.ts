@@ -16,9 +16,8 @@ export class AuthController {
     @Body()
     obj: customerSigninRequest
   ) {
+    const queryRunner = getConnection().createQueryRunner();
     try {
-      const queryRunner = getConnection().createQueryRunner();
-
       const ifUserExist = await queryRunner.manager
         .getRepository(User)
         .findOne({
@@ -83,6 +82,8 @@ export class AuthController {
       });
     } catch (err) {
       throw new APIError(err.message, 500);
+    } finally {
+      await queryRunner.release();
     }
   }
 }
