@@ -14,15 +14,16 @@ export class DashboardController {
   @Get("/count")
   async users(@Res() res: Response) {
     try {
-      const servicesRepo = getConnection().getRepository(Service);
+      const conn = getConnection();
+      const servicesRepo = conn.getRepository(Service);
       const serviceCount = await servicesRepo.count({ where: { isActive: 1 } });
 
-      const feedbackRepo = getConnection().getRepository(Form);
+      const feedbackRepo = conn.getRepository(Form);
       const feedbackCount = await feedbackRepo.count({
         where: { type: "FORM" },
       });
 
-      const adminRepo = getConnection().getRepository(User);
+      const adminRepo = conn.getRepository(User);
       const adminCount = await adminRepo.count({
         where: { is_verified: true },
       });

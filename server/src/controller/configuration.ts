@@ -64,8 +64,8 @@ export class ConfigurationController {
     @CurrentUser() user: User,
     @Res() res: Response
   ) {
+    const queryRunner: QueryRunner = getConnection().createQueryRunner();
     try {
-      const queryRunner: QueryRunner = getConnection().createQueryRunner();
       const configRepository: Repository<Configurations> =
         getConnection().getRepository(Configurations);
       const ifConfigExist = await configRepository.count({
@@ -93,6 +93,8 @@ export class ConfigurationController {
     } catch (error) {
       logger.log(error.message);
       return new APIError(error.message, ResponseStatus.API_ERROR);
+    } finally {
+      await queryRunner.release();
     }
   }
 
@@ -153,8 +155,8 @@ export class ConfigurationController {
     body: UpdateConfigurationRequest,
     @Res() res: Response
   ) {
+    const queryRunner: QueryRunner = getConnection().createQueryRunner();
     try {
-      const queryRunner: QueryRunner = getConnection().createQueryRunner();
       const newConfigRecord: Configurations = body.toConfiguration();
       await queryRunner.manager.save(newConfigRecord);
 
@@ -164,6 +166,8 @@ export class ConfigurationController {
       });
     } catch (error) {
       throw new APIError(error.message, ResponseStatus.API_ERROR);
+    } finally {
+      await queryRunner.release();
     }
   }
 }

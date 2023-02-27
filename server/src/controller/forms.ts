@@ -112,8 +112,8 @@ export class FormController {
   @Get("/:id")
   async getFormById(@Res() res: Response, @Params() { id }: EntityId) {
     try {
-      const formRepository: Repository<Form> =
-        getConnection().getRepository(Form);
+      const conn = getConnection();
+      const formRepository: Repository<Form> = conn.getRepository(Form);
       const formRecord: Form | undefined = await formRepository.findOne(id, {
         relations: ["formToServices", "formToServices.service"],
       });
@@ -143,10 +143,11 @@ export class FormController {
     @CurrentUser() user: User,
     @Body() body: FormType
   ) {
+    const conn = getConnection();
+    const queryRunner: QueryRunner = conn.createQueryRunner();
     try {
-      const queryRunner: QueryRunner = getConnection().createQueryRunner();
       const serviceRepository: Repository<Service> =
-        getConnection().getRepository(Service);
+        conn.getRepository(Service);
       const services = await serviceRepository.find({
         where: {
           serviceId: In(
@@ -167,8 +168,7 @@ export class FormController {
           return service;
         })
       );
-      const formRepository: Repository<Form> =
-        getConnection().getRepository(Form);
+      const formRepository: Repository<Form> = conn.getRepository(Form);
       const formRecord: Form | undefined = await formRepository.findOne(
         formAdded.formId,
         {
@@ -210,6 +210,8 @@ export class FormController {
       console.log(err);
       logger.error(err.message);
       return new APIError(err.message, ResponseStatus.API_ERROR);
+    } finally {
+      await queryRunner.release();
     }
   }
 
@@ -220,11 +222,10 @@ export class FormController {
     @Params() { id }: EntityId,
     @Body() body: FormType
   ) {
-    
-    const queryRunner: QueryRunner = getConnection().createQueryRunner();
+    const conn = getConnection();
+    const queryRunner: QueryRunner = conn.createQueryRunner();
     try {
-      const formRepository: Repository<Form> =
-        getConnection().getRepository(Form);
+      const formRepository: Repository<Form> = conn.getRepository(Form);
 
       const formRecord: Form | undefined = await formRepository.findOne(id);
 
@@ -256,7 +257,7 @@ export class FormController {
         const updateServiceRecord = body.updateFormServices();
 
         const serviceRepository: Repository<Service> =
-          getConnection().getRepository(Service);
+          conn.getRepository(Service);
         const services = await serviceRepository.find({
           where: {
             serviceId: In(
@@ -295,16 +296,18 @@ export class FormController {
       console.log(err.message);
       logger.error(err.message);
       return new APIError(err.message, ResponseStatus.API_ERROR);
+    } finally {
+      await queryRunner.release();
     }
   }
 
   @Authorized(UserPermissions.admin)
   @Delete("/:id")
   async deleteFormById(@Res() res: Response, @Params() { id }: EntityId) {
+    const conn = getConnection();
+    const queryRunner: QueryRunner = conn.createQueryRunner();
     try {
-      const formRepository: Repository<Form> =
-        getConnection().getRepository(Form);
-      const queryRunner: QueryRunner = getConnection().createQueryRunner();
+      const formRepository: Repository<Form> = conn.getRepository(Form);
       const formRecord: Form | undefined = await formRepository.findOne(id);
 
       if (formRecord) {
@@ -323,6 +326,8 @@ export class FormController {
       console.log(err.message);
       logger.error(err.message);
       return new APIError(err.message, ResponseStatus.API_ERROR);
+    } finally {
+      await queryRunner.release();
     }
   }
 
@@ -334,16 +339,16 @@ export class FormController {
     { id }: EntityId
   ) {
     try {
+      const conn = getConnection();
       const today = date.format(new Date(), "YYYY-MM-DD");
-      const formRepository: Repository<Form> =
-        getConnection().getRepository(Form);
+      const formRepository: Repository<Form> = conn.getRepository(Form);
       const formRecord: Form | undefined = await formRepository.findOne(id, {
         relations: ["formToServices", "formToServices.service"],
       });
       if (formRecord) {
         // console.log(formRecord)
         const configRepo: Repository<Configurations> =
-          getConnection().getRepository(Configurations);
+          conn.getRepository(Configurations);
         const configRecord = await configRepo.find();
         // console.log(configRecord)
         const invoiceNumber = Date.now();
