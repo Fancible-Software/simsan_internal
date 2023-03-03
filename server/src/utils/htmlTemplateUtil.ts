@@ -120,8 +120,9 @@ export const getInvoiceHtml = async (formId: number, formUUID: string) => {
           date: today,
           total: formRecord.final_amount,
           sub_total: formRecord.total,
-          discount: formRecord.discount,
+          discount: formRecord.discount !== null ? parseFloat(formRecord.discount).toFixed(2) : 0,
           tax: formRecord.is_taxable,
+          comment : formRecord.comment
         },
         products: products,
         // "bottom-notice": "Kindly pay your invoice within 15 days.",
@@ -131,6 +132,7 @@ export const getInvoiceHtml = async (formId: number, formUUID: string) => {
           "tax-notation": "gst",
         },
       };
+
       // console.log("rendering html");
       return ejs.renderFile(
         path.join(

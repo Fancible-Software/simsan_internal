@@ -119,6 +119,7 @@ export class InvoiceController {
             sub_total: formRecord.total,
             discount: formRecord.discount,
             tax: formRecord.is_taxable,
+            comment : formRecord.comment
           },
           products: products,
           // "bottom-notice": "Kindly pay your invoice within 15 days.",
@@ -133,7 +134,7 @@ export class InvoiceController {
           path.join(__dirname, "/../../public/views/", "invoice.ejs"),
           {
             ...data,
-            img_path: `/assets/logo.png`,
+            img_path: `/api/assets/logo.png`,
           }
         );
       } else {
