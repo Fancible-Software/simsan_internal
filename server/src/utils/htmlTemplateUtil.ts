@@ -19,19 +19,36 @@ export const sendFormEmail = async (formRecord : Form) =>{
       ? "Invoice"
       : "Quote";
   if (formType === "Quote") {
-    return sendMail({
-      from: process.env.EMAIL_USER,
-      to: formRecord.customerEmail,
-      html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/quote/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
-      subject: `${formType} - Simsan Fraser Main`,
-    });
+    return Promise.all([
+      sendMail({
+        from: process.env.EMAIL_USER,
+        to: formRecord.customerEmail,
+        html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/quote/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
+        subject: `${formType} - Simsan Fraser Main`,
+      }),
+      sendMail({
+        from: process.env.EMAIL_USER,
+        to: "simsanfrasermain@gmail.com",
+        html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/quote/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
+        subject: `${formType} - Simsan Fraser Main`,
+      })
+    ])
+    
   } else {
-    return sendMail({
+    return Promise.all([
+      sendMail({
       from: process.env.EMAIL_USER,
       to: formRecord.customerEmail,
       html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/invoice/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
       subject: `${formType} - Simsan Fraser Main`,
-    });
+    }),
+    sendMail({
+      from: process.env.EMAIL_USER,
+      to: "simsanfrasermain@gmail.com",
+      html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/invoice/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
+      subject: `${formType} - Simsan Fraser Main`,
+    })
+  ])
   }
 }
 
