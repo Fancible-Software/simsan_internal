@@ -192,10 +192,24 @@ export class FormController {
             html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/quote/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
             subject: `${formType} - Simsan Fraser Main`,
           });
+
+          await sendMail({
+            from: process.env.EMAIL_USER,
+            to: "simsanfrasermain@gmail.com",
+            html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/quote/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
+            subject: `${formType} - Simsan Fraser Main`,
+          });
         } else {
           await sendMail({
             from: process.env.EMAIL_USER,
             to: body.customerEmail,
+            html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/invoice/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
+            subject: `${formType} - Simsan Fraser Main`,
+          });
+
+          await sendMail({
+            from: process.env.EMAIL_USER,
+            to: "simsanfrasermain@gmail.com",
             html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/invoice/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
             subject: `${formType} - Simsan Fraser Main`,
           });

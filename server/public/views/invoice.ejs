@@ -98,6 +98,8 @@
                   <%= company_details[ 'city'] %> <%= company_details[ 'zip']
                   %><br />
                   <strong>Country</strong>: <%= company_details[ 'country'] %>
+                  <br/>
+                  <strong>GST Number : </strong> 75004 0602 RT0001
                 </p>
               </td>
               <td style="text-align: right">
@@ -125,6 +127,7 @@
               <th>S.No.</th>
               <th>Description</th>
               <th>Quantity</th>
+              <th>Price</th>
             </tr>
 
             <% if(products.length > 0) { %> <%
@@ -133,6 +136,7 @@
               <td align="center"><%= itemcount+1 %></td>
               <td align="center"><%= item['description'] %></td>
               <td align="center"><%= item['quantity'] %></td>
+              <td align="center"><%= item['price'] %></td>
             </tr>
             <% }); %> <% } %>
 
@@ -150,6 +154,13 @@
               </td>
               <td><% if(information['tax']) { %> 5% <% }else{ %> - <% }%></td>
             </tr>
+            <% if(information["discount"] !== null && information["discount"] > 0) { %>
+              <tr>
+                <td colspan="3"><strong>Discount</strong></td>
+
+                <td><%= settings['currency'] %> <%= parseFloat(information['discount']).toFixed(2) %></td>
+              </tr>
+            <% } %> 
             <tr>
               <td colspan="3"><strong>Total</strong></td>
 
@@ -163,6 +174,16 @@
               </td>
             </tr>
           </table>
+          <% if(information["comment"] !== null && information["comment"] !== "") { %>
+            <table class="items-table">
+              <tr>
+                <th>Comment</th>
+              </tr>
+              <tr>
+                <td><%= information["comment"] %></td>
+              </tr>
+            </table>
+          <% } %>
         </td>
       </tr>
     </table>
