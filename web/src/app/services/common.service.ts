@@ -191,4 +191,8 @@ export class CommonService {
       .patch<any>(environment.endPoint + '/form/update/' + formId, body)
       .pipe();
   }
+
+  getAnalytics(body : any) : Observable<any>{
+    return this.httpClient.post(`${environment.endPoint}/form/analytics`,body)
+  }
 }

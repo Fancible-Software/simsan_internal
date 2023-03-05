@@ -109,7 +109,8 @@ export class FormController {
     }
   }
 
-  @Get("/analytics")
+  @Authorized(UserPermissions.admin)
+  @Post("/analytics")
   async getAnalytics(
     @Res() res: Response,
     @Body() input : AnalyticsDate
