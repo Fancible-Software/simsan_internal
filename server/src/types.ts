@@ -82,6 +82,10 @@ export class ServiceType {
 
   @IsNumber()
   isActive: string;
+
+  @IsNumber()
+  @IsOptional()
+  priority?: number;
 }
 
 export class FormToServiceType {

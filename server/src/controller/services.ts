@@ -79,13 +79,14 @@ export class ServicesController {
           "serviceName",
           "price",
           "isActive",
+          "priority",
           "createdAt",
           "createdBy",
         ],
         skip: +skip,
         take: +limit,
         order: {
-          serviceId: "DESC",
+          priority: "ASC",
         },
       });
       const total = await serviceRepository.count();
@@ -137,6 +138,7 @@ export class ServicesController {
         serviceObj.serviceName = body.serviceName;
         serviceObj.price = body.price;
         serviceObj.isActive = +body.isActive;
+        serviceObj.priority = body.priority;
         serviceRepository.save(serviceObj);
         return res.status(ResponseStatus.SUCCESS_UPDATE).send({
           status: true,
@@ -230,6 +232,7 @@ export class ServicesController {
       service.serviceName = body.serviceName;
       service.isActive = +body.isActive;
       service.createdBy = user.first_name + " " + user.last_name;
+      service.priority = body.priority;
 
       await serviceRepository.save(service);
 
@@ -255,7 +258,7 @@ export class ServicesController {
           isActive: 1,
         },
         order: {
-          serviceId: "DESC",
+          priority: "ASC",
         },
       });
       const total = await serviceRepository.count({ isActive: 1 });
