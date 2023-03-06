@@ -17,19 +17,23 @@
             </div>
           </div>
         </div>
-        <div class="block w-full px-2 py-2">
+        <div class="block w-full px-2 py-2 flex flex-wrap justify-between">
           <!-- Projects table -->
           <div class="p-inputgroup m-2">
             <span class="p-inputgroup-addon">Start Date</span>
-            <p-calendar appendTo="body" [(ngModel)]="startDate"></p-calendar>        
+            <p-calendar appendTo="body" dateFormat="yy-mm-dd" [(ngModel)]="startDate"></p-calendar>        
           </div>
 
           <div class="p-inputgroup m-2">
             <span class="p-inputgroup-addon">End Date</span>
-            <p-calendar appendTo="body" [(ngModel)]="endDate"></p-calendar>        
+            <p-calendar appendTo="body" dateFormat="yy-mm-dd" [(ngModel)]="endDate"></p-calendar>        
           </div>
         
-          <button class="p-button-danger" (click)="getAnalytics()" class="m-2" pButton label="Get Report"></button>
+          <button
+            class="bg-red-600 text-white active:bg-aqua-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+            (click)="getAnalytics()" 
+            style="margin-left: 10px; float: left"
+          >Get Report</button>
         </div>
       </div>
     </div>

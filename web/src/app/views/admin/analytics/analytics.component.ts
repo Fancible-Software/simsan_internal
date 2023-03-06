@@ -32,8 +32,7 @@ export class AnalyticsComponent implements OnInit {
       endDate : this.endDate,
       type : this.type
     }).subscribe((data)=>{
-      this.data = data;
-      console.log(this.data);
+      this.commonService.getExcelReport(data,this.startDate,this.endDate);
     })
   }
 
