@@ -203,7 +203,10 @@ export class CommonService {
     const clientWorksheet = workbook.addWorksheet('Sales');
     const analyticsWorksheet = workbook.addWorksheet('Analytics')
     // if there is no data return
-    if(analytics.data.length <=0) return;
+    if(analytics.data.length <= 0) {
+      alert("No Records were found for the specified period !");
+      return;
+    };
 
     // add sales data to sales worksheet
     clientWorksheet.columns = Object.keys(analytics.data[0]).map((column:any)=>{return {"header" : column,"key":column}});
