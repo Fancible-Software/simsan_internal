@@ -1,0 +1,41 @@
+<div class="flex flex-wrap mt-4" >
+    <div class="w-full mb-12 px-4">
+      <div
+        id="analytics-container"
+        class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded"
+        [ngClass]="color === 'light' ? 'bg-white' : 'bg-red-900 text-white'"
+      >
+        <div class="rounded-t mb-0 px-4 py-3 border-0">
+          <div class="flex flex-wrap items-center">
+            <div class="relative w-full px-4 max-w-full flex-grow flex-1">
+              <h3
+                class="font-semibold text-lg"
+                [ngClass]="color === 'light' ? 'text-blueGray-700' : 'text-white'"
+              >
+                <span>Reporting</span>
+              </h3>
+            </div>
+          </div>
+        </div>
+        <div class="block w-full px-2 py-2 flex flex-wrap justify-between">
+          <!-- Projects table -->
+          <div class="p-inputgroup m-2">
+            <span class="p-inputgroup-addon">Start Date</span>
+            <p-calendar appendTo="body" dateFormat="yy-mm-dd" [(ngModel)]="startDate"></p-calendar>        
+          </div>
+
+          <div class="p-inputgroup m-2">
+            <span class="p-inputgroup-addon">End Date</span>
+            <p-calendar appendTo="body" dateFormat="yy-mm-dd" [(ngModel)]="endDate"></p-calendar>        
+          </div>
+        
+          <button
+            class="bg-red-600 text-white active:bg-aqua-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+            (click)="getAnalytics()" 
+            style="margin-left: 10px; float: left"
+          >Get Report</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  

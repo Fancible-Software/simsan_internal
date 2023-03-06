@@ -9,7 +9,7 @@ import logger from "./logger";
 import date from "date-and-time";
 import sendMail from "./sendMail";
 
-export const sendFormEmail = async (formRecord : Form) =>{
+export const sendFormEmail = async (formRecord: Form) => {
   const htmlInvoice = await getInvoiceHtml(
     formRecord.formId,
     formRecord.invoiceUuid
@@ -19,21 +19,37 @@ export const sendFormEmail = async (formRecord : Form) =>{
       ? "Invoice"
       : "Quote";
   if (formType === "Quote") {
-    return sendMail({
-      from: process.env.EMAIL_USER,
-      to: formRecord.customerEmail,
-      html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/quote/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
-      subject: `${formType} - Simsan Fraser Main`,
-    });
+    return Promise.all([
+      sendMail({
+        from: process.env.EMAIL_USER,
+        to: formRecord.customerEmail,
+        html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/quote/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
+        subject: `${formType} - Simsan Fraser Main`,
+      }),
+      sendMail({
+        from: process.env.EMAIL_USER,
+        to: "simsanfrasermain@gmail.com",
+        html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/quote/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
+        subject: `${formType} - Simsan Fraser Main`,
+      }),
+    ]);
   } else {
-    return sendMail({
-      from: process.env.EMAIL_USER,
-      to: formRecord.customerEmail,
-      html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/invoice/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
-      subject: `${formType} - Simsan Fraser Main`,
-    });
+    return Promise.all([
+      sendMail({
+        from: process.env.EMAIL_USER,
+        to: formRecord.customerEmail,
+        html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/invoice/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
+        subject: `${formType} - Simsan Fraser Main`,
+      }),
+      sendMail({
+        from: process.env.EMAIL_USER,
+        to: "simsanfrasermain@gmail.com",
+        html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/invoice/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
+        subject: `${formType} - Simsan Fraser Main`,
+      }),
+    ]);
   }
-}
+};
 
 export const getInvoiceHtml = async (formId: number, formUUID: string) => {
   try {
@@ -110,6 +126,7 @@ export const getInvoiceHtml = async (formId: number, formUUID: string) => {
         },
         client: {
           name: formRecord.customerName,
+          email: formRecord.customerEmail,
           address: formRecord.customerAddress,
           zip: formRecord.customerPostalCode,
           city: formRecord.customerCity,
@@ -120,8 +137,12 @@ export const getInvoiceHtml = async (formId: number, formUUID: string) => {
           date: today,
           total: formRecord.final_amount,
           sub_total: formRecord.total,
-          discount: formRecord.discount,
+          discount:
+            formRecord.discount !== null
+              ? parseFloat(formRecord.discount).toFixed(2)
+              : 0,
           tax: formRecord.is_taxable,
+          comment: formRecord.comment,
         },
         products: products,
         // "bottom-notice": "Kindly pay your invoice within 15 days.",
@@ -131,6 +152,7 @@ export const getInvoiceHtml = async (formId: number, formUUID: string) => {
           "tax-notation": "gst",
         },
       };
+
       // console.log("rendering html");
       return ejs.renderFile(
         path.join(

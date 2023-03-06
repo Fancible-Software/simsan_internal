@@ -47,6 +47,8 @@ import { SettingsCreateComponent } from './views/admin/settings/settings-create/
 import { VerificationComponent } from './views/auth/verify/verification/verification.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { EmailComponent } from './views/admin/email/email.component';
+import { AnalyticsComponent } from './views/admin/analytics/analytics.component';
+import {CalendarModule} from 'primeng/calendar';
 
 @NgModule({
   declarations: [
@@ -80,6 +82,7 @@ import { EmailComponent } from './views/admin/email/email.component';
     SettingsCreateComponent,
     VerificationComponent,
     EmailComponent,
+    AnalyticsComponent,
   ],
   imports: [
     BrowserModule,
@@ -98,6 +101,7 @@ import { EmailComponent } from './views/admin/email/email.component';
       preventDuplicates: true,
     }),
     NgSelectModule,
+    CalendarModule
   ],
   providers: [
     UserInterceptor,
