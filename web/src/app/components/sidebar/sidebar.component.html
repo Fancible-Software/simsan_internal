@@ -207,7 +207,7 @@
           </a>
         </li>
 
-        <li class="items-center">
+        <li class="items-center" *ngIf="userType === 'admin'">
           <a
             [routerLink]="['/admin/reporting']"
             class="text-xs uppercase py-3 font-bold block"
