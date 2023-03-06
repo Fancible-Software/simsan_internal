@@ -361,10 +361,12 @@ export class IndexComponent implements OnInit {
   }
 
   markQuoteAsInvoice(formId: number, invoiceUuid: string) {
+    this.loader.start()
     if (confirm('Are you sure you want to mark this quote as invoice?')) {
       this.commonService
         .markQuoteAsInvoice(formId, invoiceUuid)
         .subscribe((data) => {
+          this.loader.stop()
           this.toastr.success('Marked as Invoice');
           this.router.navigate(['/admin/feedbacks', { type: 'FORM' }]);
         });
