@@ -22,7 +22,7 @@ export class IndexComponent implements OnInit {
   form: FormGroup;
   submitted = false;
   services: any = [];
-  editableServices: any = [];
+  editableServices : any  = [];
   provinces: any = [];
   cities: any = [];
   formType: string = 'FORM';
@@ -197,8 +197,8 @@ export class IndexComponent implements OnInit {
       .filter((v: number) => v !== null);
 
     this.form.patchValue({
-      total_amount: amount,
-      services: selectedOrderIds,
+        total_amount: amount,
+        services: selectedOrderIds,
     });
 
     this.enabled = true;

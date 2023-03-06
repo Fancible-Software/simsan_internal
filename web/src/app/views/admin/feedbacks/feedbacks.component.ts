@@ -39,7 +39,6 @@ export class FeedbacksComponent implements OnInit {
     this.type = this.route.snapshot.params['type'];
     this.commonService.fetchRole().subscribe((data) => {
       this.userType = data.role;
-
       if (this.type === 'FORM' && this.userType === 'sub_admin') {
         this.toastr.error('You are not authorized to view this page');
         this.router.navigate(['/admin/quotes', { type: 'QUOTE' }]);
