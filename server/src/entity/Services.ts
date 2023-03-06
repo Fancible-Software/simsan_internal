@@ -1,29 +1,42 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
 import { FormToServices } from "./FormToServices";
 
 @Entity()
 export class Service {
-    @PrimaryGeneratedColumn()
-    serviceId: number;
+  @PrimaryGeneratedColumn()
+  serviceId: number;
 
-    @Column({ nullable: false, unique: true })
-    serviceName: string;
+  @Column({ nullable: false, unique: true })
+  serviceName: string;
 
-    @Column({ nullable: false, default: 1 })
-    isActive: number;
+  @Column({ nullable: false, default: 1 })
+  isActive: number;
 
-    @Column({ nullable: false, default: "0" })
-    price: string;
+  @Column({ nullable: false, default: "0" })
+  price: string;
 
-    @OneToMany(()=>FormToServices,(formToServices:FormToServices)=>formToServices.service)
-    formToServices : FormToServices[];
+  @OneToMany(
+    () => FormToServices,
+    (formToServices: FormToServices) => formToServices.service
+  )
+  formToServices: FormToServices[];
 
-    @UpdateDateColumn({ nullable: true })
-    updatedAt?: Date;
+  @Column({ nullable: true, default: 0 })
+  priority?: number;
 
-    @CreateDateColumn()
-    createdAt: Date;
+  @UpdateDateColumn({ nullable: true })
+  updatedAt?: Date;
 
-    @Column({ nullable: false, default: "default" })
-    createdBy: string
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @Column({ nullable: false, default: "default" })
+  createdBy: string;
 }

@@ -107,6 +107,7 @@ export class InvoiceController {
           },
           client: {
             name: formRecord.customerName,
+            email: formRecord.customerEmail,
             address: formRecord.customerAddress,
             zip: formRecord.customerPostalCode,
             city: formRecord.customerCity,
@@ -119,7 +120,7 @@ export class InvoiceController {
             sub_total: formRecord.total,
             discount: formRecord.discount,
             tax: formRecord.is_taxable,
-            comment : formRecord.comment
+            comment: formRecord.comment,
           },
           products: products,
           // "bottom-notice": "Kindly pay your invoice within 15 days.",

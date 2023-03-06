@@ -32,6 +32,7 @@ export class ServiceCreateComponent implements OnInit {
       serviceName: ['', [Validators.required]],
       price: ['', [Validators.required, Validators.pattern('^[1-9][0-9]*$')]],
       isActive: ['', [Validators.required]],
+      priority: [0],
     });
     if (this.route.snapshot.params['id']) {
       this.serviceId = this.route.snapshot.params['id'];
@@ -42,6 +43,7 @@ export class ServiceCreateComponent implements OnInit {
             serviceName: serviceDetail.data.serviceName,
             isActive: serviceDetail.data.isActive,
             price: serviceDetail.data.price,
+            priority: serviceDetail.data.priority,
           });
         });
     }
@@ -82,11 +84,6 @@ export class ServiceCreateComponent implements OnInit {
       this.loader.stop();
       return;
     }
-    let body = {
-      serviceName: this.serviceForm.value.serviceName,
-      isActive: this.serviceForm.value.isActive.toString(),
-      price: this.serviceForm.value.price,
-    };
 
     this.service
       .updateService(
