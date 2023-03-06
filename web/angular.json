@@ -27,6 +27,7 @@
               "src/styles.css",
               "src/assets/styles/tailwind.css",
               "node_modules/ngx-toastr/toastr.css",
+              "node_modules/primeicons/primeicons.css",
               "node_modules/primeng/resources/themes/saga-orange/theme.css",
               "node_modules/primeng/resources/primeng.min.css"
             ],
@@ -37,8 +38,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "1mb",
-                  "maximumError": "2mb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "3mb"
                 },
                 {
                   "type": "anyComponentStyle",

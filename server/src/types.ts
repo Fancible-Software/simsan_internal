@@ -7,6 +7,7 @@ import {
   IsNotIn,
   IsBoolean,
   IsOptional,
+  IsDateString,
 } from "class-validator";
 import { Configurations } from "./entity/Configurations";
 import { Form } from "./entity/Form";
@@ -308,4 +309,15 @@ export enum EmailDays {
 export enum originalFormTypes {
   form = "FORM",
   quote = "QUOTE",
+}
+
+export class AnalyticsDate{
+  @IsDateString()
+  startDate : string;
+
+  @IsDateString()
+  endDate : string;
+
+  @IsString()
+  type : string;
 }
