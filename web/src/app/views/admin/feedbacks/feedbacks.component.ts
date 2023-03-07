@@ -3,6 +3,7 @@ import { environment } from '../../../../environments/environment.prod';
 import { CommonService } from '../../../services/common.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'app-feedbacks',
@@ -30,7 +31,8 @@ export class FeedbacksComponent implements OnInit {
     private commonService: CommonService,
     private route: ActivatedRoute,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private loader: NgxUiLoaderService
   ) {}
 
   ngOnInit(): void {
@@ -48,7 +50,9 @@ export class FeedbacksComponent implements OnInit {
   }
 
   getAllFeedbacks() {
+    this.loader.start();
     this.commonService.feedbackList(0, 10, this.type, '').subscribe((data) => {
+      this.loader.stop();
       this.feedbackListData = data.data;
       this.totalCount = data.count.count;
     });
@@ -70,11 +74,16 @@ export class FeedbacksComponent implements OnInit {
   }
 
   search() {
-    if (this.searchTerm === '') return;
+    this.loader.start();
+    if (this.searchTerm === '') {
+      this.loader.stop();
+      return;
+    }
 
     this.commonService
       .feedbackList(0, 10, this.type, this.searchTerm)
       .subscribe((data) => {
+        this.loader.stop();
         this.feedbackListData = data.data;
         this.totalCount = data.count.count;
       });
@@ -87,6 +96,7 @@ export class FeedbacksComponent implements OnInit {
 
   markQuoteAsInvoice(formId: number, invoiceUuid: string) {
     if (confirm('Are you sure you want to mark this quote as invoice?')) {
+      this.loader.start();
       this.commonService
         .markQuoteAsInvoice(formId, invoiceUuid)
         .subscribe((data) => {
@@ -96,6 +106,7 @@ export class FeedbacksComponent implements OnInit {
           } else {
             this.toastr.error(data.message);
           }
+          this.loader.stop();
         });
     }
   }

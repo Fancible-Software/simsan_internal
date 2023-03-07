@@ -38,7 +38,7 @@ async function run() {
             }
             res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH");
             res.header("Access-Control-Allow-Headers", "*");
-
+            console.log(req.headers);
             next();
         });
 

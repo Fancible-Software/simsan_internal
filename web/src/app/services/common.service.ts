@@ -10,6 +10,8 @@ import {
 import { environment } from '../../environments/environment.prod';
 import { Observable, Subject, throwError } from 'rxjs';
 import { Router } from '@angular/router';
+import { Workbook } from 'exceljs';
+import * as fs from 'file-saver';
 
 @Injectable({
   providedIn: 'root',
@@ -190,5 +192,50 @@ export class CommonService {
     return this.httpClient
       .patch<any>(environment.endPoint + '/form/update/' + formId, body)
       .pipe();
+  }
+
+  getAnalytics(body : any) : Observable<any>{
+    return this.httpClient.post(`${environment.endPoint}/form/analytics`,body)
+  }
+
+  getExcelReport(analytics : any,from:string,to:string) {
+    const workbook = new Workbook();
+    const clientWorksheet = workbook.addWorksheet('Sales');
+    const analyticsWorksheet = workbook.addWorksheet('Analytics')
+    // if there is no data return
+    if(analytics.data.length <= 0) {
+      alert("No Records were found for the specified period !");
+      return;
+    };
+
+    // add sales data to sales worksheet
+    clientWorksheet.columns = Object.keys(analytics.data[0]).map((column:any)=>{return {"header" : column,"key":column}});
+    clientWorksheet.autoFilter = 'A1:Z1';
+    const newRows = clientWorksheet.addRows(Object.values(analytics.data).map((record:any)=>Object.values(record)));
+
+    // add analytics data to analytics worksheet
+    let statistics = {
+      ...analytics,
+      data : null
+    };
+    delete statistics['data'];
+    analyticsWorksheet.columns = Object.keys(statistics).map((column:any)=>{return {"header" : column,"key":column}});
+    const analyticsRows = analyticsWorksheet.addRow(Object.values(statistics));
+
+    let startDate = new Date(from).
+    toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).
+    replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2');
+
+    let endDate = new Date(to).
+    toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).
+    replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2');
+
+    // save workbook
+    workbook.xlsx.writeBuffer().then((data) => {
+      let blob = new Blob([data], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      });
+      fs.saveAs(blob, 'Report_Simsan_'+startDate+"_"+"To_"+endDate+'_.xlsx');
+    });
   }
 }
