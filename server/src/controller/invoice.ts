@@ -170,6 +170,7 @@ export class InvoiceController {
 
       if (formRecord) {
         formRecord.type = originalFormTypes.form;
+        formRecord.createdAt = new Date(Date.now());
         await formRepository.save(formRecord);
         await sendFormEmail(formRecord);
         return res.status(ResponseStatus.SUCCESS_UPDATE).send({
