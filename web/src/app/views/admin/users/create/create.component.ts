@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { CommonService } from '../../../../services/common.service';
 import { ToastrService } from 'ngx-toastr';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
+
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
@@ -17,7 +19,8 @@ export class CreateComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private commonService: CommonService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private loader: NgxUiLoaderService
   ) {
     this.commonService.fetchRole().subscribe((data) => {
       this.userType = data.role;
@@ -41,8 +44,10 @@ export class CreateComponent implements OnInit {
   }
 
   submit() {
+    this.loader.start();
     this.submitted = true;
     if (this.userForm.status == 'INVALID') {
+      this.loader.stop();
       return;
     }
     this.commonService.createUser(this.userForm.value).subscribe((data) => {
@@ -50,6 +55,7 @@ export class CreateComponent implements OnInit {
         this.toastr.success(data.message, 'SUCCESS');
         this.router.navigateByUrl('/admin/users');
       }
+      this.loader.stop();
     });
   }
 

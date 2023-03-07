@@ -463,11 +463,27 @@ export class AdminController {
               <b>Simsan Fraser Pvt. Ltd.</b> account.
             </p>
             <p>
+              Credentials for your account are as follows:<br/>
+              Email: <b>${newCustomer.email}</b><br/>
+              Password: <b>${obj.password}</b><br/>
+
+              <a href='https://billing.simsanfrasermain.com/'>Link for the web app</a>
+            </p>
+            <p>
               To complete the verification process, please enter the following one-time
               verification code (OTP) in the field provided on our website:
             </p>
             <p>OTP: <b>${userVerify.token}</b></p>
             <p>This code will expire in <b>10</b> minutes.</p>
+            <p>Steps for verification:</p>
+            <ul>
+              <li>Click on the link above</li>
+              <li>Enter the credentials given above</li>
+              <li>Enter the OTP given above</li>
+              <li>Click on the verify button</li>
+              <li>In case OTP expire click on the resend OTP button</li>
+
+            </ul>
             <p>
               If you did not request this email, please ignore it and no further action
               will be taken.
