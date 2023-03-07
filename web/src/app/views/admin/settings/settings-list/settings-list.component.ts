@@ -50,6 +50,7 @@ export class SettingsListComponent implements OnInit {
         this.settingsList = data.data;
         this.count = data.count;
       }
+      this.loader.stop()
     });
   }
 
