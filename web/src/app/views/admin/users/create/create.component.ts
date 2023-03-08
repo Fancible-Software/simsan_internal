@@ -38,7 +38,15 @@ export class CreateComponent implements OnInit {
       last_name: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
-      mobile_no: ['', [Validators.required]],
+      mobile_no: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(
+            '^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$'
+          ),
+        ],
+      ],
       roles: ['', [Validators.required]],
     });
   }
@@ -48,6 +56,7 @@ export class CreateComponent implements OnInit {
     this.submitted = true;
     if (this.userForm.status == 'INVALID') {
       this.loader.stop();
+      this.toastr.warning('Invalid form request!', 'WARNING');
       return;
     }
     this.commonService.createUser(this.userForm.value).subscribe((data) => {
