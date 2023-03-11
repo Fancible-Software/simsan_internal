@@ -8,6 +8,8 @@ import {
   Get,
   Params,
   Authorized,
+  Delete,
+  Patch,
 } from "routing-controllers";
 import {
   customerSignupRequest,
@@ -41,6 +43,9 @@ export class AdminController {
     try {
       const repo = getConnection().getRepository(User);
       let users = await repo.find({
+        where: {
+          is_deleted: 0,
+        },
         select: [
           "id",
           "first_name",
@@ -535,7 +540,7 @@ export class AdminController {
             },
           ],
         });
-      console.log(fetchRecord);
+      // console.log(fetchRecord);
 
       if (!fetchRecord) {
         return res.status(ResponseStatus.FAILED_UPDATE).send({
@@ -639,5 +644,104 @@ export class AdminController {
   @Get("/role")
   async getRole(@CurrentUser() user: User) {
     return { role: user.roles };
+  }
+
+  @Authorized()
+  @Delete("/delete/:id")
+  async deleteUser(
+    @Res() res: Response,
+    @Params()
+    { id }: { id: number },
+    @CurrentUser() user: User
+  ) {
+    try {
+      if (user.id === id) {
+        return res.status(ResponseStatus.API_ERROR).send({
+          status: false,
+          message: "Not allowed!",
+        });
+      }
+
+      if (UserPermissions.sub_admin === user.roles) {
+        return res.status(ResponseStatus.API_ERROR).send({
+          status: false,
+          message: "Not allowed!",
+        });
+      }
+
+      const userRepo = getConnection().getRepository(User);
+      const userDetails = await userRepo.findOne({ id });
+      if (userDetails) {
+        if (userDetails.email === "admin@simsanfrasermain.com") {
+          return res.status(ResponseStatus.API_ERROR).send({
+            status: false,
+            message: "Not allowed!",
+          });
+        }
+        userDetails.is_deleted = 1;
+        userDetails.deleted_at = new Date();
+        userDetails.deleted_by = user.id;
+        await userRepo.save(userDetails);
+        return res.status(ResponseStatus.SUCCESS_UPDATE).send({
+          status: true,
+          message: "User deleted successfully!",
+        });
+      }
+      return res.status(ResponseStatus.FAILED_UPDATE).send({
+        status: false,
+        message: "Something went wrong, try again later!",
+      });
+    } catch (error) {
+      throw new APIError(error.message, ResponseStatus.API_ERROR);
+    }
+  }
+
+  @Authorized()
+  @Patch("/update/status/:id/:status")
+  async updateUser(
+    @Res() res: Response,
+    @Params()
+    { id, status }: { id: number; status: number },
+    @CurrentUser() user: User
+  ) {
+    try {
+      if (user.id === id) {
+        return res.status(ResponseStatus.API_ERROR).send({
+          status: false,
+          message: "Not allowed!",
+        });
+      }
+
+      if (UserPermissions.sub_admin === user.roles) {
+        return res.status(ResponseStatus.API_ERROR).send({
+          status: false,
+          message: "Not allowed!",
+        });
+      }
+
+      const userRepo = getConnection().getRepository(User);
+      const userDetails = await userRepo.findOne({ id });
+      if (userDetails) {
+        if (userDetails.email === "admin@simsanfrasermain.com") {
+          return res.status(ResponseStatus.API_ERROR).send({
+            status: false,
+            message: "Not allowed!",
+          });
+        }
+        userDetails.is_active = status;
+
+        await userRepo.save(userDetails);
+        return res.status(ResponseStatus.SUCCESS_UPDATE).send({
+          status: true,
+          message: "User updated successfully!",
+        });
+      }
+      return res.status(ResponseStatus.FAILED_UPDATE).send({
+        status: false,
+        message: "Something went wrong, try again later!",
+      });
+    } catch (error) {
+      throw new APIError(error.message, ResponseStatus.API_ERROR);
+    }
   }
 }

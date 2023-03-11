@@ -1,10 +1,15 @@
 import { UserPermissions } from "../types";
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
 
 enum UserLogin {
   not_logged_in = "0",
-  logged_in = "1"
+  logged_in = "1",
 }
 
 @Entity()
@@ -13,40 +18,50 @@ export class User {
   readonly id: number;
 
   @Column({ nullable: false })
-  first_name: string
+  first_name: string;
 
   @Column({ nullable: false })
-  last_name: string
+  last_name: string;
 
   @Column({ nullable: false, unique: true })
-  email!: string
+  email!: string;
 
   @Column({ nullable: false })
-  mobile_no: string
+  mobile_no: string;
 
   @Column({ nullable: false })
-  password: string
+  password: string;
 
   @Column({ nullable: false, default: 0 })
-  is_login: UserLogin
+  is_login: UserLogin;
 
   @Column({ nullable: false, default: 1 })
-  is_active: number
+  is_active: number;
 
   @Column({
     default: UserPermissions.sub_admin,
-    nullable: false
+    nullable: false,
   })
   roles: UserPermissions;
 
   @Column({ nullable: false })
-  createdBy: string
+  createdBy: string;
 
   @Column({ default: false })
-  is_verified: Boolean
+  is_verified: Boolean;
 
   @Column({ nullable: true })
-  verified_at?: Date
+  verified_at?: Date;
+
+  //for soft delete. 0=> Not deleted, 1=>deleted
+  @Column({ nullable: false, default: 0 })
+  is_deleted: number;
+
+  @Column({ nullable: true })
+  deleted_at?: Date;
+
+  @Column({ nullable: true })
+  deleted_by?: number;
 
   @UpdateDateColumn({ nullable: true })
   updatedAt?: Date;

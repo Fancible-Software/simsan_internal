@@ -93,10 +93,10 @@
               <td>
                 <p>
                   <strong>Sold By :</strong><br />
+                  <%= company_details['soldBy'] %><br />
                   <%= company_details[ 'name'] %><br />
-                  <%= company_details[ 'address'] %><br />
-                  <%= company_details[ 'city'] %> <%= company_details[ 'zip']
-                  %><br />
+                  BC, Canada<br/>
+                  
                   <strong>Country</strong>: <%= company_details[ 'country'] %>
                   <br />
                   <strong>GST Number : </strong> 75004 0602 RT0001
@@ -179,7 +179,7 @@
               </td>
             </tr>
           </table>
-          <% if(information["comment"] !== null && information["comment"] !==
+          <!-- <% if(information["comment"] !== null && information["comment"] !==
           "") { %>
           <table class="items-table">
             <tr>
@@ -189,7 +189,7 @@
               <td><%= information["comment"] %></td>
             </tr>
           </table>
-          <% } %>
+          <% } %> -->
         </td>
       </tr>
     </table>

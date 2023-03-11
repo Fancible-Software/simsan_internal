@@ -21,7 +21,7 @@ export class AuthController {
       const ifUserExist = await queryRunner.manager
         .getRepository(User)
         .findOne({
-          where: [{ email: obj.email }],
+          where: [{ email: obj.email, is_deleted: 0 }],
           select: [
             "id",
             "first_name",
