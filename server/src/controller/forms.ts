@@ -111,43 +111,52 @@ export class FormController {
 
   @Authorized(UserPermissions.admin)
   @Post("/analytics")
-  async getAnalytics(
-    @Res() res: Response,
-    @Body() input : AnalyticsDate
-  ) {
+  async getAnalytics(@Res() res: Response, @Body() input: AnalyticsDate) {
     try {
       const conn = getConnection();
       let startDate = new Date(Date.parse(input.startDate));
       let endDate = new Date(Date.parse(input.endDate));
-      endDate.setUTCHours(23,59,59,999);
+      endDate.setUTCHours(23, 59, 59, 999);
 
-      const forms = await conn.createQueryBuilder(Form, "form")
+      const forms = await conn
+        .createQueryBuilder(Form, "form")
         .select([
           'form."formId" as "formId", form."customerName" as "customerName",form."customerEmail" as "customerEmail", form."customerPhone" as "customerPhone", form."createdAt" as "createdAt", form."customerAddress" as "customerAddress",form."customerPostalCode" as "customerPostalCode", form."customerCity" as "customerCity",form."customerProvince" as "customerProvince", form."customerCountry" as "customerCountry", form."total" as "total", form."discount" as "discount", form."discount_percent" as "discount_percent", form."type" as "type", form."invoiceUuid" as "invoiceUuid",form."final_amount" as "final_amount", form."invoiceNumber" as "invoiceNumber"',
         ])
-        .where('form.createdAt >= :startDate', {startDate: startDate.toUTCString()})
-        .andWhere('form.createdAt <= :endDate', {endDate: endDate.toUTCString()})
+        .where("form.createdAt >= :startDate", {
+          startDate: startDate.toUTCString(),
+        })
+        .andWhere("form.createdAt <= :endDate", {
+          endDate: endDate.toUTCString(),
+        })
         .andWhere("form.type = :type", { type: input.type })
         .getRawMany<Form>();
 
-      const uniqueCustomers = await conn.createQueryBuilder(Form, "form")
-      .select([
-        'distinct form."customerEmail" as "customerEmail"',
-      ])
-      .where('form.createdAt >= :startDate', {startDate: startDate.toUTCString()})
-      .andWhere('form.createdAt <= :endDate', {endDate: endDate.toUTCString()})
-      .andWhere("form.type = :type", { type: input.type })
-      .getCount();
+      const uniqueCustomers = await conn
+        .createQueryBuilder(Form, "form")
+        .select(['distinct form."customerEmail" as "customerEmail"'])
+        .where("form.createdAt >= :startDate", {
+          startDate: startDate.toUTCString(),
+        })
+        .andWhere("form.createdAt <= :endDate", {
+          endDate: endDate.toUTCString(),
+        })
+        .andWhere("form.type = :type", { type: input.type })
+        .getCount();
 
-      const total = forms.reduce((total : number,record : Form)=>total + parseFloat(record.final_amount) ,0)
+      const total = forms.reduce(
+        (total: number, record: Form) =>
+          total + parseFloat(record.final_amount),
+        0
+      );
 
       return res.status(ResponseStatus.SUCCESS_FETCH).send({
         status: true,
         "Number Of Sales": forms.length,
         data: forms,
-        "Total Sales in $" : total,
-        "Average Sales in $" : total / forms.length,
-        "Number of Unique Customers" : uniqueCustomers
+        "Total Sales in $": total,
+        "Average Sales in $": total / forms.length,
+        "Number of Unique Customers": uniqueCustomers,
       });
     } catch (err) {
       console.log(err.message);
@@ -238,28 +247,28 @@ export class FormController {
             from: process.env.EMAIL_USER,
             to: body.customerEmail,
             html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/quote/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
-            subject: `${formType} - Simsan Fraser Main`,
+            subject: `${formType} - Simsan Fraser Maintenance`,
           });
 
           await sendMail({
             from: process.env.EMAIL_USER,
             to: "simsanfrasermain@gmail.com",
             html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/quote/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
-            subject: `${formType} - Simsan Fraser Main`,
+            subject: `${formType} - Simsan Fraser Maintenance`,
           });
         } else {
           await sendMail({
             from: process.env.EMAIL_USER,
             to: body.customerEmail,
             html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/invoice/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
-            subject: `${formType} - Simsan Fraser Main`,
+            subject: `${formType} - Simsan Fraser Maintenance`,
           });
 
           await sendMail({
             from: process.env.EMAIL_USER,
             to: "simsanfrasermain@gmail.com",
             html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/invoice/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
-            subject: `${formType} - Simsan Fraser Main`,
+            subject: `${formType} - Simsan Fraser Maintenance`,
           });
         }
       }
@@ -408,6 +417,11 @@ export class FormController {
         relations: ["formToServices", "formToServices.service"],
       });
       if (formRecord) {
+        const createdBy: Repository<User> = getConnection().getRepository(User);
+        const createdByRecord = await createdBy.findOne({
+          where: { id: formRecord.createdBy },
+          select: ["first_name", "last_name"],
+        });
         // console.log(formRecord)
         const configRepo: Repository<Configurations> =
           conn.getRepository(Configurations);
@@ -455,6 +469,8 @@ export class FormController {
             logo: logoDetails,
           },
           company_details: {
+            soldBy:
+              createdByRecord?.first_name + " " + createdByRecord?.last_name,
             name: companyName,
             address: companyAddress,
             zip: companyZip,
@@ -481,7 +497,7 @@ export class FormController {
           // Settings to customize your invoice
           settings: {
             currency: "CAD",
-            "tax-notation": "gst",
+            "tax-notation": "GST",
           },
         };
         let invoiceDetails: any = {};

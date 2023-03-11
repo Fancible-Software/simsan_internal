@@ -9,6 +9,7 @@ import { Repository, getConnection } from "typeorm";
 import date from "date-and-time";
 import { Response } from "express";
 import path from "path";
+import { User } from "../entity/User";
 // import {create} from "html-pdf";
 
 @Controller("/quote")
@@ -34,6 +35,12 @@ export class QuoteController {
         uuid &&
         formRecord.type.toLocaleLowerCase() === formTypes.quote
       ) {
+        const createdBy: Repository<User> = getConnection().getRepository(User);
+        const createdByRecord = await createdBy.findOne({
+          where: { id: formRecord.createdBy },
+          select: ["first_name", "last_name"],
+        });
+        
         // console.log(formRecord)
         const configRepo: Repository<Configurations> =
           getConnection().getRepository(Configurations);
@@ -94,6 +101,8 @@ export class QuoteController {
             logo: logoDetails,
           },
           company_details: {
+            soldBy:
+              createdByRecord?.first_name + " " + createdByRecord?.last_name,
             name: companyName,
             address: companyAddress,
             zip: companyZip,
@@ -123,7 +132,7 @@ export class QuoteController {
           // Settings to customize your invoice
           settings: {
             currency: "CAD",
-            "tax-notation": "gst",
+            "tax-notation": "GST",
           },
         };
         // console.log("data", data);

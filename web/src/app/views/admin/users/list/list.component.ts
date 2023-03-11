@@ -13,6 +13,7 @@ export class ListComponent implements OnInit {
   totalUsers = 0;
   page: number = 1;
   userType = 'sub_admin';
+  
 
   @Input()
   get color(): string {
@@ -61,5 +62,37 @@ export class ListComponent implements OnInit {
         this.toastr.error(data.message);
       }
     });
+  }
+
+  updateStatus(id: number, status: number) {
+    // console.log(id, status);
+    if (confirm('This will activate/deactivate the user. are you sure you want proceed with this?')) {
+      if (status == 1) {
+        status = 0;
+      } else {
+        status = 1;
+      }
+      this.commonService.updateUserStatus(id, status).subscribe((data: any) => {
+        if (data.status) {
+          this.toastr.success(data.message);
+          this.getAllUsers();
+        } else {
+          this.toastr.error(data.message);
+        }
+      });
+    }
+  }
+
+  deleteUser(id: number) {
+    if (confirm('are you sure, you want to delete?')) {
+      this.commonService.deleteUser(id).subscribe((data: any) => {
+        if (data.status) {
+          this.toastr.success(data.message);
+          this.ngOnInit();
+        } else {
+          this.toastr.error(data.message);
+        }
+      });
+    }
   }
 }

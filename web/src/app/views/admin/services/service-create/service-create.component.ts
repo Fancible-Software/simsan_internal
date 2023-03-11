@@ -30,7 +30,7 @@ export class ServiceCreateComponent implements OnInit {
   ngOnInit(): void {
     this.serviceForm = this.formBuilder.group({
       serviceName: ['', [Validators.required]],
-      price: ['', [Validators.required, Validators.pattern('^[1-9][0-9]*$')]],
+      price: ['', [Validators.required]],
       isActive: ['', [Validators.required]],
       priority: [0],
     });

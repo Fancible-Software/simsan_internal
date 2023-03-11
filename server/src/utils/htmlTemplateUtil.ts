@@ -8,6 +8,7 @@ import { APIError } from "./APIError";
 import logger from "./logger";
 import date from "date-and-time";
 import sendMail from "./sendMail";
+import { User } from "../entity/User";
 
 export const sendFormEmail = async (formRecord: Form) => {
   const htmlInvoice = await getInvoiceHtml(
@@ -61,6 +62,12 @@ export const getInvoiceHtml = async (formId: number, formUUID: string) => {
     });
 
     if (formRecord && formUUID) {
+      const createdBy: Repository<User> = getConnection().getRepository(User);
+      const createdByRecord = await createdBy.findOne({
+        where: { id: formRecord.createdBy },
+        select: ["first_name", "last_name"],
+      });
+
       const configRepo: Repository<Configurations> =
         getConnection().getRepository(Configurations);
       const configRecord = await configRepo.find();
@@ -117,6 +124,7 @@ export const getInvoiceHtml = async (formId: number, formUUID: string) => {
           logo: logoDetails,
         },
         company_details: {
+          soldBy: `${createdByRecord?.first_name} ${createdByRecord?.last_name}`,
           name: companyName,
           address: companyAddress,
           zip: companyZip,
@@ -149,7 +157,7 @@ export const getInvoiceHtml = async (formId: number, formUUID: string) => {
         // Settings to customize your invoice
         settings: {
           currency: "CAD",
-          "tax-notation": "gst",
+          "tax-notation": "GST",
         },
       };
 
