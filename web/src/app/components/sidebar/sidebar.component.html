@@ -99,92 +99,7 @@
             Dashboard
           </a>
         </li> -->
-
-        <li class="items-center" *ngIf="userType === 'admin'">
-          <a
-            [routerLink]="['/admin/feedbacks', { type: 'FORM' }]"
-            class="text-xs uppercase py-3 font-bold block"
-            routerLinkActive
-            #adminFeedback="routerLinkActive"
-            [ngClass]="
-              adminFeedback.isActive
-                ? 'text-red-600 hover:text-red-700'
-                : 'text-blueGray-700 hover:text-blueGray-500'
-            "
-            ><i
-              class="fas fa-tools mr-2 text-sm"
-              [ngClass]="
-                adminFeedback.isActive ? 'opacity-75' : 'text-blueGray-300'
-              "
-            ></i>
-            Invoices
-          </a>
-        </li>
-
-        <li class="items-center" *ngIf="userType === 'admin'">
-          <a
-            [routerLink]="['/admin/users']"
-            class="text-xs uppercase py-3 font-bold block"
-            routerLinkActive
-            #adminSettings="routerLinkActive"
-            [ngClass]="
-              adminSettings.isActive
-                ? 'text-red-600 hover:text-red-700'
-                : 'text-blueGray-700 hover:text-blueGray-500'
-            "
-          >
-            <i
-              class="fas fa-tools mr-2 text-sm"
-              [ngClass]="
-                adminSettings.isActive ? 'opacity-75' : 'text-blueGray-300'
-              "
-            ></i>
-            Users
-          </a>
-        </li>
-        <li class="items-center" *ngIf="userType === 'admin'">
-          <a
-            [routerLink]="['/admin/services']"
-            class="text-xs uppercase py-3 font-bold block"
-            routerLinkActive
-            #adminServices="routerLinkActive"
-            [ngClass]="
-              adminServices.isActive
-                ? 'text-red-600 hover:text-red-700'
-                : 'text-blueGray-700 hover:text-blueGray-500'
-            "
-          >
-            <i
-              class="fas fa-tools mr-2 text-sm"
-              [ngClass]="
-                adminServices.isActive ? 'opacity-75' : 'text-blueGray-300'
-              "
-            ></i>
-            Services
-          </a>
-        </li>
-        <li class="items-center" *ngIf="userType === 'admin'">
-          <a
-            [routerLink]="['/admin/configurations']"
-            class="text-xs uppercase py-3 font-bold block"
-            routerLinkActive
-            #adminConfig="routerLinkActive"
-            [ngClass]="
-              adminConfig.isActive
-                ? 'text-red-600 hover:text-red-700'
-                : 'text-blueGray-700 hover:text-blueGray-500'
-            "
-          >
-            <i
-              class="fas fa-tools mr-2 text-sm"
-              [ngClass]="
-                adminConfig.isActive ? 'opacity-75' : 'text-blueGray-300'
-              "
-            ></i>
-            Settings
-          </a>
-        </li>
-
+        <!--Quotes-->
         <li class="items-center">
           <a
             [routerLink]="['/admin/quotes', { type: 'QUOTE' }]"
@@ -207,14 +122,37 @@
           </a>
         </li>
 
+        <!-- Invoices -->
         <li class="items-center" *ngIf="userType === 'admin'">
           <a
-            [routerLink]="['/admin/reporting']"
+            [routerLink]="['/admin/feedbacks', { type: 'FORM' }]"
             class="text-xs uppercase py-3 font-bold block"
             routerLinkActive
-            #analytics="routerLinkActive"
+            #adminFeedback="routerLinkActive"
             [ngClass]="
-              analytics.isActive
+              adminFeedback.isActive
+                ? 'text-red-600 hover:text-red-700'
+                : 'text-blueGray-700 hover:text-blueGray-500'
+            "
+            ><i
+              class="fas fa-tools mr-2 text-sm"
+              [ngClass]="
+                adminFeedback.isActive ? 'opacity-75' : 'text-blueGray-300'
+              "
+            ></i>
+            Invoices
+          </a>
+        </li>
+
+        <!--Users-->
+        <li class="items-center" *ngIf="userType === 'admin'">
+          <a
+            [routerLink]="['/admin/users']"
+            class="text-xs uppercase py-3 font-bold block"
+            routerLinkActive
+            #adminSettings="routerLinkActive"
+            [ngClass]="
+              adminSettings.isActive
                 ? 'text-red-600 hover:text-red-700'
                 : 'text-blueGray-700 hover:text-blueGray-500'
             "
@@ -222,13 +160,35 @@
             <i
               class="fas fa-tools mr-2 text-sm"
               [ngClass]="
-                adminQuotes.isActive ? 'opacity-75' : 'text-blueGray-300'
+                adminSettings.isActive ? 'opacity-75' : 'text-blueGray-300'
               "
             ></i>
-            Reporting
+            Users
           </a>
         </li>
-
+        <!--Services-->
+        <li class="items-center" *ngIf="userType === 'admin'">
+          <a
+            [routerLink]="['/admin/services']"
+            class="text-xs uppercase py-3 font-bold block"
+            routerLinkActive
+            #adminServices="routerLinkActive"
+            [ngClass]="
+              adminServices.isActive
+                ? 'text-red-600 hover:text-red-700'
+                : 'text-blueGray-700 hover:text-blueGray-500'
+            "
+          >
+            <i
+              class="fas fa-tools mr-2 text-sm"
+              [ngClass]="
+                adminServices.isActive ? 'opacity-75' : 'text-blueGray-300'
+              "
+            ></i>
+            Services
+          </a>
+        </li>
+        <!--Promotions-->
         <li class="items-center" *ngIf="userType === 'admin'">
           <a
             [routerLink]="['/admin/mails']"
@@ -250,7 +210,51 @@
             Promotions
           </a>
         </li>
-
+        <!--Reporting-->
+        <li class="items-center" *ngIf="userType === 'admin'">
+          <a
+            [routerLink]="['/admin/reporting']"
+            class="text-xs uppercase py-3 font-bold block"
+            routerLinkActive
+            #analytics="routerLinkActive"
+            [ngClass]="
+              analytics.isActive
+                ? 'text-red-600 hover:text-red-700'
+                : 'text-blueGray-700 hover:text-blueGray-500'
+            "
+          >
+            <i
+              class="fas fa-tools mr-2 text-sm"
+              [ngClass]="
+                adminQuotes.isActive ? 'opacity-75' : 'text-blueGray-300'
+              "
+            ></i>
+            Reporting
+          </a>
+        </li>
+        <!--Settings-->
+        <li class="items-center" *ngIf="userType === 'admin'">
+          <a
+            [routerLink]="['/admin/configurations']"
+            class="text-xs uppercase py-3 font-bold block"
+            routerLinkActive
+            #adminConfig="routerLinkActive"
+            [ngClass]="
+              adminConfig.isActive
+                ? 'text-red-600 hover:text-red-700'
+                : 'text-blueGray-700 hover:text-blueGray-500'
+            "
+          >
+            <i
+              class="fas fa-tools mr-2 text-sm"
+              [ngClass]="
+                adminConfig.isActive ? 'opacity-75' : 'text-blueGray-300'
+              "
+            ></i>
+            Settings
+          </a>
+        </li>
+        <!--Logout-->
         <li class="items-center">
           <a
             class="text-xs uppercase py-3 font-bold block"

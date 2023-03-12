@@ -17,6 +17,7 @@ import { Response } from "express";
 import path from "path";
 import { sendFormEmail } from "../utils/htmlTemplateUtil";
 // import {create} from "html-pdf";
+import { User } from "../entity/User";
 
 @Controller("/invoice")
 export class InvoiceController {
@@ -41,6 +42,11 @@ export class InvoiceController {
         uuid &&
         formRecord.type.toLocaleLowerCase() === formTypes.form
       ) {
+        const createdBy: Repository<User> = getConnection().getRepository(User);
+        const createdByRecord = await createdBy.findOne({
+          where: { id: formRecord.createdBy },
+          select: ["first_name", "last_name"],
+        });
         const configRepo: Repository<Configurations> =
           conn.getRepository(Configurations);
         const configRecord = await configRepo.find();
@@ -98,6 +104,7 @@ export class InvoiceController {
             logo: logoDetails,
           },
           company_details: {
+            soldBy: `${createdByRecord?.first_name} ${createdByRecord?.last_name}`,
             name: companyName,
             address: companyAddress,
             zip: companyZip,
@@ -127,7 +134,7 @@ export class InvoiceController {
           // Settings to customize your invoice
           settings: {
             currency: "CAD",
-            "tax-notation": "gst",
+            "tax-notation": "GST",
           },
         };
 
