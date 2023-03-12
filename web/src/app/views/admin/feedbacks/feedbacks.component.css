@@ -1,3 +1,35 @@
 .ng-select .ng-dropdown-panel-items {
   background: white;
 }
+@media only screen and (max-width:1085px) {
+  #quotes_res{
+     display: flex!important;
+  }
+}
+@media only screen and (max-width:840px) and (min-width: 768px)  {
+
+  #quotes_res{
+    flex-direction: column;
+ }
+ #quotes_res input,
+ #quotes_res a,
+ #quotes_res button{
+  width: 100%!important;
+  margin: 0px!important;
+  margin-bottom: 10px!important;
+  text-align: center!important;
+ }
+}
+@media only screen and (max-width:540px) {
+  #quotes_res{
+    flex-direction: column;
+ }
+ #quotes_res input,
+ #quotes_res a,
+ #quotes_res button{
+  width: 100%!important;
+  margin: 0px!important;
+  margin-bottom: 10px!important;
+  text-align: center!important;
+ }
+}
