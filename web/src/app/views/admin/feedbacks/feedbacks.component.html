@@ -12,12 +12,12 @@
               [ngClass]="color === 'light' ? 'text-blueGray-700' : 'text-white'"
             >
               <span *ngIf="type === 'FORM'">Invoices</span>
-              <span *ngIf="type === 'QUOTE'">Quotes</span>
+              <span *ngIf="type === 'QUOTE'">Quotes </span>
             </h3>
           </div>
         </div>
         <div
-          class="relative w-full px-4 max-w-full flex-grow flex-1 text-right"
+           id="quotes_res" class="relative w-full px-4 max-w-full flex-grow flex-1 text-right"
         >
           <input
             type="text"
@@ -32,6 +32,7 @@
             "
             [(ngModel)]="searchTerm"
           />
+        
           <button
             class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
             (click)="search()"
@@ -52,6 +53,7 @@
           >
             Create
           </a>
+        
         </div>
       </div>
       <div class="block w-full overflow-x-auto">
@@ -261,7 +263,7 @@
                 <td
                   class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
                 >
-                  <i class="fas fa-circle text-orange-500 mr-2"></i>
+                  <!-- <i class="fas fa-circle text-orange-500 mr-2"></i> -->
                   {{ feedback.total }}
                 </td>
                 <td
