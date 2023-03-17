@@ -20,6 +20,7 @@ export const sendFormEmail = async (formRecord: Form) => {
       ? "Invoice"
       : "Quote";
   if (formType === "Quote") {
+    console.log('In quote')
     return Promise.all([
       sendMail({
         from: process.env.EMAIL_USER,
