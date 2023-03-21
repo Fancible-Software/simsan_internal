@@ -39,4 +39,10 @@ export class Service {
 
   @Column({ nullable: false, default: "default" })
   createdBy: string;
+
+  @Column({ default: false })
+  isDeleted: boolean;
+
+  @Column({ nullable: true })
+  deletedBy: string;
 }

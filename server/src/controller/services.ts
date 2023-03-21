@@ -29,7 +29,6 @@ import {
   Not,
   Connection,
 } from "typeorm";
-import { FormToServices } from "../entity/FormToServices";
 
 @Controller("/services")
 export class ServicesController {
@@ -82,6 +81,7 @@ export class ServicesController {
           "priority",
           "createdAt",
           "createdBy",
+          "isDeleted",
         ],
         skip: +skip,
         take: +limit,
@@ -158,7 +158,11 @@ export class ServicesController {
 
   @Authorized(UserPermissions.admin)
   @Delete("/:id")
-  async deleteService(@Res() res: Response, @Params() { id }: EntityId) {
+  async deleteService(
+    @Res() res: Response,
+    @Params() { id }: EntityId,
+    @CurrentUser() user: User
+  ) {
     const conn = getConnection();
     const queryRunner: QueryRunner = conn.createQueryRunner();
     try {
@@ -167,22 +171,15 @@ export class ServicesController {
       const serviceObj: Service | undefined = await serviceRepository.findOne(
         id
       );
-      const formToServicesRepository: Repository<FormToServices> =
-        conn.getRepository(FormToServices);
 
       if (serviceObj) {
-        const serviceLinkedToForm = await formToServicesRepository.count({
-          where: {
-            serviceId: id,
-          },
-        });
-        if (serviceLinkedToForm) {
-          return res.status(ResponseStatus.FAILED_UPDATE).send({
-            status: false,
-            message: "Service is linked to some form, cannot delete",
-          });
-        }
-        await queryRunner.manager.remove(serviceObj);
+        serviceObj.isDeleted = !serviceObj.isDeleted;
+        serviceObj.deletedBy = user.email;
+        await serviceRepository.update(
+          { serviceId: serviceObj.serviceId },
+          serviceObj
+        );
+        // await queryRunner.manager.remove(serviceObj);
         return res.status(ResponseStatus.SUCCESS_UPDATE).send({
           status: true,
           message: "Service successfully deleted",
@@ -256,6 +253,7 @@ export class ServicesController {
         select: ["serviceId", "serviceName", "price", "isActive"],
         where: {
           isActive: 1,
+          isDeleted: false,
         },
         order: {
           priority: "ASC",

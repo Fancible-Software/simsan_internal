@@ -22,7 +22,7 @@ export class IndexComponent implements OnInit {
   form: FormGroup;
   submitted = false;
   services: any = [];
-  editableServices : any  = [];
+  editableServices: any = [];
   provinces: any = [];
   cities: any = [];
   formType: string = 'FORM';
@@ -197,8 +197,8 @@ export class IndexComponent implements OnInit {
       .filter((v: number) => v !== null);
 
     this.form.patchValue({
-        total_amount: amount,
-        services: selectedOrderIds,
+      total_amount: amount,
+      services: selectedOrderIds,
     });
 
     this.enabled = true;
@@ -361,15 +361,24 @@ export class IndexComponent implements OnInit {
   }
 
   markQuoteAsInvoice(formId: number, invoiceUuid: string) {
-    this.loader.start()
+    this.loader.start();
     if (confirm('Are you sure you want to mark this quote as invoice?')) {
       this.commonService
         .markQuoteAsInvoice(formId, invoiceUuid)
         .subscribe((data) => {
-          this.loader.stop()
+          this.loader.stop();
           this.toastr.success('Marked as Invoice');
           this.router.navigate(['/admin/feedbacks', { type: 'FORM' }]);
         });
     }
+  }
+
+  changeTextToUppercase() {
+    this.form.patchValue({
+      postal_code: this.form.value.postal_code.toUpperCase(),
+    });
+    // var obj = {};
+    // obj[field] = this.form.controls[field].value.toUpperCase();
+    // this.form.patchValue(obj);
   }
 }

@@ -204,6 +204,7 @@
                   class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                   placeholder="Postal Code"
                   formControlName="postal_code"
+                  (input)="changeTextToUppercase()"
                 />
                 <div
                   *ngIf="submitted && f['postal_code'].errors"
@@ -403,7 +404,11 @@
             </button>
 
             <button
-              *ngIf="formType === 'QUOTE' && isFormUpdated === 'UPDATE' && userType==='admin'"
+              *ngIf="
+                formType === 'QUOTE' &&
+                isFormUpdated === 'UPDATE' &&
+                userType === 'admin'
+              "
               type="button"
               class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
               (click)="markQuoteAsInvoice(formId, invoiceUuid)"
@@ -416,9 +421,9 @@
     </div>
   </div>
 
-  <img
+  <!-- <img
     class="absolute top-0 b-auto right-0 pt-16 sm:w-6/12 -mt-48 sm:mt-0 w-10/12 max-h-860-px"
     src="assets/img/pattern_angular.png"
     alt="..."
-  />
+  /> -->
 </section>
