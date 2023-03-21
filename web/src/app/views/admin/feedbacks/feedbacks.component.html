@@ -17,7 +17,8 @@
           </div>
         </div>
         <div
-           id="quotes_res" class="relative w-full px-4 max-w-full flex-grow flex-1 text-right"
+          id="quotes_res"
+          class="relative w-full px-4 max-w-full flex-grow flex-1 text-right"
         >
           <input
             type="text"
@@ -32,7 +33,7 @@
             "
             [(ngModel)]="searchTerm"
           />
-        
+
           <button
             class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
             (click)="search()"
@@ -53,7 +54,6 @@
           >
             Create
           </a>
-        
         </div>
       </div>
       <div class="block w-full overflow-x-auto">
@@ -72,7 +72,6 @@
                 Action
               </th>
               <th
-                
                 class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
                 [ngClass]="
                   color === 'light'
@@ -101,6 +100,16 @@
                 "
               >
                 Captured On
+              </th>
+              <th
+                class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                [ngClass]="
+                  color === 'light'
+                    ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                    : 'bg-red-800 text-red-300 border-red-700'
+                "
+              >
+                Sold By
               </th>
               <th
                 class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
@@ -172,7 +181,6 @@
                 <!-- View Invoice/Quote-->
                 <td
                   class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right"
-                  
                 >
                   <a
                     [href]="getInvoiceUrl(feedback)"
@@ -201,7 +209,6 @@
                 <!--Edit-->
                 <td
                   class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right"
-                  
                   [routerLink]="[
                     '/collect/feedback',
                     { formId: feedback.formId, type: type }
@@ -231,6 +238,11 @@
                   class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
                 >
                   {{ feedback.createdAt | date : "dd-MM-YYYY HH:MM a" }}
+                </td>
+                <td
+                  class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+                >
+                  {{ feedback.first_name }} {{ feedback.last_name }}
                 </td>
                 <th
                   class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center"
@@ -275,7 +287,7 @@
                       color === 'light' ? 'text-blueGray-600' : 'text-white'
                     "
                   >
-                    {{ feedback.discount | number}}
+                    {{ feedback.discount | number }}
                   </span>
                 </td>
                 <td
