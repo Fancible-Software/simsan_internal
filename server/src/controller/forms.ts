@@ -89,8 +89,9 @@ export class FormController {
         .getRawOne<{ count: string }>();
 
       const forms = await qb
+        .leftJoin(User, "user", "user.id = CAST(form.createdBy AS DECIMAL)")
         .select([
-          'form."formId" as "formId", form."customerName" as "customerName",form."customerEmail" as "customerEmail", form."customerPhone" as "customerPhone", form."createdAt" as "createdAt", form."customerAddress" as "customerAddress",form."customerPostalCode" as "customerPostalCode", form."customerCity" as "customerCity",form."customerProvince" as "customerProvince", form."customerCountry" as "customerCountry", form."total" as "total", form."discount" as "discount", form."discount_percent" as "discount_percent", form."type" as "type", form."invoiceUuid" as "invoiceUuid",form."final_amount" as "final_amount", form."invoiceNumber" as "invoiceNumber"',
+          'form."formId" as "formId", form."customerName" as "customerName",form."customerEmail" as "customerEmail", form."customerPhone" as "customerPhone", form."createdAt" as "createdAt", form."customerAddress" as "customerAddress",form."customerPostalCode" as "customerPostalCode", form."customerCity" as "customerCity",form."customerProvince" as "customerProvince", form."customerCountry" as "customerCountry", form."total" as "total", form."discount" as "discount", form."discount_percent" as "discount_percent", form."type" as "type", form."invoiceUuid" as "invoiceUuid",form."final_amount" as "final_amount", form."invoiceNumber" as "invoiceNumber", "user"."first_name" as "first_name", "user"."last_name" as "last_name"',
         ])
         .orderBy("form.formId", "DESC")
         .offset(+skip)
