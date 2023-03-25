@@ -351,7 +351,11 @@ export class FormController {
           })
         );
         await queryRunner.commitTransaction();
-        await sendFormEmail(formRecord);
+        const updatedFormRecord: Form | undefined =
+          await formRepository.findOne(id);
+        if (updatedFormRecord) {
+          await sendFormEmail(updatedFormRecord);
+        }
         return res.status(ResponseStatus.SUCCESS_UPDATE).send({
           status: true,
           messsage: "Successfully updated form record",
