@@ -11,3 +11,11 @@
 - Restart containers
 
 TODO : Try cloudflare's ssl certificates
+
+# Automatic Database Backups
+- Database backups are done using a cronjob. It uses a shell script whose path is present in a cronjob.
+Path : ``` /var/automation/backup-automation/backup.sh```
+
+# Project Paths on server
+- Simsan : ```/var/simsan_internal```
+- Automation : ``` /var/automation/backup-automation/```
