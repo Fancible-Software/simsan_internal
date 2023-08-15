@@ -297,15 +297,16 @@ export class IndexComponent implements OnInit {
    */
   applyAbsoluteDiscount(event : Event){
     let discount = parseInt((event.target as HTMLInputElement).value);
-    let discountPercentage =
-      (discount / this.form.value.total_amount ) * 100;
-
-    let discountAmount = this.form.value.total_amount - discount;
-
+    
     // If discount is greater than total_amount as for confirmation
     if(discount > this.form.value.total_amount 
       && !window.confirm("Discount is bigger than total price, do you want to proceed ?") 
       ) discount = 0;
+
+    let discountPercentage =
+      (discount / this.form.value.total_amount ) * 100;
+
+    let discountAmount = this.form.value.total_amount - discount;
 
     // If tax is applicable then we add tax on top 
     if (this.form.value.tax_applicable) {
