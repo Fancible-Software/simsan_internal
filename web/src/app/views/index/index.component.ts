@@ -290,6 +290,45 @@ export class IndexComponent implements OnInit {
     }
   }
 
+  /***
+   * function that handles any change event to absolute discount inputS
+   * @param event {Event} input change event 
+   * @returns null
+   */
+  applyAbsoluteDiscount(event : Event){
+    let discount = parseInt((event.target as HTMLInputElement).value);
+    
+    // If discount is greater than total_amount as for confirmation
+    if(discount > this.form.value.total_amount 
+      && !window.confirm("Discount is bigger than total price, do you want to proceed ?") 
+      ) discount = 0;
+
+    let discountPercentage =
+      (discount / this.form.value.total_amount ) * 100;
+
+    let discountAmount = this.form.value.total_amount - discount;
+
+    // If tax is applicable then we add tax on top 
+    if (this.form.value.tax_applicable) {
+      this.form.patchValue({
+        final_amount: (discountAmount + (discountAmount * 5) / 100).toFixed(
+          2
+        ),
+        discount: discount,
+        amount_after_discount: discountAmount,
+        discount_percent: discountPercentage,
+      });
+    } else { // Do not add taxa simply propagate changes
+      this.form.patchValue({
+        discount: discount,
+        amount_after_discount: discountAmount,
+        final_amount: discountAmount,
+        discount_percent: discountPercentage,
+      });
+    }
+
+  }
+
   clear() {
     this.form.controls['services_dropdown'].reset();
     this.enabled = false;
