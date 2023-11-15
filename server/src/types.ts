@@ -311,13 +311,27 @@ export enum originalFormTypes {
   quote = "QUOTE",
 }
 
-export class AnalyticsDate{
+export class AnalyticsDate {
   @IsDateString()
-  startDate : string;
+  startDate: string;
 
   @IsDateString()
-  endDate : string;
+  endDate: string;
 
   @IsString()
-  type : string;
+  type: string;
+}
+
+export class companyRegisterRequest {
+  @IsNotEmpty()
+  @IsString()
+  companyName: string;
+
+  @IsString()
+  @IsNotEmpty()
+  businessId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  businessIdImg: string;
 }
