@@ -4824,13 +4824,6 @@ neo-async@^2.6.2:
   resolved "https://registry.npmjs.org/neo-async/-/neo-async-2.6.2.tgz"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-ng-toggle-button@^1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/ng-toggle-button/-/ng-toggle-button-1.5.0.tgz#a77ea64c1956abe20d240b35fa889af768cc6676"
-  integrity sha512-cXEgb1NNv6RWGt2Y3AqJILsiWVlew1JIi4D0AfnX6g6dwgPa08FFX9MhYrTQlzLDp7VjtMrqtRxPrV5DIlul0w==
-  dependencies:
-    tslib "^2.0.0"
-
 ngx-bootstrap@^5.6.0:
   version "5.6.2"
   resolved "https://registry.npmjs.org/ngx-bootstrap/-/ngx-bootstrap-5.6.2.tgz"

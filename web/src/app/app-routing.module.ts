@@ -16,6 +16,7 @@ import { SettingsCreateComponent } from './views/admin/settings/settings-create/
 import { VerificationComponent } from './views/auth/verify/verification/verification.component';
 import { EmailComponent } from './views/admin/email/email.component';
 import { AnalyticsComponent } from './views/admin/analytics/analytics.component';
+import { RegisterComponent } from './views/auth/register/register.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'auth', pathMatch: 'full' },
@@ -26,6 +27,7 @@ const routes: Routes = [
       { path: 'login', component: LoginComponent },
       { path: '', redirectTo: 'login', pathMatch: 'full' },
       { path: 'verify/user/:type', component: VerificationComponent },
+      { path: 'register', component: RegisterComponent },
     ],
   },
   {
@@ -50,7 +52,7 @@ const routes: Routes = [
       { path: 'configurations/create', component: SettingsCreateComponent },
       { path: 'configurations/edit/:id', component: SettingsCreateComponent },
       { path: 'mails', component: EmailComponent },
-      { path : 'reporting', component : AnalyticsComponent}
+      { path: 'reporting', component: AnalyticsComponent },
 
       // { path: "verify/user", component: VerificationComponent }
     ],
