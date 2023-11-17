@@ -9,7 +9,7 @@ import {
 @Entity()
 export class Company {
   @PrimaryGeneratedColumn()
-  readonly companyId: number;
+  companyId: number;
 
   @Column({
     nullable: false,
@@ -18,11 +18,12 @@ export class Company {
 
   @Column({
     nullable: false,
+    unique : true
   })
-  businessId: string;
+  governmentBusinessId: string;
 
   @Column({ nullable: false })
-  businessIdImg: string;
+  governmentBusinessIdImg: string;
 
   @Column({ nullable: false, default: true })
   isTrail: boolean;

@@ -13,6 +13,7 @@ import { Configurations } from "./entity/Configurations";
 import { Form } from "./entity/Form";
 import { FormToServices } from "./entity/FormToServices";
 import { Service } from "./entity/Services";
+import { Company } from "./entity/Company";
 
 export interface TokenData {
   email: string;
@@ -322,16 +323,51 @@ export class AnalyticsDate {
   type: string;
 }
 
-export class companyRegisterRequest {
+export class CompanyRegisterRequest {
   @IsNotEmpty()
   @IsString()
   companyName: string;
 
   @IsString()
   @IsNotEmpty()
-  businessId: string;
+  governmentBusinessId: string;
 
   @IsString()
   @IsNotEmpty()
-  businessIdImg: string;
+  governmentBusinessIdImg: string;
+
+  toCompany(){
+    const company = new Company();
+    company.companyName = this.companyName;
+    company.governmentBusinessId = this.governmentBusinessId;
+    company.governmentBusinessIdImg = this.governmentBusinessIdImg;
+    return company;
+  }
+}
+
+export class CompanyUpdateRequest {
+  @IsNotEmpty()
+  @IsNumber()
+  companyId: number;
+
+  @IsNotEmpty()
+  @IsString()
+  companyName: string;
+
+  @IsString()
+  @IsNotEmpty()
+  governmentBusinessId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  governmentBusinessIdImg: string;
+
+  toCompany(){
+    const company = new Company();
+    company.companyId = this.companyId;
+    company.companyName = this.companyName;
+    company.governmentBusinessId = this.governmentBusinessId;
+    company.governmentBusinessIdImg = this.governmentBusinessIdImg;
+    return company;
+  }
 }
