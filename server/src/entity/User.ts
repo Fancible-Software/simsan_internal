@@ -3,9 +3,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Company } from "./Company";
 
 enum UserLogin {
   not_logged_in = "0",
@@ -39,7 +42,7 @@ export class User {
   is_active: number;
 
   @Column({
-    default: UserPermissions.sub_admin,
+    enum: UserPermissions,
     nullable: false,
   })
   roles: UserPermissions;
@@ -52,6 +55,13 @@ export class User {
 
   @Column({ nullable: true })
   verified_at?: Date;
+
+  @JoinColumn({ name: "companyId" })
+  @ManyToOne(() => Company, (c) => c.userId)
+  company: Company;
+
+  @Column({ nullable: false })
+  companyId: number;
 
   //for soft delete. 0=> Not deleted, 1=>deleted
   @Column({ nullable: false, default: 0 })

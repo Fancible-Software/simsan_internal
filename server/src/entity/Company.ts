@@ -4,7 +4,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   CreateDateColumn,
+  OneToMany,
 } from "typeorm";
+import { User } from "./User";
 
 @Entity()
 export class Company {
@@ -18,7 +20,7 @@ export class Company {
 
   @Column({
     nullable: false,
-    unique : true
+    unique: true,
   })
   governmentBusinessId: string;
 
@@ -27,6 +29,9 @@ export class Company {
 
   @Column({ nullable: false, default: true })
   isTrail: boolean;
+
+  @OneToMany(() => User, (usr) => usr.companyId)
+  userId: User;
 
   @UpdateDateColumn({ nullable: true })
   updatedAt?: Date;

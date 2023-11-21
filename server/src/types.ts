@@ -14,6 +14,8 @@ import { Form } from "./entity/Form";
 import { FormToServices } from "./entity/FormToServices";
 import { Service } from "./entity/Services";
 import { Company } from "./entity/Company";
+import { User } from "./entity/User";
+import bcrypt from "bcryptjs";
 
 export interface TokenData {
   email: string;
@@ -31,6 +33,7 @@ export enum ResponseStatus {
   SUCCESS_UPDATE = 201,
   FAILED_UPDATE = 400,
   API_ERROR = 500,
+  FAILED_FETCH = 404,
 }
 
 export class customerSigninRequest {
@@ -336,12 +339,45 @@ export class CompanyRegisterRequest {
   @IsNotEmpty()
   governmentBusinessIdImg: string;
 
-  toCompany(){
+  @IsString()
+  @IsNotEmpty()
+  first_name: string;
+
+  @IsString()
+  @IsNotEmpty()
+  last_name: string;
+
+  @IsString()
+  @IsNotEmpty()
+  email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  mobile_no: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password: string;
+
+  toCompany() {
     const company = new Company();
     company.companyName = this.companyName;
     company.governmentBusinessId = this.governmentBusinessId;
     company.governmentBusinessIdImg = this.governmentBusinessIdImg;
     return company;
+  }
+
+  toUser(companyId: number) {
+    const user = new User();
+    user.first_name = this.first_name;
+    user.last_name = this.last_name;
+    user.email = this.email;
+    user.mobile_no = this.mobile_no;
+    user.password = bcrypt.hashSync(this.password);
+    user.roles = UserPermissions.admin;
+    user.companyId = companyId;
+    user.createdBy = this.first_name + " " + this.last_name;
+    return user;
   }
 }
 
@@ -362,7 +398,7 @@ export class CompanyUpdateRequest {
   @IsNotEmpty()
   governmentBusinessIdImg: string;
 
-  toCompany(){
+  toCompany() {
     const company = new Company();
     company.companyId = this.companyId;
     company.companyName = this.companyName;

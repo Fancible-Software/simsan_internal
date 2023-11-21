@@ -43,6 +43,7 @@ export class LoginComponent implements OnInit {
         this.toastr.success(data.message, 'SUCCESS');
         localStorage.setItem('token', data.data.token);
         localStorage.setItem('is_verified', data.data.is_verified);
+        localStorage.setItem('cId', data.data.companyId);
         if (data.data.is_verified) {
           this.router.navigate(['/admin/feedbacks', { type: 'FORM' }]);
         } else {

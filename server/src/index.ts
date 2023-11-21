@@ -26,6 +26,7 @@ import { APIError } from "./utils/APIError";
 import { createDbConnection } from "./utils/createDbConnection";
 import logger from "./utils/logger";
 import { CompanyController } from "./controller/company";
+import { BlobController } from "./controller/blob";
 
 async function run() {
   try {
@@ -77,6 +78,7 @@ async function run() {
         EmailController,
         QuoteController,
         CompanyController,
+        BlobController,
       ],
       middlewares: [CustomErrorHandler],
       authorizationChecker: (action: Action): boolean => {

@@ -7,6 +7,10 @@ declare namespace NodeJS {
     EMAIL_USER: string;
     EMAIL_PWD: string;
     IMAGE_UPLOAD_PATH: string;
-    BACKEND_URI : string;
+    BACKEND_URI: string;
+    B2_APPLICATION_ID: string;
+    B2_APPLICATION_KEY: string;
+    BUCKET_ID: string;
+    BUCKET_BASE_URL: string;
   }
 }

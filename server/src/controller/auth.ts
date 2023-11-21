@@ -73,6 +73,7 @@ export class AuthController {
         roles: ifUserExist.roles,
         token: auth_token,
         is_verified: ifUserExist.is_verified,
+        companyId: ifUserExist.companyId,
       };
 
       return res.status(200).send({
