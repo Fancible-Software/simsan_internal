@@ -268,4 +268,8 @@ export class CommonService {
   deleteUser(id: number) {
     return this.httpClient.delete(`${environment.endPoint}/admin/delete/${id}`);
   }
+
+  addCompany(body: any): Observable<any> {
+    return this.httpClient.post(`${environment.endPoint}/company/create`, body);
+  }
 }

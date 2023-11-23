@@ -11,23 +11,28 @@
           <hr class="mt-6 border-b-1 border-blueGray-300" />
         </div>
         <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
-          <!-- <div class="text-blueGray-400 text-center mb-3 font-bold">
-                        <small>Or sign in with credentials</small>
-                    </div> -->
-          <form>
+          <form [formGroup]="registerationForm">
             <div class="relative w-full mb-3">
               <label
                 class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                 htmlFor="grid-password"
               >
-                Company Name
+                Company Name *
               </label>
               <input
                 type="email"
                 class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                 placeholder="Company Name"
-                formControlName="company_name"
+                formControlName="companyName"
               />
+              <div
+                *ngIf="submitted && f['companyName'].errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="f['companyName'].errors['required']">
+                  Company Name is required
+                </div>
+              </div>
             </div>
             <div class="flex flex-wrap">
               <div class="w-full lg:w-6/12 px-1">
@@ -36,7 +41,7 @@
                     class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                     htmlFor="grid-password"
                   >
-                    Govt. Registered Business Id
+                    Govt. Registered Business Id *
                   </label>
                   <input
                     type="text"
@@ -44,6 +49,14 @@
                     placeholder="Government Registered Business Id"
                     formControlName="governmentBusinessId"
                   />
+                  <div
+                    *ngIf="submitted && f['governmentBusinessId'].errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="f['governmentBusinessId'].errors['required']">
+                      Govt. Registered Business Id is required
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="w-full lg:w-6/12 px-2">
@@ -52,12 +65,12 @@
                     class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                     htmlFor="grid-password"
                   >
-                    Govt. Registered Business Proof
+                    Govt. Registered Business Proof *
                   </label>
                   <input
                     type="file"
                     class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    formControlName="governmentBusinessProof"
+                    (change)="onFilechange($event)"
                   />
                 </div>
               </div>
@@ -70,12 +83,21 @@
                     class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                     htmlFor="grid-password"
                   >
-                    First Name
+                    First Name *
                   </label>
                   <input
                     class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     placeholder="First Name"
+                    formControlName="firstName"
                   />
+                  <div
+                    *ngIf="submitted && f['firstName'].errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="f['firstName'].errors['required']">
+                      First Name is required
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="w-full lg:w-6/12 px-2">
@@ -84,13 +106,22 @@
                     class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                     htmlFor="grid-password"
                   >
-                    Last Name
+                    Last Name *
                   </label>
 
                   <input
                     class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     placeholder="Last Name"
+                    formControlName="lastName"
                   />
+                  <div
+                    *ngIf="submitted && f['lastName'].errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="f['lastName'].errors['required']">
+                      Last Name is required
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -101,12 +132,21 @@
                     class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                     htmlFor="grid-password"
                   >
-                    Email
+                    Email *
                   </label>
                   <input
                     class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     placeholder="Email"
+                    formControlName="email"
                   />
+                  <div
+                    *ngIf="submitted && f['email'].errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="f['email'].errors['required']">
+                      * Email is required
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="w-full lg:w-6/12 px-2">
@@ -115,13 +155,22 @@
                     class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                     htmlFor="grid-password"
                   >
-                    Mobile No
+                    Mobile No *
                   </label>
 
                   <input
                     class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     placeholder="Mobile No"
+                    formControlName="mobileNo"
                   />
+                  <div
+                    *ngIf="submitted && f['mobileNo'].errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="f['mobileNo'].errors['required']">
+                      * Mobile No is required
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -132,13 +181,22 @@
                     class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                     htmlFor="grid-password"
                   >
-                    Password
+                    Password *
                   </label>
                   <input
                     class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     type="password"
                     placeholder="Password"
+                    formControlName="password"
                   />
+                  <div
+                    *ngIf="submitted && f['password'].errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="f['password'].errors['required']">
+                      * Password is required
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="w-full lg:w-6/12 px-2">
@@ -147,14 +205,24 @@
                     class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                     htmlFor="grid-password"
                   >
-                    Confirm Password
+                    Confirm Password *
                   </label>
 
                   <input
                     class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     placeholder="Confirm Password"
                     type="password"
+                    formControlName="confPassword"
                   />
+                  <div
+                    *ngIf="submitted && f['confPassword'].errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="f['confPassword'].errors['required']">
+                      * Confirm Password
+                    </div>
+                    <div *ngIf="registerationForm.errors['mismatch']">* Password mismatch</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -163,6 +231,7 @@
               <button
                 class="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
                 type="button"
+                (click)="onSubmit()"
               >
                 Sign Up
               </button>

@@ -48,7 +48,8 @@ import { VerificationComponent } from './views/auth/verify/verification/verifica
 import { NgSelectModule } from '@ng-select/ng-select';
 import { EmailComponent } from './views/admin/email/email.component';
 import { AnalyticsComponent } from './views/admin/analytics/analytics.component';
-import {CalendarModule} from 'primeng/calendar';
+import { CalendarModule } from 'primeng/calendar';
+import { RegisterComponent } from './views/auth/register/register.component';
 
 @NgModule({
   declarations: [
@@ -83,6 +84,7 @@ import {CalendarModule} from 'primeng/calendar';
     VerificationComponent,
     EmailComponent,
     AnalyticsComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,
@@ -101,7 +103,7 @@ import {CalendarModule} from 'primeng/calendar';
       preventDuplicates: true,
     }),
     NgSelectModule,
-    CalendarModule
+    CalendarModule,
   ],
   providers: [
     UserInterceptor,
