@@ -270,6 +270,8 @@ export class CommonService {
   }
 
   addCompany(body: any): Observable<any> {
-    return this.httpClient.post(`${environment.endPoint}/company/create`, body);
+    return this.httpClient
+      .post(`${environment.endPoint}/company/create`, body)
+      .pipe();
   }
 }

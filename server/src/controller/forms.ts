@@ -44,7 +44,8 @@ export class FormController {
     { skip, limit }: SkipLimitURLParams,
     @QueryParams({ validate: true })
     { type, searchTerm }: { type: string; searchTerm?: string },
-    @Res() res: Response
+    @Res() res: Response,
+    @CurrentUser() user: User
   ) {
     try {
       if (searchTerm) {
@@ -53,10 +54,28 @@ export class FormController {
           searchTerm = undefined;
         }
       }
+
       const conn = getConnection();
       const qb = conn.createQueryBuilder(Form, "form");
 
       qb.where("form.type = :type", { type: type });
+
+      if (UserPermissions.admin !== user.roles) {
+        qb.andWhere('form."createdBy"=:userId', {
+          userId: `${user.id}`,
+        });
+      } 
+      // else if (UserPermissions.admin === user.roles) {
+      //   const userRepo = getConnection().getRepository(User);
+      //   const users = await userRepo
+      //     .createQueryBuilder("user")
+      //     .where('"user"."comapnyId"=:companyId', { companyId: user.companyId })
+      //     .select('"user"."id","user"."companyId"')
+      //     .groupBy('"user"."companyId"')
+      //     .getMany();
+
+      //   console.log(users);
+      // }
 
       if (searchTerm) {
         qb.andWhere(

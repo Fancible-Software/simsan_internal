@@ -10,6 +10,7 @@ import { Company } from "../entity/Company";
 import { Response } from "express";
 import logger from "../utils/logger";
 import { APIError } from "../utils/APIError";
+import { User } from "../entity/User";
 
 @Controller("/company")
 export class CompanyController {
@@ -30,16 +31,16 @@ export class CompanyController {
       await queryRunner.startTransaction();
       const companyRepository = getConnection().getRepository(Company);
 
-      let registeredCompany = await companyRepository.findOne({
+      const registeredCompany = await companyRepository.findOne({
         governmentBusinessId: body.governmentBusinessId,
       });
 
       // If a company was already registered for given governmentBusinessId return companyId
+
       if (registeredCompany) {
         return res.status(ResponseStatus.SUCCESS_UPDATE).send({
-          status: true,
-          messsage:
-            "A company already exists with given Government Business Id",
+          status: false,
+          message: "A company already exists with given Government Business Id",
           data: {
             companyId: registeredCompany.companyId,
             is_existing: true,
@@ -49,12 +50,32 @@ export class CompanyController {
 
       const companyDetails = await queryRunner.manager.save(body.toCompany());
 
+      const userRepo = getConnection().getRepository(User);
+
+      const registeredUser = await userRepo.findOne({
+        where: [{ mobile_no: body.mobile_no }, { email: body.email }],
+      });
+
+      if (registeredUser) {
+        let message = "";
+        if (registeredUser.mobile_no === body.mobile_no) {
+          message = "Mobile already registered!";
+        }
+        if (registeredUser.email === body.email) {
+          message = "Email already registered!";
+        }
+        return res.status(ResponseStatus.SUCCESS_UPDATE).send({
+          status: false,
+          message,
+        });
+      }
+
       await queryRunner.manager.save(body.toUser(companyDetails.companyId));
       await queryRunner.commitTransaction();
       // else register a new Company and return companyId
       return res.status(ResponseStatus.SUCCESS_UPDATE).send({
         status: true,
-        messsage: "Successfully registered Company",
+        message: "Successfully registered Company",
         data: {
           companyId: companyDetails.companyId,
           is_existing: false,

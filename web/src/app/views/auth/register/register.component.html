@@ -88,13 +88,13 @@
                   <input
                     class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     placeholder="First Name"
-                    formControlName="firstName"
+                    formControlName="first_name"
                   />
                   <div
-                    *ngIf="submitted && f['firstName'].errors"
+                    *ngIf="submitted && f['first_name'].errors"
                     class="invalid-feedback"
                   >
-                    <div *ngIf="f['firstName'].errors['required']">
+                    <div *ngIf="f['first_name'].errors['required']">
                       First Name is required
                     </div>
                   </div>
@@ -112,13 +112,13 @@
                   <input
                     class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     placeholder="Last Name"
-                    formControlName="lastName"
+                    formControlName="last_name"
                   />
                   <div
-                    *ngIf="submitted && f['lastName'].errors"
+                    *ngIf="submitted && f['last_name'].errors"
                     class="invalid-feedback"
                   >
-                    <div *ngIf="f['lastName'].errors['required']">
+                    <div *ngIf="f['last_name'].errors['required']">
                       Last Name is required
                     </div>
                   </div>
@@ -161,13 +161,13 @@
                   <input
                     class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     placeholder="Mobile No"
-                    formControlName="mobileNo"
+                    formControlName="mobile_no"
                   />
                   <div
-                    *ngIf="submitted && f['mobileNo'].errors"
+                    *ngIf="submitted && f['mobile_no'].errors"
                     class="invalid-feedback"
                   >
-                    <div *ngIf="f['mobileNo'].errors['required']">
+                    <div *ngIf="f['mobile_no'].errors['required']">
                       * Mobile No is required
                     </div>
                   </div>

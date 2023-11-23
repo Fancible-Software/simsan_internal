@@ -113,6 +113,7 @@ export class AdminController {
       newCustomer.createdBy = user.first_name + " " + user.last_name;
       newCustomer.password = bcrypt.hashSync(obj.password);
       newCustomer.roles = obj.roles;
+      newCustomer.companyId = user.companyId;
       await queryRunner.manager.save(newCustomer);
 
       let userVerify = new UserVerification();
@@ -629,9 +630,22 @@ export class AdminController {
           message: "OTP generated successfully!",
         });
       } else {
-        return res.status(ResponseStatus.API_ERROR).send({
-          status: false,
-          message: "Something went wrong, try again later!",
+        const userVerifyObj = new UserVerification();
+        userVerifyObj.type = tokenType.otp;
+        userVerifyObj.userId = user;
+        userVerifyObj.token = await generateOtp();
+        await queryRunner.manager.save(userVerifyObj);
+
+        const info = await sendMail({
+          from: process.env.EMAIL_USER,
+          to: user.email,
+          subject: "Verification Code",
+          html: `<strong>Your verification OTP is ${userVerifyObj.token}</strong>`,
+        });
+        console.log(info);
+        return res.status(ResponseStatus.SUCCESS_UPDATE).send({
+          status: true,
+          message: "OTP generated successfully!",
         });
       }
     } catch (error) {

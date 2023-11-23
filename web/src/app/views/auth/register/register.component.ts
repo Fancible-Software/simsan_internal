@@ -35,14 +35,14 @@ export class RegisterComponent {
           ]),
         ],
         governmentBusinessId: ['', Validators.compose([Validators.required])],
-        governmentBusinessProof: [
+        governmentBusinessIdImg: [
           'https://test.blob.com/',
           Validators.required,
         ],
-        firstName: ['', Validators.compose([Validators.required])],
-        lastName: ['', Validators.compose([Validators.required])],
+        first_name: ['', Validators.compose([Validators.required])],
+        last_name: ['', Validators.compose([Validators.required])],
         email: ['', Validators.compose([Validators.required])],
-        mobileNo: ['', Validators.compose([Validators.required])],
+        mobile_no: ['', Validators.compose([Validators.required])],
         password: [
           '',
           Validators.compose([
@@ -81,14 +81,20 @@ export class RegisterComponent {
 
   onSubmit() {
     this.submitted = true;
-    console.log(this.registerationForm.value);
     if (this.registerationForm.status !== 'INVALID') {
       return;
     }
     this.loader.start();
     this.service.addCompany(this.registerationForm.value).subscribe((data) => {
-      console.log(data);
+      // console.log(data);
+      if (data.status) {
+        this.toastr.success(data.message, 'SUCCESS');
+        this.router.navigate(['/auth/login']);
+      } else {
+        this.toastr.error(data.message, 'ERROR');
+      }
       this.loader.stop();
+      return;
     });
   }
 
@@ -98,6 +104,5 @@ export class RegisterComponent {
 
   onFilechange(event: any) {
     console.log(event.target.files[0]);
-    // this.file = event.target.files[0];
   }
 }
