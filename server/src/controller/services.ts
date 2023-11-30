@@ -28,6 +28,7 @@ import {
   Repository,
   Not,
   Connection,
+  In,
 } from "typeorm";
 
 @Controller("/services")
@@ -62,34 +63,42 @@ export class ServicesController {
   }
 
   // for admin listing - fetching all services (is Active flag removed)
-  @Authorized(UserPermissions.sub_admin || UserPermissions.admin)
+  @Authorized(UserPermissions.admin)
   @Get("/all/:skip/:limit")
   async getAllServices(
     @Params()
     { skip, limit }: SkipLimitURLParams,
-    @Res() res: Response
+    @Res() res: Response,
+    @CurrentUser() user: User
   ) {
     try {
-      const serviceRepository: Repository<Service> =
-        getConnection().getRepository(Service);
-      const services: Service[] = await serviceRepository.find({
-        select: [
-          "serviceId",
-          "serviceName",
-          "price",
-          "isActive",
-          "priority",
-          "createdAt",
-          "createdBy",
-          "isDeleted",
-        ],
-        skip: +skip,
-        take: +limit,
-        order: {
-          priority: "ASC",
-        },
-      });
-      const total = await serviceRepository.count();
+      const conn = getConnection();
+      const qb = conn.createQueryBuilder(Service, "srv");
+
+      qb.where("srv.createdBy = :userId", { userId: user.id });
+
+      const services = await qb
+        .leftJoinAndSelect("srv.created", "user")
+        .select([
+          "srv.serviceId",
+          "srv.serviceName",
+          "srv.price",
+          "srv.isActive",
+          "srv.priority",
+          "srv.createdAt",
+          'CONCAT("user"."first_name", "user"."last_name") as "createdBy"',
+          "srv.createdBy as createdById",
+          "srv.isDeleted",
+        ])
+        .offset(+skip)
+        .limit(+limit)
+        .getRawMany();
+      // .orderBy("srv.priority", "ASC")
+
+      const total = await qb
+        .clone()
+        .select("COUNT(1) as count")
+        .getRawOne<{ count: string }>();
       return res.status(200).send({
         status: true,
         message: "Services Fetched !",
@@ -110,7 +119,7 @@ export class ServicesController {
   async updateService(
     @Res() res: Response,
     @Params() { id }: EntityId,
-    @Body() body: ServiceType
+    @Body() body: ServiceType,
   ) {
     try {
       const conn = getConnection();
@@ -214,6 +223,7 @@ export class ServicesController {
       const isExisting: Service[] = await serviceRepository.find({
         where: {
           serviceName: body.serviceName,
+          createdBy: user.id,
         },
       });
 
@@ -228,7 +238,7 @@ export class ServicesController {
       service.price = body.price;
       service.serviceName = body.serviceName;
       service.isActive = +body.isActive;
-      service.createdBy = user.first_name + " " + user.last_name;
+      service.createdBy = user.id;
       service.priority = body.priority;
 
       await serviceRepository.save(service);
@@ -245,21 +255,36 @@ export class ServicesController {
   }
 
   @Get("/all-services")
-  async getServices(@Res() res: Response) {
+  @Authorized(UserPermissions.sub_admin || UserPermissions.admin)
+  async getServices(@Res() res: Response, @CurrentUser() user: User) {
     try {
       const serviceRepository: Repository<Service> =
         getConnection().getRepository(Service);
+
+      const userRepo = getConnection();
+      const users = await userRepo
+        .createQueryBuilder(User, "user")
+        .where('"user"."companyId"=:companyId', { companyId: user.companyId })
+        .select('"user"."id"')
+        .getRawMany();
+
+      const usersArr = users.map((user) => user.id);
+
       const services: Service[] = await serviceRepository.find({
         select: ["serviceId", "serviceName", "price", "isActive"],
         where: {
           isActive: 1,
           isDeleted: false,
+          createdBy: In(usersArr),
         },
         order: {
           priority: "ASC",
         },
       });
-      const total = await serviceRepository.count({ isActive: 1 });
+      const total = await serviceRepository.count({
+        isActive: 1,
+        createdBy: In(usersArr),
+      });
       return res.status(200).send({
         status: true,
         message: "Services Fetched !",

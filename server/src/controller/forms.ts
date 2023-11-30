@@ -59,23 +59,25 @@ export class FormController {
       const qb = conn.createQueryBuilder(Form, "form");
 
       qb.where("form.type = :type", { type: type });
-
+      
       if (UserPermissions.admin !== user.roles) {
         qb.andWhere('form."createdBy"=:userId', {
           userId: `${user.id}`,
         });
-      } 
-      // else if (UserPermissions.admin === user.roles) {
-      //   const userRepo = getConnection().getRepository(User);
-      //   const users = await userRepo
-      //     .createQueryBuilder("user")
-      //     .where('"user"."comapnyId"=:companyId', { companyId: user.companyId })
-      //     .select('"user"."id","user"."companyId"')
-      //     .groupBy('"user"."companyId"')
-      //     .getMany();
+      } else if (UserPermissions.admin === user.roles) {
+        const userRepo = getConnection();
+        const users = await userRepo
+          .createQueryBuilder(User, "user")
+          .where('"user"."companyId"=:companyId', { companyId: user.companyId })
+          .select('"user"."id"')
+          .getRawMany();
 
-      //   console.log(users);
-      // }
+        const usersArr = users.map((user) => user.id);
+        console.log(usersArr);
+        qb.andWhere('form."createdBy" IN (:userIds)', {
+          userIds: usersArr,
+        });
+      }
 
       if (searchTerm) {
         qb.andWhere(
@@ -272,7 +274,7 @@ export class FormController {
 
           await sendMail({
             from: process.env.EMAIL_USER,
-            to: "simsanfrasermain@gmail.com",
+            to: "vikasarora393@gmail.com",
             html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/quote/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
             subject: `${formType} - Simsan Fraser Maintenance`,
           });
@@ -286,7 +288,7 @@ export class FormController {
 
           await sendMail({
             from: process.env.EMAIL_USER,
-            to: "simsanfrasermain@gmail.com",
+            to: "vikasarora393@gmail.com",
             html: `<html><head></head><body><div>Click on the below link to check your ${formType} <br/> <a href="${process.env.BACKEND_URI}/invoice/${formRecord.formId}/${formRecord.invoiceUuid}">Link to ${formType}</a></div> <br/> <br/> ${htmlInvoice}</body></html>`,
             subject: `${formType} - Simsan Fraser Maintenance`,
           });

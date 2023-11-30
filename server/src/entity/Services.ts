@@ -2,18 +2,21 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 import { FormToServices } from "./FormToServices";
+import { User } from "./User";
 
 @Entity()
 export class Service {
   @PrimaryGeneratedColumn()
   serviceId: number;
 
-  @Column({ nullable: false, unique: true })
+  @Column({ nullable: false })
   serviceName: string;
 
   @Column({ nullable: false, default: 1 })
@@ -37,8 +40,12 @@ export class Service {
   @CreateDateColumn()
   createdAt: Date;
 
-  @Column({ nullable: false, default: "default" })
-  createdBy: string;
+  @JoinColumn({ name: "createdBy" })
+  @ManyToOne(() => User, (c) => c.serviceCreatedBy)
+  created: User;
+
+  @Column({ nullable: false })
+  createdBy: number;
 
   @Column({ default: false })
   isDeleted: boolean;

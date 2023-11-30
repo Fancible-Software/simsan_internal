@@ -5,10 +5,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 import { Company } from "./Company";
+import { Service } from "./Services";
 
 enum UserLogin {
   not_logged_in = "0",
@@ -62,6 +64,9 @@ export class User {
 
   @Column({ nullable: false })
   companyId: number;
+
+  @OneToMany(() => Service, (service) => service.created)
+  serviceCreatedBy: User;
 
   //for soft delete. 0=> Not deleted, 1=>deleted
   @Column({ nullable: false, default: 0 })
