@@ -80,15 +80,15 @@ export class ServicesController {
       const services = await qb
         .leftJoinAndSelect("srv.created", "user")
         .select([
-          "srv.serviceId",
-          "srv.serviceName",
-          "srv.price",
-          "srv.isActive",
-          "srv.priority",
-          "srv.createdAt",
+          'srv."serviceId"',
+          'srv."serviceName"',
+          'srv."price"',
+          'srv."isActive"',
+          'srv."priority"',
+          'srv."createdAt"',
           'CONCAT("user"."first_name", "user"."last_name") as "createdBy"',
-          "srv.createdBy as createdById",
-          "srv.isDeleted",
+          'srv."createdBy" as "createdById"',
+          'srv."isDeleted"',
         ])
         .offset(+skip)
         .limit(+limit)
@@ -119,7 +119,7 @@ export class ServicesController {
   async updateService(
     @Res() res: Response,
     @Params() { id }: EntityId,
-    @Body() body: ServiceType,
+    @Body() body: ServiceType
   ) {
     try {
       const conn = getConnection();

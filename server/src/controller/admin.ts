@@ -38,13 +38,15 @@ export class AdminController {
   async users(
     @Params()
     { skip, limit }: SkipLimitURLParams,
-    @Res() res: Response
+    @Res() res: Response,
+    @CurrentUser() user: User
   ) {
     try {
       const repo = getConnection().getRepository(User);
       let users = await repo.find({
         where: {
           is_deleted: 0,
+          companyId: user.companyId,
         },
         select: [
           "id",

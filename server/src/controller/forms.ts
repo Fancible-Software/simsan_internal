@@ -59,7 +59,7 @@ export class FormController {
       const qb = conn.createQueryBuilder(Form, "form");
 
       qb.where("form.type = :type", { type: type });
-      
+
       if (UserPermissions.admin !== user.roles) {
         qb.andWhere('form."createdBy"=:userId', {
           userId: `${user.id}`,
@@ -72,7 +72,7 @@ export class FormController {
           .select('"user"."id"')
           .getRawMany();
 
-        const usersArr = users.map((user) => user.id);
+        const usersArr = users.map((user) => user.id.toString());
         console.log(usersArr);
         qb.andWhere('form."createdBy" IN (:userIds)', {
           userIds: usersArr,
