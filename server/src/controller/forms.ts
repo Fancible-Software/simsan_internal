@@ -72,11 +72,9 @@ export class FormController {
           .select('"user"."id"')
           .getRawMany();
 
-        const usersArr = users.map((user) => user.id.toString());
-        console.log(usersArr);
-        qb.andWhere('form."createdBy" IN (:userIds)', {
-          userIds: usersArr,
-        });
+        const usersArr = users.map((user) => `'${user.id}'`).join(", ");
+        const usersIdsInParentheses = `(${usersArr})`;
+        qb.andWhere('form."createdBy" IN ' + usersIdsInParentheses);
       }
 
       if (searchTerm) {
