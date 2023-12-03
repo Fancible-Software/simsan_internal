@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
   OneToMany,
 } from "typeorm";
+import { Configurations } from "./Configurations";
 import { User } from "./User";
 
 @Entity()
@@ -32,6 +33,9 @@ export class Company {
 
   @OneToMany(() => User, (usr) => usr.companyId)
   userId: User;
+
+  @OneToMany(() => Configurations, (config) => config.companyId)
+  configId: Configurations;
 
   @UpdateDateColumn({ nullable: true })
   updatedAt?: Date;

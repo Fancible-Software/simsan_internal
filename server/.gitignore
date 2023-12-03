@@ -8,5 +8,5 @@ dbdata
 dist
 logs
 dist/
-
+.env
 ormconfig.json

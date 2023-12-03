@@ -1,25 +1,41 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
+import { Company } from "./Company";
 
 @Entity()
 export class Configurations {
-    @PrimaryGeneratedColumn()
-    readonly id: number;
+  @PrimaryGeneratedColumn()
+  readonly id: number;
 
-    @Column({ nullable: false })
-    key: string;
+  @Column({ nullable: false })
+  key: string;
 
-    @Column({ nullable: false })
-    value: string;
+  @Column({ nullable: false })
+  value: string;
 
-    @Column({ nullable: false, default: false })
-    isImage: Boolean;
+  @Column({ nullable: false, default: false })
+  isImage: Boolean;
 
-    @UpdateDateColumn({ nullable: true })
-    updatedAt?: Date;
+  @JoinColumn({ name: "companyId" })
+  @ManyToOne(() => Company, (c) => c.configId)
+  company: Company;
 
-    @CreateDateColumn()
-    createdAt: Date;
+  @Column({ nullable: false })
+  companyId: number;
 
-    @Column({ nullable: false })
-    createdBy: string
+  @UpdateDateColumn({ nullable: true })
+  updatedAt?: Date;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @Column({ nullable: false })
+  createdBy: string;
 }
