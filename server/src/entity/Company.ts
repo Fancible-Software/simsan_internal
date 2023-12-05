@@ -31,6 +31,9 @@ export class Company {
   @Column({ nullable: false, default: true })
   isTrail: boolean;
 
+  @Column({ nullable: false, default: false })
+  isConfigured: boolean;
+
   @OneToMany(() => User, (usr) => usr.companyId)
   userId: User;
 
