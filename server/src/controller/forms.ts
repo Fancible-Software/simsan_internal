@@ -44,7 +44,8 @@ export class FormController {
     { skip, limit }: SkipLimitURLParams,
     @QueryParams({ validate: true })
     { type, searchTerm }: { type: string; searchTerm?: string },
-    @Res() res: Response
+    @Res() res: Response,
+    @CurrentUser() user: User
   ) {
     try {
       if (searchTerm) {
@@ -88,7 +89,7 @@ export class FormController {
         .select("COUNT(1) as count")
         .getRawOne<{ count: string }>();
 
-      const forms = await qb
+      let forms = await qb
         .leftJoin(User, "user", "user.id = CAST(form.createdBy AS DECIMAL)")
         .select([
           'form."formId" as "formId", form."customerName" as "customerName",form."customerEmail" as "customerEmail", form."customerPhone" as "customerPhone", form."createdAt" as "createdAt", form."customerAddress" as "customerAddress",form."customerPostalCode" as "customerPostalCode", form."customerCity" as "customerCity",form."customerProvince" as "customerProvince", form."customerCountry" as "customerCountry", form."total" as "total", form."discount" as "discount", form."discount_percent" as "discount_percent", form."type" as "type", form."invoiceUuid" as "invoiceUuid",form."final_amount" as "final_amount", form."invoiceNumber" as "invoiceNumber", "user"."first_name" as "first_name", "user"."last_name" as "last_name"',
@@ -96,8 +97,13 @@ export class FormController {
         .orderBy("form.formId", "DESC")
         .offset(+skip)
         .limit(+limit)
-        .getRawMany<Form[]>();
-
+        .getRawMany<Form>();
+      
+      // If user if of type sub_admin, only fetch quotes made by them
+      if(type === "QUOTE" && user.roles === UserPermissions.sub_admin){
+        forms = forms.filter((form:any) => form.first_name === user.first_name)
+      }
+      
       return res.status(ResponseStatus.SUCCESS_FETCH).send({
         status: true,
         count: formCount,
