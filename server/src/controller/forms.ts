@@ -43,7 +43,7 @@ export class FormController {
     @Params()
     { skip, limit }: SkipLimitURLParams,
     @QueryParams({ validate: true })
-    { type, searchTerm }: { type: string; searchTerm?: string },
+    { type, searchTerm}: { type: string; searchTerm?: string;},
     @Res() res: Response,
     @CurrentUser() user: User
   ) {
@@ -58,6 +58,11 @@ export class FormController {
       const qb = conn.createQueryBuilder(Form, "form");
 
       qb.where("form.type = :type", { type: type });
+
+      // If user if of type sub_admin, only fetch quotes made by them
+      if(type === "QUOTE" && user.roles === UserPermissions.sub_admin){
+        qb.andWhere("form.createdBy = :userId", { userId: user.id});
+      }
 
       if (searchTerm) {
         qb.andWhere(
@@ -99,10 +104,7 @@ export class FormController {
         .limit(+limit)
         .getRawMany<Form>();
       
-      // If user if of type sub_admin, only fetch quotes made by them
-      if(type === "QUOTE" && user.roles === UserPermissions.sub_admin){
-        forms = forms.filter((form:any) => form.first_name === user.first_name)
-      }
+      
       
       return res.status(ResponseStatus.SUCCESS_FETCH).send({
         status: true,
