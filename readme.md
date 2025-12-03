@@ -19,3 +19,9 @@ Path : ``` /var/automation/backup-automation/backup.sh```
 # Project Paths on server
 - Simsan : ```/var/simsan_internal```
 - Automation : ``` /var/automation/backup-automation/```
+
+# Setup CheapSSL
+- Get CSR from /dinesh/simsan_ssl folder (Also contains private key)
+- Go to Cheapssl and regenrate SSL certificate
+- Verify DNS
+- Download the SSL certificate
