@@ -1,0 +1,16 @@
+billing.simsanfrasermain.com {
+
+    encode gzip
+
+    handle_path /api/* {
+        reverse_proxy back-end:4000 {
+            header_up Host {host}
+        }
+    }
+
+    handle {
+        root * /usr/share/caddy
+        try_files {path} /index.html
+        file_server
+    }
+}
