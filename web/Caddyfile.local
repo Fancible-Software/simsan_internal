@@ -1,0 +1,32 @@
+:80 {
+    # Set the root directory to where your Angular app build output is located
+    # Common build paths include: ./dist/your-app-name/browser, ./www, or /usr/share/caddy
+    # root * /usr/share/caddy/web
+
+    # Serve the static files from the root directory
+    # file_server
+
+    # Essential for Angular routing (deep linking):
+    # If the requested file doesn't exist on disk,
+    # rewrite the request to load index.html and let the Angular router handle the path.
+    # try_files {path} /index.html
+
+    # Handle /api requests and strip /api prefix
+    # handle_path /api/* {
+    #    reverse_proxy back-end:4000
+    # }
+
+    handle_path /api/* {
+        reverse_proxy back-end:4000
+    }
+
+    handle {
+        root * /usr/share/caddy/web
+        file_server
+        try_files {path} /index.html
+    }
+
+    # Optional: Enable gzip compression for better performance
+    encode gzip
+}
+

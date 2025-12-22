@@ -4,7 +4,7 @@ services:
   caddy:
     build:
       context: ./web
-      dockerfile: Dockerfile.local
+      dockerfile: Dockerfile.prod
     ports:
       - "80:80"
       - "443:443"
