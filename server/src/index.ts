@@ -25,6 +25,7 @@ import { TokenData } from "./types";
 import { APIError } from "./utils/APIError";
 import { createDbConnection } from "./utils/createDbConnection";
 import logger from "./utils/logger";
+import { ContactController } from "./controller/contact";
 
 async function run() {
     try {
@@ -64,7 +65,7 @@ async function run() {
             },
             defaultErrorHandler: false,
             controllers: [UserController, AuthController, AdminController, ServicesController,
-                 FormController, LocationController, ConfigurationController, DashboardController,InvoiceController,EmailController,QuoteController],
+                FormController, LocationController, ConfigurationController, DashboardController, InvoiceController, EmailController, QuoteController, ContactController],
             middlewares: [CustomErrorHandler],
             authorizationChecker: (action: Action): boolean => {
                 const { authorization } = (action.request as Request).headers || {};

@@ -321,3 +321,26 @@ export class AnalyticsDate{
   @IsString()
   type : string;
 }
+
+export class ContactFormRequest {
+
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsString()
+  @IsNotEmpty()
+  email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  phone: string;
+
+  @IsString()
+  @IsNotEmpty()
+  service: string;
+
+  @IsString()
+  @IsNotEmpty()
+  message: string;
+}

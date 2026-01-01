@@ -22,6 +22,17 @@ services:
     depends_on:
       database:
         condition: service_healthy
+    environment:
+      - DB_HOST=database
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=root
+      - DB_NAME=postgres
+      - DB_SCHEMA=public
+      - DB_SSL=false
+      - DB_LOGGING=false
+      - DB_SYNCHRONIZE=true
+      - NODE_ENV=development
 
   database:
     image: postgres:14.1-alpine

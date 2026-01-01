@@ -1,10 +1,24 @@
 import multer, { Options } from "multer"
 import path from "path"
+import { existsSync, mkdirSync } from "fs"
 import { APIError } from "./APIError";
+
+// Get upload path from environment or use default
+const getUploadPath = (): string => {
+    const uploadPath = process.env.IMAGE_UPLOAD_PATH || "../../public/uploads";
+    const fullPath = path.join(__dirname, uploadPath);
+    
+    // Ensure directory exists
+    if (!existsSync(fullPath)) {
+        mkdirSync(fullPath, { recursive: true });
+    }
+    
+    return fullPath;
+};
 
 export const fileUploadOptions: Options = {
     storage: multer.diskStorage({
-        destination: path.join(__dirname, process.env.IMAGE_UPLOAD_PATH),
+        destination: getUploadPath(),
         filename: (_, file, cb) => {
             cb(null, `${Date.now()}_${file.originalname}`);
         }
