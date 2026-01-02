@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  caddy:
+    build:
+      context: ./web
+      dockerfile: Dockerfile.k8s
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - API_UPSTREAM=admin-dev-api.fanciblesoftware.com
+    depends_on:
+      - back-end
+    restart: unless-stopped
+
+  back-end:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    restart: always
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      - DB_HOST=database
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=root
+      - DB_NAME=postgres
+      - DB_SCHEMA=public
+      - DB_SSL=false
+      - DB_LOGGING=false
+      - DB_SYNCHRONIZE=true
+      - NODE_ENV=development
+
+  database:
+    image: postgres:14.1-alpine
+    restart: always
+    env_file:
+      - docker-compose.env
+    ports:
+      - "6432:5432"
+    volumes:
+      - ./server/dbdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
