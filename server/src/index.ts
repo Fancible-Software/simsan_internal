@@ -34,30 +34,45 @@ async function run() {
 
         const app = express();
 
-        const allowedOrigins = process.env.CORS_DOMAINS.split(",");
-        console.log(allowedOrigins);
-        console.log(process.env.CORS_DOMAINS);
+        // Parse and trim CORS domains
+        const allowedOrigins = process.env.CORS_DOMAINS
+            ? process.env.CORS_DOMAINS.split(",").map(origin => origin.trim())
+            : [];
+        
+        console.log("Allowed CORS origins:", allowedOrigins);
+        
+        // CORS configuration with dynamic origin validation
         app.use(
             cors({
-              origin: allowedOrigins,
-              methods: ["GET", "PUT", "POST", "DELETE", "PATCH", "OPTIONS"],
-              credentials: true,
-              allowedHeaders: ["Content-Type", "Authorization"],
+                origin: (origin, callback) => {
+                    // Allow requests with no origin (like mobile apps or curl requests)
+                    if (!origin) {
+                        return callback(null, true);
+                    }
+                    
+                    // Check if origin is in allowed list
+                    if (allowedOrigins.includes(origin)) {
+                        return callback(null, true);
+                    }
+                    
+                    // Log blocked origins for debugging
+                    console.log(`CORS blocked origin: ${origin}`);
+                    console.log(`Allowed origins: ${allowedOrigins.join(", ")}`);
+                    
+                    return callback(new Error("Not allowed by CORS"));
+                },
+                methods: ["GET", "PUT", "POST", "DELETE", "PATCH", "OPTIONS"],
+                credentials: true,
+                allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+                preflightContinue: false,
+                optionsSuccessStatus: 204,
             })
-          );
+        );
+        
+        // Handle preflight requests explicitly
+        app.options("*", cors());
         // app.all("/*", (req, res, next) => {
 
-            
-        //     console.log(allowedDomains);
-        //     console.log(req.headers.origin);
-        //     if (allowedDomains.includes(req.headers.origin || "")) {
-        //         res.header("Access-Control-Allow-Origin", req.headers.origin || "");
-        //     }
-        //     res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH");
-        //     res.header("Access-Control-Allow-Headers", "*");
-
-        //     next();
-        // });
 
         app.use(express.json());
         app.use(express.urlencoded({ extended: true }));
@@ -76,7 +91,18 @@ async function run() {
 
         useExpressServer(app, {
             cors: {
-                origin: process.env.CORS_DOMAINS?.split(","),
+                origin: (origin, callback) => {
+                    if (!origin) {
+                        return callback(null, true);
+                    }
+                    const allowedOrigins = process.env.CORS_DOMAINS
+                        ? process.env.CORS_DOMAINS.split(",").map(o => o.trim())
+                        : [];
+                    if (allowedOrigins.includes(origin)) {
+                        return callback(null, true);
+                    }
+                    return callback(new Error("Not allowed by CORS"));
+                },
                 credentials: true,
             },
             defaultErrorHandler: false,
