@@ -26,22 +26,38 @@ import { APIError } from "./utils/APIError";
 import { createDbConnection } from "./utils/createDbConnection";
 import logger from "./utils/logger";
 import { ContactController } from "./controller/contact";
+import cors from "cors";
 
 async function run() {
     try {
         await createDbConnection();
 
         const app = express();
-        app.all("/*", (req, res, next) => {
-            const allowedDomains = process.env.CORS_DOMAINS.split(",");
-            if (allowedDomains.includes(req.headers.origin || "")) {
-                res.header("Access-Control-Allow-Origin", req.headers.origin || "");
-            }
-            res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH");
-            res.header("Access-Control-Allow-Headers", "*");
 
-            next();
-        });
+        const allowedOrigins = process.env.CORS_DOMAINS.split(",");
+        console.log(allowedOrigins);
+        console.log(process.env.CORS_DOMAINS);
+        app.use(
+            cors({
+              origin: allowedOrigins,
+              methods: ["GET", "PUT", "POST", "DELETE", "PATCH", "OPTIONS"],
+              credentials: true,
+              allowedHeaders: ["Content-Type", "Authorization"],
+            })
+          );
+        // app.all("/*", (req, res, next) => {
+
+            
+        //     console.log(allowedDomains);
+        //     console.log(req.headers.origin);
+        //     if (allowedDomains.includes(req.headers.origin || "")) {
+        //         res.header("Access-Control-Allow-Origin", req.headers.origin || "");
+        //     }
+        //     res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH");
+        //     res.header("Access-Control-Allow-Headers", "*");
+
+        //     next();
+        // });
 
         app.use(express.json());
         app.use(express.urlencoded({ extended: true }));
