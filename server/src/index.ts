@@ -68,9 +68,6 @@ async function run() {
                 optionsSuccessStatus: 204,
             })
         );
-        
-        // Handle preflight requests explicitly
-        app.options("*", cors());
         // app.all("/*", (req, res, next) => {
 
 
@@ -91,7 +88,7 @@ async function run() {
 
         useExpressServer(app, {
             cors: {
-                origin: (origin, callback) => {
+                origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
                     if (!origin) {
                         return callback(null, true);
                     }
