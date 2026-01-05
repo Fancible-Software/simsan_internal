@@ -122,7 +122,7 @@ export class FormController {
       const forms = await conn
         .createQueryBuilder(Form, "form")
         .select([
-          'form."formId" as "formId", form."customerName" as "customerName",form."customerEmail" as "customerEmail", form."customerPhone" as "customerPhone", form."createdAt" as "createdAt", form."customerAddress" as "customerAddress",form."customerPostalCode" as "customerPostalCode", form."customerCity" as "customerCity",form."customerProvince" as "customerProvince", form."customerCountry" as "customerCountry", form."total" as "total", form."discount" as "discount", form."discount_percent" as "discount_percent", form."type" as "type", form."invoiceUuid" as "invoiceUuid",form."final_amount" as "final_amount", form."invoiceNumber" as "invoiceNumber"',
+          'form."formId" as "formId", form."customerName" as "customerName",form."customerEmail" as "customerEmail", form."customerPhone" as "customerPhone", form."createdAt" as "createdAt", form."customerAddress" as "customerAddress",form."customerPostalCode" as "customerPostalCode", form."customerCity" as "customerCity",form."customerProvince" as "customerProvince", form."customerCountry" as "customerCountry", form."total" as "total", form."discount" as "discount", form."discount_percent" as "discount_percent", form."type" as "type", form."invoiceUuid" as "invoiceUuid",form."final_amount" as "final_amount", form."invoiceNumber" as "invoiceNumber", form."createdBy" as "createdBy", form."createdAt" as "createdAt"',
         ])
         .where("form.createdAt >= :startDate", {
           startDate: startDate.toUTCString(),
