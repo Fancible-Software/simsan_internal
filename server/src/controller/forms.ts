@@ -89,9 +89,9 @@ export class FormController {
         .getRawOne<{ count: string }>();
 
       const forms = await qb
-        .leftJoin(User, "user", "user.id = CAST(form.createdBy AS DECIMAL)")
+        .leftJoin(User, "creator", "creator.id = CAST(form.createdBy AS DECIMAL)")
         .select([
-          'form."formId" as "formId", form."customerName" as "customerName",form."customerEmail" as "customerEmail", form."customerPhone" as "customerPhone", form."createdAt" as "createdAt", form."customerAddress" as "customerAddress",form."customerPostalCode" as "customerPostalCode", form."customerCity" as "customerCity",form."customerProvince" as "customerProvince", form."customerCountry" as "customerCountry", form."total" as "total", form."discount" as "discount", form."discount_percent" as "discount_percent", form."type" as "type", form."invoiceUuid" as "invoiceUuid",form."final_amount" as "final_amount", form."invoiceNumber" as "invoiceNumber", "user"."first_name" as "first_name", "user"."last_name" as "last_name"',
+          'form."formId" as "formId", form."customerName" as "customerName",form."customerEmail" as "customerEmail", form."customerPhone" as "customerPhone", form."createdAt" as "createdAt", form."customerAddress" as "customerAddress",form."customerPostalCode" as "customerPostalCode", form."customerCity" as "customerCity",form."customerProvince" as "customerProvince", form."customerCountry" as "customerCountry", form."total" as "total", form."discount" as "discount", form."discount_percent" as "discount_percent", form."type" as "type", form."invoiceUuid" as "invoiceUuid",form."final_amount" as "final_amount", form."invoiceNumber" as "invoiceNumber", "creator"."first_name" as "first_name", "creator"."last_name" as "last_name"',
         ])
         .orderBy("form.formId", "DESC")
         .offset(+skip)
@@ -121,9 +121,9 @@ export class FormController {
 
       const forms = await conn
         .createQueryBuilder(Form, "form")
-        .leftJoin(User, "user", "user.id = CAST(form.\"createdBy\" AS DECIMAL)")
+        .leftJoin(User, "creator", "creator.id = CAST(form.\"createdBy\" AS DECIMAL)")
         .select([
-          'form."formId" as "formId", form."customerName" as "customerName", form."customerEmail" as "customerEmail", form."customerPhone" as "customerPhone", form."createdAt" as "createdAt", form."customerAddress" as "customerAddress", form."customerPostalCode" as "customerPostalCode", form."customerCity" as "customerCity", form."customerProvince" as "customerProvince", form."customerCountry" as "customerCountry", form."total" as "total", form."discount" as "discount", form."discount_percent" as "discount_percent", form."type" as "type", form."invoiceUuid" as "invoiceUuid", form."final_amount" as "final_amount", form."invoiceNumber" as "invoiceNumber", form."createdBy" as "createdBy", form."createdAt" as "Creation Date", CONCAT(user."first_name", \' \', user."last_name") as "Created By"',
+          'form."formId" as "formId", form."customerName" as "customerName", form."customerEmail" as "customerEmail", form."customerPhone" as "customerPhone", form."createdAt" as "createdAt", form."customerAddress" as "customerAddress", form."customerPostalCode" as "customerPostalCode", form."customerCity" as "customerCity", form."customerProvince" as "customerProvince", form."customerCountry" as "customerCountry", form."total" as "total", form."discount" as "discount", form."discount_percent" as "discount_percent", form."type" as "type", form."invoiceUuid" as "invoiceUuid", form."final_amount" as "final_amount", form."invoiceNumber" as "invoiceNumber", form."createdBy" as "createdBy", form."createdAt" as "creationDate", CONCAT(creator."first_name", \' \', creator."last_name") as "createdByName"',
         ])
         .where("form.createdAt >= :startDate", {
           startDate: startDate.toUTCString(),
@@ -161,7 +161,7 @@ export class FormController {
         "Number of Unique Customers": uniqueCustomers,
       });
     } catch (err) {
-      console.log(err.message);
+      console.log(err);
       logger.error(err.message);
       return new APIError(err.message, ResponseStatus.API_ERROR);
     }
