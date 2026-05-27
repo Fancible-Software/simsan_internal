@@ -17,6 +17,7 @@ export class ContactController {
       contact.email = body.email;
       contact.phone = body.phone;
       contact.service = body.service;
+      contact.address = body.address;
       contact.message = body.message;
       await getConnection().getRepository(Contact).save(contact);
       // Send notification email to admin
@@ -31,6 +32,7 @@ export class ContactController {
           body.email +
           "<br>Phone: " +
           body.phone +
+          (body.address ? "<br>Address: " + body.address : "") +
           "<br>Service: " +
           body.service,
         subject: `[Lead] New Contact Form Submission from ${body.name}`,

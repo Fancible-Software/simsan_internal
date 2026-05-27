@@ -340,6 +340,10 @@ export class ContactFormRequest {
   @IsNotEmpty()
   service: string;
 
+  @IsOptional()
+  @IsString()
+  address?: string;
+
   @IsString()
   @IsNotEmpty()
   message: string;

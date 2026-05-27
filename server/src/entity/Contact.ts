@@ -17,6 +17,9 @@ export class Contact {
     @Column({ nullable: false })
     service: string;
 
+    @Column({ nullable: true })
+    address?: string;
+
     @Column({ nullable: false })
     message: string;
 
