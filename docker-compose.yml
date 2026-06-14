@@ -1,4 +1,4 @@
-version: '3.8'
+version: '2.4'
 
 services:
   nginx-server:
@@ -21,7 +21,8 @@ services:
       - 4000:4000
     restart: always
     depends_on:
-      - database
+      database:
+        condition: service_healthy
 
   database:
     image: postgres:14.1-alpine
@@ -29,6 +30,11 @@ services:
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB:-postgres} -h 127.0.0.1 -p 5432 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     ports:
       - '6432:5432'
     volumes: 

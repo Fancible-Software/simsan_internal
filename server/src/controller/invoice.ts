@@ -26,7 +26,7 @@ export class InvoiceController {
   async generateInvoice(
     @Res() res: Response,
     @Params()
-    { id, uuid }: InvoiceParams
+    { id, uuid }: InvoiceParams,
   ) {
     try {
       const conn = getConnection();
@@ -59,8 +59,8 @@ export class InvoiceController {
             path.join(
               __dirname,
               "/../../public/views/",
-              "invoice_unauthorized.ejs"
-            )
+              "invoice_unauthorized.ejs",
+            ),
           );
         }
 
@@ -98,6 +98,8 @@ export class InvoiceController {
             companyZip = element.value;
           }
         });
+
+        console.log("CONFIG RECORD", configRecord);
 
         let data = {
           images: {
@@ -143,7 +145,7 @@ export class InvoiceController {
           {
             ...data,
             img_path: `/api/assets/logo.png`,
-          }
+          },
         );
       } else {
         console.log("CANNOT FIND");
@@ -163,7 +165,7 @@ export class InvoiceController {
   async convertQuoteToInvoice(
     @Res() res: Response,
     @Params()
-    { id, uuid }: InvoiceParams
+    { id, uuid }: InvoiceParams,
   ) {
     try {
       const formRepository: Repository<Form> =
