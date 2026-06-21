@@ -43,9 +43,9 @@ export class FormController {
     @Params()
     { skip, limit }: SkipLimitURLParams,
     @QueryParams({ validate: true })
-    { type, searchTerm}: { type: string; searchTerm?: string;},
+    { type, searchTerm }: { type: string; searchTerm?: string },
     @Res() res: Response,
-    @CurrentUser() user: User
+    @CurrentUser() user: User,
   ) {
     try {
       if (searchTerm) {
@@ -60,8 +60,8 @@ export class FormController {
       qb.where("form.type = :type", { type: type });
 
       // If user if of type sub_admin, only fetch quotes made by them
-      if(type === "QUOTE" && user.roles === UserPermissions.sub_admin){
-        qb.andWhere("form.createdBy = :userId", { userId: user.id});
+      if (type === "QUOTE" && user.roles === UserPermissions.sub_admin) {
+        qb.andWhere("form.createdBy = :userId", { userId: user.id });
       }
 
       if (searchTerm) {
@@ -85,7 +85,7 @@ export class FormController {
               .orWhere("form.customerPostalCode ilike :searchTerm", {
                 searchTerm: `%${searchTerm}%`,
               });
-          })
+          }),
         );
       }
 
@@ -103,9 +103,7 @@ export class FormController {
         .offset(+skip)
         .limit(+limit)
         .getRawMany<Form>();
-      
-      
-      
+
       return res.status(ResponseStatus.SUCCESS_FETCH).send({
         status: true,
         count: formCount,
@@ -156,7 +154,7 @@ export class FormController {
       const total = forms.reduce(
         (total: number, record: Form) =>
           total + parseFloat(record.final_amount),
-        0
+        0,
       );
 
       return res.status(ResponseStatus.SUCCESS_FETCH).send({
@@ -207,7 +205,7 @@ export class FormController {
   async createForm(
     @Res() res: Response,
     @CurrentUser() user: User,
-    @Body() body: FormType
+    @Body() body: FormType,
   ) {
     const conn = getConnection();
     const queryRunner: QueryRunner = conn.createQueryRunner();
@@ -217,13 +215,15 @@ export class FormController {
       const services = await serviceRepository.find({
         where: {
           serviceId: In(
-            body.services.map((service: FormToServiceType) => service.serviceId)
+            body.services.map(
+              (service: FormToServiceType) => service.serviceId,
+            ),
           ),
         },
       });
       const serviceMap: Map<number, Service> = new Map<number, Service>();
       services.forEach((service: Service) =>
-        serviceMap.set(service.serviceId, service)
+        serviceMap.set(service.serviceId, service),
       );
       const newFormRecord: Form = body.toForm(user.id.toString());
       const formAdded = await queryRunner.manager.save(newFormRecord);
@@ -232,20 +232,20 @@ export class FormController {
         newFormRecord.formToServices.map((service: FormToServices) => {
           service.form = newFormRecord;
           return service;
-        })
+        }),
       );
       const formRepository: Repository<Form> = conn.getRepository(Form);
       const formRecord: Form | undefined = await formRepository.findOne(
         formAdded.formId,
         {
           relations: ["formToServices", "formToServices.service"],
-        }
+        },
       );
 
       if (formRecord) {
         const htmlInvoice = await getInvoiceHtml(
           formRecord.formId,
-          formRecord.invoiceUuid
+          formRecord.invoiceUuid,
         );
         const formType =
           formRecord.type.toLocaleLowerCase() === formTypes.form
@@ -300,7 +300,7 @@ export class FormController {
   async updateForm(
     @Res() res: Response,
     @Params() { id }: EntityId,
-    @Body() body: FormType
+    @Body() body: FormType,
   ) {
     const conn = getConnection();
     const queryRunner: QueryRunner = conn.createQueryRunner();
@@ -311,7 +311,7 @@ export class FormController {
 
       if (formRecord) {
         await queryRunner.startTransaction();
-        queryRunner.manager.update(Form, id, {
+        await queryRunner.manager.update(Form, id, {
           customerName: body.customerName,
           customerEmail: body.customerEmail,
           customerAddress: body.customerAddress,
@@ -328,7 +328,8 @@ export class FormController {
           type: body.type,
           comment: body.comment,
         });
-        queryRunner.manager.update(Form, id, body);
+        // Avoid updating non-column relation fields (e.g. `services`) via
+        // UpdateQueryBuilder — relations are handled separately below.
 
         await queryRunner.manager.delete(FormToServices, {
           formId: id,
@@ -342,21 +343,21 @@ export class FormController {
           where: {
             serviceId: In(
               body.services.map(
-                (service: FormToServiceType) => service.serviceId
-              )
+                (service: FormToServiceType) => service.serviceId,
+              ),
             ),
           },
         });
 
         const serviceMap: Map<number, Service> = new Map<number, Service>();
         services.forEach((service: Service) =>
-          serviceMap.set(service.serviceId, service)
+          serviceMap.set(service.serviceId, service),
         );
         await queryRunner.manager.save(
           updateServiceRecord.formToServices.map((service: FormToServices) => {
             service.form = formRecord;
             return service;
-          })
+          }),
         );
         await queryRunner.commitTransaction();
         const updatedFormRecord: Form | undefined =
@@ -420,7 +421,7 @@ export class FormController {
   async generateInvoice(
     @Res() res: Response,
     @Body()
-    { id }: EntityId
+    { id }: EntityId,
   ) {
     try {
       const conn = getConnection();
